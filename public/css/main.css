@@ -15,3 +15,7 @@ rect {
   stroke: rgba(0,0,0,0);
   stroke-width: .5;
 }
+
+rect:hover {
+  fill: #22ccff;
+}

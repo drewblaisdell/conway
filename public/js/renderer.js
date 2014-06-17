@@ -1,12 +1,13 @@
 define(['lib/d3'], function(d3) {
   var Renderer = function(app) {
     this.app = app;
+    this.config = app.config;
     this.grid = app.game.grid;
     this.width = app.width;
     this.height = app.height;
     this.d3 = d3;
-    this.cellSize = 8;
-    this.spacing = 1;
+    this.cellSize = this.config.cellSize;
+    this.spacing = this.config.cellSpacing;
 
     this.pixelWidth = this.width * (this.cellSize + this.spacing);
     this.pixelHeight = this.height * (this.cellSize + this.spacing);
@@ -35,8 +36,12 @@ define(['lib/d3'], function(d3) {
       cells = this.grid.getCells(),
       _this = this;
 
+    if (!this.grid.isDirty()) {
+      return;
+    }
+
     if(!this.rendered) {
-      this.rect = this.svg.selectAll('rect')
+      this.svg.selectAll('rect')
         .data(cells).enter().append('rect')
         .attr('transform', function(d) {
           var x = d.x * (cellSize + _this.spacing),
@@ -53,9 +58,10 @@ define(['lib/d3'], function(d3) {
         .attr('width', cellSize)
         .attr('height', cellSize)
         .attr('fill', function(d) {
-          return (d.alive) ? "#0af" : "#fff";
+          return (d.alive) ? _this.config.aliveCellColor : _this.config.deadCellColor;
         })
         .on('click', function(d) {
+          _this.grid.setDirty();
           d.setAlive();
         });
 
@@ -64,11 +70,13 @@ define(['lib/d3'], function(d3) {
       this.svg.selectAll('rect').data(cells)
         .each(function(d) {
           if(d.isDirty()){
-            d3.select(this).attr('fill', ((d.alive) ? "#0af" : "#fff"));
+            d3.select(this).attr('fill', ((d.alive) ? _this.config.aliveCellColor : _this.config.deadCellColor));
 
             d.setClean();
           }
         });
+
+      this.grid.setClean();
     }
   };
 

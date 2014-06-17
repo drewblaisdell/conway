@@ -2,8 +2,8 @@ requirejs.config({
   baseUrl: 'js',
 });
 
-require(['app'], function(App) {
-  var app = new App();
+require(['app', 'config'], function(App, Config) {
+  var app = new App(Config);
 
   app.init(94, 70);
 

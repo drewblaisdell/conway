@@ -2,6 +2,7 @@ define(['cell'], function(Cell) {
   var Grid = function(app) {
     this.app = app;
     this.cells = [];
+    this.dirty = true;
   };
 
   Grid.prototype.getLivingNeighborCount = function(x, y) {
@@ -67,6 +68,18 @@ define(['cell'], function(Cell) {
     this.cells = this._buildCells(width, height);
   };
 
+  Grid.prototype.setClean = function() {
+    this.dirty = false;
+  };
+
+  Grid.prototype.isDirty = function() {
+    return this.dirty;
+  };
+
+  Grid.prototype.setDirty = function() {
+    this.dirty = true;
+  }
+
   Grid.prototype.setNextGeneration = function() {
     var cells = this.getCells(),
       i,
@@ -106,6 +119,8 @@ define(['cell'], function(Cell) {
     for (i = 0; i < l; i++) {
       cells[i].tick();
     }
+
+    this.setDirty();
   };
 
   Grid.prototype._buildCells = function(width, height) {
