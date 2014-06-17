@@ -5,17 +5,3 @@
 h1, h2, h3, h4, h5, h6 {
   font-weight: 100;
 }
-
-svg {
-  background: #000;
-  padding: 1px 0 0 1px;
-}
-
-rect {
-  stroke: rgba(0,0,0,0);
-  stroke-width: .5;
-}
-
-rect:hover {
-  fill: #22ccff;
-}

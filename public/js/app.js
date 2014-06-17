@@ -10,10 +10,10 @@ define(['game', 'renderer'], function(Game, Renderer) {
     this.game = new Game(this);
     this.game.init(width, height);
 
-    // for (var i = 0; i < 2000; i++) {
-    //   var c = this.game.grid.getRandomCell();
-    //   c.setAlive();
-    // }
+    for (var i = 0; i < 2000; i++) {
+      var c = this.game.grid.getRandomCell();
+      c.setAlive();
+    }
 
     this.renderer = new Renderer(this);
     this.renderer.init();
@@ -34,7 +34,7 @@ define(['game', 'renderer'], function(Game, Renderer) {
         _this.lastTick = now;
       }
     
-      _this.renderer.render();
+      _this.renderer.renderChanges();
       _this.run();
     });
   };
