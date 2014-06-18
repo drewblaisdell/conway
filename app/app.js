@@ -10,33 +10,27 @@ define(['game'], function(Game) {
     this.game = new Game(this);
     this.game.init(width, height);
 
-    for (var i = 0; i < 2000; i++) {
-      var c = this.game.grid.getRandomCell();
-      c.setAlive();
+    var _this = this;
+    for (var j = 0; j < 5; j++) {
+      var x = Math.floor(Math.random() * 90),
+        y = Math.floor(Math.random() * 60);
+
+      _this.game.grid.getCell(x, y).setAlive();
+      _this.game.grid.getCell(x + 1, y).setAlive();
+      _this.game.grid.getCell(x + 2, y).setAlive();
     }
-
-//    this.renderer = new Renderer(this);
-//    this.renderer.init();
-
-    this.lastTick = +new Date;
   };
 
   App.prototype.run = function() {
     var _this = this;
 
     setTimeout(function() {
-      var now = +new Date;
-    
-      if (now - _this.lastTick > _this.config.generationDuration) {
-        _this.game.grid.setNextGeneration();
-        _this.game.grid.tick();
-
-        _this.lastTick = now;
+      if (_this.game.isTimeToTick()) {
+        _this.game.tick();
       }
     
-//      _this.renderer.renderChanges();
       _this.run();
-    }, 100);
+    }, 1000 / 30);
   };
 
   return App;

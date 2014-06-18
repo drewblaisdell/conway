@@ -10,42 +10,39 @@ define(['game', 'renderer'], function(Game, Renderer) {
     this.game = new Game(this);
     this.game.init(width, height);
 
-    // for (var i = 0; i < 2000; i++) {
-    //   var c = this.game.grid.getRandomCell();
-    //   c.setAlive();
-    // }
-
     this.renderer = new Renderer(this);
     this.renderer.init();
 
-    this.lastTick = +new Date;
+    var _this = this;
+    this.game.getUpdate(function(data) {
+      _this.run();
+    });
+
+    _this.run();
   };
 
   App.prototype.run = function() {
     var _this = this;
 
-    // requestAnimationFrame(function() {
-    //   var now = +new Date;
+    // "the loop"
+    requestAnimationFrame(function() {
+      var now = +new Date;
     
-    //   if (now - _this.lastTick > _this.config.generationDuration) {
-    //     _this.game.grid.setNextGeneration();
-    //     _this.game.grid.tick();
+      // go to next generation
+      if (_this.game.isTimeToTick()) {
+        _this.game.tick();
+      }
 
-    //     _this.lastTick = now;
-    //   }
+      // get an update from the server
+      if (_this.game.isTimeToUpdate() && !_this.game.updating) {
+        _this.game.getUpdate(function(data) {
+        });
+      }
     
-    //   _this.renderer.renderChanges();
-    //   _this.run();
-    // });
-
-    $.get('/test', function(data) {
-      _this.game.grid.setLivingCells(data);
       _this.renderer.renderChanges();
-      
-      setTimeout(function() {
-        _this.run();
-      }, 300);
+      _this.run();
     });
+
   };
 
   return App;

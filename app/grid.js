@@ -40,6 +40,8 @@ define(['cell'], function(Cell) {
   };
 
   Grid.prototype.getCell = function(x, y) {
+    x = Math.max(x, 0);
+    y = Math.max(y, 0);
     return this.cells[y][x];
   };
 
@@ -95,34 +97,69 @@ define(['cell'], function(Cell) {
     this.dirty = true;
   }
 
-  Grid.prototype.setNextGeneration = function() {
+  Grid.prototype.setNextGeneration = function(nextGeneration) {
     var cells = this.getCells(),
       i,
       l = cells.length;
 
-    for (i = 0; i < l; i++) {
-      var cell = cells[i],
-        livingNeighbors = this.getLivingNeighborCount(cell.x, cell.y);
+    if (nextGeneration !== undefined) {
+      // the server calculated the next generation for us
+      
+      var j = nextGeneration.length;
 
-      if (livingNeighbors > 0) {
-        if (cell.alive) {
-          if (livingNeighbors < 2) {
-            // live cells with < 2 neighbors die
-            cell.aliveNextGeneration = false;
-          } else if (livingNeighbors === 2 || livingNeighbors === 3) {
-            // live cells with 2 or 3 neighbors live
-            cell.aliveNextGeneration = true;
+      // kill all the cells
+      for (i = 0; i < l; i++) {
+        cells[i].aliveNextGeneration = false;
+      }
+
+      // bring the living ones back
+      for (i = 0; i < j; i++) {
+        var cell = this.getCell(nextGeneration[i].x, nextGeneration[i].y);
+        cell.aliveNextGeneration = true;
+      }
+    } else {
+      // we need to calculate the next generation locally
+
+      for (i = 0; i < l; i++) {
+        var cell = cells[i],
+          livingNeighbors = this.getLivingNeighborCount(cell.x, cell.y);
+
+        if (livingNeighbors > 0) {
+          if (cell.alive) {
+            if (livingNeighbors < 2) {
+              // live cells with < 2 neighbors die
+              cell.aliveNextGeneration = false;
+            } else if (livingNeighbors === 2 || livingNeighbors === 3) {
+              // live cells with 2 or 3 neighbors live
+              cell.aliveNextGeneration = true;
+            } else {
+              // live cells with more than three neighbors die
+              cell.aliveNextGeneration = false;
+            }
           } else {
-            // live cells with more than three neighbors die
-            cell.aliveNextGeneration = false;
-          }
-        } else {
-          if (livingNeighbors === 3) {
-            // dead cells with three neighbors become live cells
-            cell.aliveNextGeneration = true;
+            if (livingNeighbors === 3) {
+              // dead cells with three neighbors become live cells
+              cell.aliveNextGeneration = true;
+            }
           }
         }
       }
+    }
+  };
+
+  Grid.prototype.setLivingCells = function(newCells) {
+    var i,
+      cells = this.getCells(),
+      j = cells.length,
+      l = newCells.length;
+
+    for (i = 0; i < j; i++) {
+      cells[i].set('alive', false);
+    }
+
+    for (i = 0; i < l; i++) {
+      var cell = this.getCell(newCells[i].x, newCells[i].y);
+      cell.set('alive', newCells[i].alive);
     }
   };
 
@@ -132,10 +169,9 @@ define(['cell'], function(Cell) {
       l = cells.length;
 
     for (i = 0; i < l; i++) {
-      cells[i].tick();
+      cells[i].set('alive', cells[i].aliveNextGeneration);
+      cells[i].aliveNextGeneration = undefined;
     }
-
-    this.setDirty();
   };
 
   Grid.prototype._buildCells = function(width, height) {

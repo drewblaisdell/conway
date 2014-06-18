@@ -3,7 +3,21 @@ module.exports = function(app, game) {
     res.render('main.ejs');
   });
 
-  app.get('/test', function(req, res) {
-    res.json(game.game.grid.getLivingCells());
+  app.get('/state', function(req, res) {
+    var livingCells = game.grid.getLivingCells().map(function(cell) {
+      return {
+        x: cell.x,
+        y: cell.y,
+        alive: cell.alive
+      };
+    });
+
+    var update = {
+      generation: game.generation,
+      timeBeforeTick: (game.nextTick - (+new Date)),
+      livingCells: livingCells
+    };
+
+    res.json(update);
   });
 };

@@ -9,7 +9,8 @@ requirejs.config({
   name: 'main'
 });
 
-var game = requirejs(['app/main.js'], function(game) {
+requirejs(['app/main.js'], function(game) {
+  var game = game.game;
   var routes = require('./config/routes.js')(appServer, game);
 });
 

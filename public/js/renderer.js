@@ -173,8 +173,8 @@ define([], function() {
     if (delta) {
 //      this.scale(delta);
     }
-    event.preventDefault();
-    return false;
+    // event.preventDefault();
+    // return false;
   };
 
   return Renderer;
