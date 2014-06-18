@@ -2,20 +2,30 @@ var http = require('http');
 var path = require('path');
 var express = require('express');
 var errorhandler = require('errorhandler');
+var requirejs = require('requirejs');
 
-var app = express();
+requirejs.config({
+  baseUrl: './app',
+  name: 'main'
+});
+
+var game = requirejs(['app/main.js'], function(game) {
+  var routes = require('./config/routes.js')(appServer, game);
+});
+
+var appServer = express();
 var environment = process.env.NODE_ENV || 'development';
 
 // General configuration
-app.set('port', process.env.PORT || 3000);
-var routes = require('./config/routes.js')(app);
+appServer.set('port', process.env.PORT || 3000);
+// var routes = require('./config/routes.js')(appServer, game);
 
 // Development
 if (environment === 'development') {
-  app.use(errorhandler());
-  app.use(express.static(path.join(__dirname, 'public')));
+  appServer.use(errorhandler());
+  appServer.use(express.static(path.join(__dirname, 'public')));
 }
 
-http.createServer(app).listen(app.get('port'), function() {
-  console.log('Conway started: ' + app.get('port') + ' (' + environment + ')');
+http.createServer(appServer).listen(appServer.get('port'), function() {
+  console.log('Conway started: ' + appServer.get('port') + ' (' + environment + ')');
 });

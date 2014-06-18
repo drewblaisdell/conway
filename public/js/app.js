@@ -10,10 +10,10 @@ define(['game', 'renderer'], function(Game, Renderer) {
     this.game = new Game(this);
     this.game.init(width, height);
 
-    for (var i = 0; i < 2000; i++) {
-      var c = this.game.grid.getRandomCell();
-      c.setAlive();
-    }
+    // for (var i = 0; i < 2000; i++) {
+    //   var c = this.game.grid.getRandomCell();
+    //   c.setAlive();
+    // }
 
     this.renderer = new Renderer(this);
     this.renderer.init();
@@ -24,18 +24,27 @@ define(['game', 'renderer'], function(Game, Renderer) {
   App.prototype.run = function() {
     var _this = this;
 
-    requestAnimationFrame(function() {
-      var now = +new Date;
+    // requestAnimationFrame(function() {
+    //   var now = +new Date;
     
-      if (now - _this.lastTick > _this.config.generationDuration) {
-        _this.game.grid.setNextGeneration();
-        _this.game.grid.tick();
+    //   if (now - _this.lastTick > _this.config.generationDuration) {
+    //     _this.game.grid.setNextGeneration();
+    //     _this.game.grid.tick();
 
-        _this.lastTick = now;
-      }
+    //     _this.lastTick = now;
+    //   }
     
+    //   _this.renderer.renderChanges();
+    //   _this.run();
+    // });
+
+    $.get('/test', function(data) {
+      _this.game.grid.setLivingCells(data);
       _this.renderer.renderChanges();
-      _this.run();
+      
+      setTimeout(function() {
+        _this.run();
+      }, 300);
     });
   };
 

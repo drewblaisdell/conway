@@ -12,6 +12,6 @@ define([], function() {
     gridHeight: 70,
 
     // game settings
-    generationDuration: 3000
+    generationDuration: 300
   };
 });

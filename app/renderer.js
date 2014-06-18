@@ -124,11 +124,6 @@ define([], function() {
   };
 
   Renderer.prototype._drawCell = function(cell) {
-    // return if the cell was made undefined by _handleMouseLeave
-    if (cell === undefined) {
-      return;
-    }
-
     var i,
       config = this.config,
       context = this.context,

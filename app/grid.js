@@ -40,8 +40,6 @@ define(['cell'], function(Cell) {
   };
 
   Grid.prototype.getCell = function(x, y) {
-    x = Math.max(x, 0);
-    y = Math.max(y, 0);
     return this.cells[y][x];
   };
 
@@ -125,23 +123,6 @@ define(['cell'], function(Cell) {
           }
         }
       }
-    }
-  };
-
-  Grid.prototype.setLivingCells = function(newCells) {
-    var i,
-      cells = this.getCells(),
-      j = cells.length,
-      l = newCells.length;
-
-    for (i = 0; i < j; i++) {
-      cells[i].set('alive', false);
-    }
-
-
-    for (i = 0; i < l; i++) {
-      var cell = this.getCell(newCells[i].x, newCells[i].y);
-      cell.set('alive', newCells[i].alive);
     }
   };
 

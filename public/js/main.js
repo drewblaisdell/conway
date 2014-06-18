@@ -1,11 +1,14 @@
 requirejs.config({
   baseUrl: 'js',
+  paths: {
+    'jquery': 'lib/jquery.min'
+  }
 });
 
-require(['app', 'config'], function(App, Config) {
+require(['app', 'config', 'jquery'], function(App, Config, $) {
   var app = new App(Config);
 
-  app.init(94, 70);
+  app.init(120, 60);
 
   app.run();
 });
