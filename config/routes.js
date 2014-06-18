@@ -4,6 +4,7 @@ module.exports = function(app, game) {
   });
 
   app.get('/state', function(req, res) {
+    // only send the relevant info
     var livingCells = game.grid.getLivingCells().map(function(cell) {
       return {
         x: cell.x,
@@ -19,5 +20,9 @@ module.exports = function(app, game) {
     };
 
     res.json(update);
+  });
+
+  app.post('/placeLiveCells', function(req, res) {
+    console.log(req.body);
   });
 };

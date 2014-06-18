@@ -1,6 +1,8 @@
 define([], function() {
   var Renderer = function(app) {
     this.app = app;
+    this.game = app.game;
+    this.gameClient = app.gameClient;
     this.config = app.config;
     this.grid = app.game.grid;
     this.width = app.width;
@@ -147,8 +149,17 @@ define([], function() {
   };
 
   Renderer.prototype._handleClick = function(event) {
-    var clickedCell = this.getCellFromPosition(this.lastX, this.lastY);
-    clickedCell.setAlive();
+    var clickedCell = this.getCellFromPosition(this.lastX, this.lastY),
+      cells = [
+        {
+          x: clickedCell.x,
+          y: clickedCell.y
+        }
+      ];
+
+    this.gameClient.placeLiveCells(cells, function(data) {
+      console.log(data);
+    });
   };
 
   Renderer.prototype._handleMouseLeave = function(event) {

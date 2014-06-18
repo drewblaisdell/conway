@@ -1,4 +1,4 @@
-define(['game', 'renderer'], function(Game, Renderer) {
+define(['game', 'renderer', 'gameclient'], function(Game, Renderer, GameClient) {
   var App = function(config) {
     this.config = config;
   };
@@ -10,15 +10,15 @@ define(['game', 'renderer'], function(Game, Renderer) {
     this.game = new Game(this);
     this.game.init(width, height);
 
+    this.gameClient = new GameClient(this, this.game);
+
     this.renderer = new Renderer(this);
     this.renderer.init();
 
     var _this = this;
-    this.game.getUpdate(function(data) {
+    this.gameClient.getUpdate(function(data) {
       _this.run();
     });
-
-    _this.run();
   };
 
   App.prototype.run = function() {
@@ -34,8 +34,8 @@ define(['game', 'renderer'], function(Game, Renderer) {
       }
 
       // get an update from the server
-      if (_this.game.isTimeToUpdate() && !_this.game.updating) {
-        _this.game.getUpdate(function(data) {
+      if (_this.gameClient.isTimeToUpdate() && !_this.gameClient.updating) {
+        _this.gameClient.getUpdate(function(data) {
         });
       }
     
