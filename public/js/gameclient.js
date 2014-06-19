@@ -1,10 +1,31 @@
 define([], function() {
-  var GameClient = function(app, game) {
+  var GameClient = function(app, game, playerManager) {
     this.app = app;
     this.game = game;
+    this.playerManager = playerManager;
     this.config = app.config;
 
     this.updating = false;
+  };
+
+  GameClient.prototype.createNewPlayer = function(callback) {
+    var _this = this,
+      data = {};
+
+    $.ajax({
+      url: '/createNewPlayer',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      success: function(data) {
+        var newPlayer = _this.playerManager.createNewPlayer(data.id, data.color);
+        _this.playerManager.setLocalPlayer(newPlayer);
+
+        if (typeof callback === 'function') {
+          callback(data);
+        }
+      }
+    });
   };
 
   GameClient.prototype.getUpdate = function(callback) {
@@ -36,21 +57,29 @@ define([], function() {
 
   GameClient.prototype.placeLiveCells = function(cells, callback) {
     var _this = this,
-      message = { "cells": cells };
+      localPlayer = this.playerManager.getLocalPlayer(),
+      message = {
+        'cells': cells,
+        'playerId': localPlayer.id
+      };
 
-    if (!this.game.canPlaceLiveCells(cells)) {
-      callback(false);
+    if (!this.game.canPlaceLiveCells(localPlayer, cells)) {
       return false;
     }
 
     $.ajax({
       url: '/placeLiveCells',
       type: 'POST',
-      dataType: 'json',
-      contentType: 'json',
+      contentType: 'application/json',
       data: JSON.stringify(message),
       success: function(data) {
-        callback(data);
+        if (data.success) {
+          _this.game.placeCells(_this.playerManager.getLocalPlayer(), cells);
+        }
+
+        if (typeof callback === 'function') {
+          callback(data);
+        }
       }
     });
   };

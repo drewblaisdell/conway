@@ -1,5 +1,6 @@
 var http = require('http');
 var path = require('path');
+var crypto = require('crypto');
 var express = require('express');
 var bodyParser = require('body-parser');
 var errorhandler = require('errorhandler');
@@ -12,14 +13,11 @@ requirejs.config({
 
 var appServer = express();
 
-appServer.use(bodyParser.json());
-
-
 var environment = process.env.NODE_ENV || 'development';
 
-requirejs(['app/main.js'], function(game) {
-  var game = game.game;
-  var routes = require('./config/routes.js')(appServer, game);
+requirejs(['app/main.js'], function(conwayApp) {
+  appServer.use(bodyParser());
+  var routes = require('./config/routes.js')(appServer, conwayApp);
 });
 
 // General configuration

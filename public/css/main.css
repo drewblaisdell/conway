@@ -5,3 +5,20 @@
 h1, h2, h3, h4, h5, h6 {
   font-weight: 100;
 }
+
+.tickbar, .tickbarfill {
+  height: 3px;
+}
+
+.tickbar {
+  margin-bottom: 1px;
+}
+
+.tickbarfill {
+  float: left;
+  background: #0af;
+}
+
+.tickbarfill.moving {
+  transition: width 0.1s linear;
+}

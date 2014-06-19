@@ -1,4 +1,4 @@
-define([], function() {
+define(['jquery'], function($) {
   var Renderer = function(app) {
     this.app = app;
     this.game = app.game;
@@ -13,6 +13,8 @@ define([], function() {
 
     this.pixelWidth = this.width * (this.cellSize + this.spacing) + 1;
     this.pixelHeight = this.height * (this.cellSize + this.spacing) + 1;
+
+    this.nextTickBarUpdate = Date.now() + 100;
   };
 
   Renderer.prototype.init = function() {
@@ -22,6 +24,10 @@ define([], function() {
 
     this.canvas = document.getElementById('c');
     this.context = this.canvas.getContext('2d');
+
+    this.gameEl = this.canvas.parentElement;
+    this.tickBar = $('.tickbar');
+    this.tickBarFill = $(this.tickBar).find('.tickbarfill');
 
     // prevent text selection when interacting with the canvas
     this.canvas.addEventListener('selectstart', function(e) {
@@ -45,6 +51,9 @@ define([], function() {
 
     this.canvas.width = this.pixelWidth;
     this.canvas.height = this.pixelHeight;
+
+    $(this.gameEl).width(this.pixelWidth);
+    $(this.tickBar).width(this.pixelWidth);
 
     this._drawGrid();
   };
@@ -79,6 +88,7 @@ define([], function() {
 
   Renderer.prototype.renderChanges = function() {
     var i,
+      now = Date.now(),
       cells = this.grid.getCells(),
       l = cells.length;
 
@@ -88,6 +98,25 @@ define([], function() {
         cells[i].setClean();
       }
     }
+
+    if (this.nextTickBarUpdate <= now) {
+      this.updateTickBar(this.game.percentageOfTick());
+      this.nextTickBarUpdate = now + 100;
+    }
+  };
+
+  Renderer.prototype.updateTickBar = function(percent) {
+    var nextWidth = this.pixelWidth * percent;
+
+    if (nextWidth < $(this.tickBarFill).width()) {
+      // going back to zero
+      $(this.tickBarFill).removeClass('moving');
+    } else if (!$(this.tickBarFill).hasClass('moving')) {
+      $(this.tickBarFill).addClass('moving');
+    }
+
+    $(this.tickBarFill).width(nextWidth);
+
   };
 
   Renderer.prototype._drawGrid = function() {
@@ -157,9 +186,7 @@ define([], function() {
         }
       ];
 
-    this.gameClient.placeLiveCells(cells, function(data) {
-      console.log(data);
-    });
+    this.gameClient.placeLiveCells(cells);
   };
 
   Renderer.prototype._handleMouseLeave = function(event) {

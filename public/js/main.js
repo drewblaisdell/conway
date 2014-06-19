@@ -9,4 +9,7 @@ require(['app', 'config', 'jquery'], function(App, Config, $) {
   var app = new App(Config);
 
   app.init(120, 60);
+
+  // for testing, remove before production
+  window.app = app;
 });

@@ -1,4 +1,4 @@
-define(['game', 'renderer', 'gameclient'], function(Game, Renderer, GameClient) {
+define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Renderer, GameClient, PlayerManager) {
   var App = function(config) {
     this.config = config;
   };
@@ -9,15 +9,20 @@ define(['game', 'renderer', 'gameclient'], function(Game, Renderer, GameClient) 
 
     this.game = new Game(this);
     this.game.init(width, height);
+    
+    this.playerManager = new PlayerManager(this);
 
-    this.gameClient = new GameClient(this, this.game);
+    this.gameClient = new GameClient(this, this.game, this.playerManager);
 
     this.renderer = new Renderer(this);
     this.renderer.init();
 
     var _this = this;
-    this.gameClient.getUpdate(function(data) {
-      _this.run();
+
+    this.gameClient.createNewPlayer(function(data) {
+      _this.gameClient.getUpdate(function(data) {
+        _this.run();
+      });
     });
   };
 
@@ -27,7 +32,7 @@ define(['game', 'renderer', 'gameclient'], function(Game, Renderer, GameClient) 
     // "the loop"
     requestAnimationFrame(function() {
       var now = +new Date;
-    
+
       // go to next generation
       if (_this.game.isTimeToTick()) {
         _this.game.tick();
@@ -38,7 +43,7 @@ define(['game', 'renderer', 'gameclient'], function(Game, Renderer, GameClient) 
         _this.gameClient.getUpdate(function(data) {
         });
       }
-    
+
       _this.renderer.renderChanges();
       _this.run();
     });

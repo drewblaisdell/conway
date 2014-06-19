@@ -1,4 +1,6 @@
-module.exports = function(app, game) {
+module.exports = function(app, conwayApp) {
+  var game = conwayApp.game;
+
   app.get('/', function(req, res) {
     res.render('main.ejs');
   });
@@ -9,7 +11,8 @@ module.exports = function(app, game) {
       return {
         x: cell.x,
         y: cell.y,
-        alive: cell.alive
+        alive: cell.alive,
+        playerId: cell.playerId
       };
     });
 
@@ -23,6 +26,26 @@ module.exports = function(app, game) {
   });
 
   app.post('/placeLiveCells', function(req, res) {
-    console.log(req.body);
+    var cells = req.param('cells'),
+      playerId = req.param('playerId'),
+      player = conwayApp.playerManager.getPlayer(playerId);
+
+    if (game.canPlaceLiveCells(player, cells)) {
+      game.placeCells(player, cells);
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
+
+  });
+
+  app.post('/createNewPlayer', function(req, res) {
+    var player = conwayApp.playerManager.createNewPlayer(),
+      cleanPlayer = {
+        id: player.id,
+        color: player.color
+      };
+
+    res.json(player);
   });
 };

@@ -20,9 +20,9 @@ define(['cell'], function(Cell) {
     return n;
   };
 
-  Grid.prototype.getLivingCells = function() {
+  Grid.prototype.getLivingCells = function(cells) {
     var aliveCells = [],
-      cells = this.getCells(),
+      cells = (cells !== undefined) ? cells : this.getCells(),
       i,
       l = cells.length;
 
@@ -122,14 +122,14 @@ define(['cell'], function(Cell) {
 
       for (i = 0; i < l; i++) {
         var cell = cells[i],
-          livingNeighbors = this.getLivingNeighborCount(cell.x, cell.y);
+          livingNeighborCount = this.getLivingNeighborCount(cell.x, cell.y);
 
-        if (livingNeighbors > 0) {
+        if (livingNeighborCount > 0) {
           if (cell.alive) {
-            if (livingNeighbors < 2) {
+            if (livingNeighborCount < 2) {
               // live cells with < 2 neighbors die
               cell.aliveNextGeneration = false;
-            } else if (livingNeighbors === 2 || livingNeighbors === 3) {
+            } else if (livingNeighborCount === 2 || livingNeighborCount === 3) {
               // live cells with 2 or 3 neighbors live
               cell.aliveNextGeneration = true;
             } else {
@@ -137,9 +137,14 @@ define(['cell'], function(Cell) {
               cell.aliveNextGeneration = false;
             }
           } else {
-            if (livingNeighbors === 3) {
+            if (livingNeighborCount === 3) {
               // dead cells with three neighbors become live cells
               cell.aliveNextGeneration = true;
+
+              var livingNeighbors = this.getLivingCells(this.getNeighbors(cell.x, cell.y)),
+                randomParent = livingNeighbors[Math.floor(Math.random() * livingNeighbors.length)];
+
+              cell.playerIdNextGeneration = randomParent.playerId;
             }
           }
         }
@@ -161,6 +166,7 @@ define(['cell'], function(Cell) {
     for (i = 0; i < l; i++) {
       var cell = this.getCell(newCells[i].x, newCells[i].y);
       cell.set('alive', newCells[i].alive);
+      cell.set('playerId', newCells[i].playerId);
     }
   };
 
@@ -171,7 +177,9 @@ define(['cell'], function(Cell) {
 
     for (i = 0; i < l; i++) {
       cells[i].set('alive', cells[i].aliveNextGeneration);
+      cells[i].set('playerId', (cells[i].playerIdNextGeneration !== undefined) ? cells[i].playerIdNextGeneration : cells[i].playerId);
       cells[i].aliveNextGeneration = undefined;
+      cells[i].playerIdNextGeneration = undefined;
     }
   };
 
