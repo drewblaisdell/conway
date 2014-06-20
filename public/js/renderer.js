@@ -3,6 +3,7 @@ define(['jquery'], function($) {
     this.app = app;
     this.game = app.game;
     this.gameClient = app.gameClient;
+    this.playerManager = app.playerManager;
     this.config = app.config;
     this.grid = app.game.grid;
     this.width = app.width;
@@ -171,7 +172,11 @@ define(['jquery'], function($) {
     if (cell.equals(this.hoveredCell)) {
       context.fillStyle = config.hoveredCellColor;
     } else {
-      context.fillStyle = (cell.alive) ? config.aliveCellColor : config.deadCellColor;      
+      if (!cell.alive) {
+        context.fillStyle = config.deadCellColor;
+      } else {
+        context.fillStyle = this.playerManager.getPlayer(cell.playerId).color;      
+      }
     }
 
     context.fillRect(x1, y1, cellSize, cellSize);

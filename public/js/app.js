@@ -20,8 +20,10 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
     var _this = this;
 
     this.gameClient.createNewPlayer(function(data) {
-      _this.gameClient.getUpdate(function(data) {
-        _this.run();
+      _this.gameClient.getPlayers(function(data) {
+        _this.gameClient.getUpdate(function(data) {
+          _this.run();
+        });
       });
     });
   };

@@ -5,6 +5,28 @@ define(['cell'], function(Cell) {
     this.dirty = true;
   };
 
+  Grid.prototype.getDominantNeighbor = function(x, y) {
+    var neighbors = this.getLivingCells(this.getNeighbors(x, y)),
+      max = 0,
+      bestParent,
+      candidates = {};
+
+    for (var i = 0; i < neighbors.length; i++) {
+      if (candidates[neighbors[i]] === undefined) {
+        candidates[neighbors[i].playerId] = 1;
+      } else {
+        candidates[neighbors[i].playerId] += 1;
+      }
+
+      if (candidates[neighbors[i].playerId] > max) {
+        max = candidates[neighbors[i].playerId];
+        bestParent = neighbors[i].playerId;
+      }
+    }
+
+    return bestParent;
+  };
+
   Grid.prototype.getLivingNeighborCount = function(x, y) {
     var i,
       n = 0,
@@ -141,10 +163,7 @@ define(['cell'], function(Cell) {
               // dead cells with three neighbors become live cells
               cell.aliveNextGeneration = true;
 
-              var livingNeighbors = this.getLivingCells(this.getNeighbors(cell.x, cell.y)),
-                randomParent = livingNeighbors[Math.floor(Math.random() * livingNeighbors.length)];
-
-              cell.playerIdNextGeneration = randomParent.playerId;
+              cell.playerIdNextGeneration = this.getDominantNeighbor(cell.x, cell.y);
             }
           }
         }

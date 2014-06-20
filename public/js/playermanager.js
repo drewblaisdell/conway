@@ -6,8 +6,19 @@ define(['player'], function(Player) {
   };
 
   PlayerManager.prototype.addPlayer = function(player) {
-    this.players.push(player);
-    return player;
+    if (!this.getPlayer(player.id)) {
+      var newPlayer = new Player(player.id, player.color);
+      this.players.push(newPlayer);
+      return player;
+    } else {
+      return false;
+    }
+  };
+
+  PlayerManager.prototype.addPlayers = function(players) {
+    for (var i = 0; i < players.length; i++) {
+      this.addPlayer(players[i]);
+    }
   };
 
   PlayerManager.prototype.createNewPlayer = function(id, color) {
@@ -47,8 +58,24 @@ define(['player'], function(Player) {
     return false;
   };
 
+  PlayerManager.prototype.getPlayers = function() {
+    return this.players;
+  };
+
   PlayerManager.prototype.setLocalPlayer = function(player) {
     this.localPlayer = player;
+  };
+
+  PlayerManager.prototype.updatePlayers = function(players) {
+    for (var i = 0; i < players.length; i++) {
+      var player = this.getPlayer(players[i].id);
+
+      if (player) {
+        player.setColor(players[i].color);
+      } else {
+        this.addPlayer(players[i]);
+      }
+    }
   };
 
   return PlayerManager;
