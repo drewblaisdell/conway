@@ -12,9 +12,12 @@ define([], function() {
     gridHeight: 70,
 
     // game settings
-    generationDuration: 3000,
+    generationDuration: 5000,
 
     // player settings
-    defaultPlayerColor: '#00aaff'
+    defaultPlayerColor: '#00aaff',
+
+    // server settings
+    timeBetweenStateUpdates: 5000
   };
 });

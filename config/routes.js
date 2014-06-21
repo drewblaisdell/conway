@@ -1,10 +1,6 @@
 module.exports = function(app, conwayApp) {
   var game = conwayApp.game;
 
-  app.get('/', function(req, res) {
-    res.render('main.ejs');
-  });
-
   app.get('/state', function(req, res) {
     // only send the relevant info
     var livingCells = game.grid.getLivingCells().map(function(cell) {

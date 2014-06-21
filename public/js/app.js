@@ -19,13 +19,17 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
 
     var _this = this;
 
-    this.gameClient.createNewPlayer(function(data) {
-      _this.gameClient.getPlayers(function(data) {
-        _this.gameClient.getUpdate(function(data) {
-          _this.run();
-        });
-      });
+    this.gameClient.init(function() {
+      _this.run();
     });
+
+    // this.gameClient.createNewPlayer(function(data) {
+    //   _this.gameClient.getPlayers(function(data) {
+    //     _this.gameClient.getUpdate(function(data) {
+    //       _this.run();
+    //     });
+    //   });
+    // });
   };
 
   App.prototype.run = function() {
@@ -40,16 +44,51 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
         _this.game.tick();
       }
 
-      // get an update from the server
-      if (_this.gameClient.isTimeToUpdate() && !_this.gameClient.updating) {
-        _this.gameClient.getUpdate(function(data) {
-        });
-      }
-
       _this.renderer.renderChanges();
       _this.run();
     });
 
+  };
+
+  App.prototype.getInitialState = function() {
+    var state = this.getState();
+
+    state.newPlayer = this.playerManager.createNewPlayer();
+
+    return state;
+  };
+
+  App.prototype.getState = function() {
+    var livingCells = this.game.grid.getLivingCells().map(function(cell) {
+        return {
+          x: cell.x,
+          y: cell.y,
+          alive: cell.alive,
+          playerId: cell.playerId
+        };
+      }),
+      players = this.playerManager.getPlayers().map(function(player) {
+        return {
+          id: player.id,
+          color: player.color
+        };
+      }),
+      generation = this.game.generation,
+      timeBeforeTick = (game.nextTick - Date.now());
+
+    return {
+      livingCells: livingCells,
+      players: players,
+      generation: generation,
+      timeBeforeTick: timeBeforeTick
+    };
+  };
+
+  App.prototype.updateState = function(state) {
+    this.game.generation = state.generation;
+    this.game.nextTick = Date.now() + state.timeBeforeTick;
+    this.game.grid.setLivingCells(state.livingCells);
+    this.playerManager.updatePlayers(state.players);
   };
 
   return App;

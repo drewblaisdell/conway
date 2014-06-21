@@ -31,7 +31,7 @@ requirejs(['app/main.js'], function(Conway) {
 
   app.use(bodyParser());
 
-  var conway = new Conway();
+  var conway = new Conway(io);
 
   var routes = require('./config/routes.js')(app, conway.app);
 });

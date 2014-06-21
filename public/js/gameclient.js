@@ -1,4 +1,4 @@
-define([], function() {
+define(['socket.io'], function(io) {
   var GameClient = function(app, game, playerManager) {
     this.app = app;
     this.game = game;
@@ -8,24 +8,41 @@ define([], function() {
     this.updating = false;
   };
 
-  GameClient.prototype.createNewPlayer = function(callback) {
-    var _this = this,
-      data = {};
+  GameClient.prototype.init = function(callback) {
+    var _this = this;
 
-    $.ajax({
-      url: '/createNewPlayer',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify(data),
-      success: function(data) {
-        var newPlayer = _this.playerManager.createNewPlayer(data.id, data.color);
-        _this.playerManager.setLocalPlayer(newPlayer);
+    this.socket = io();
 
-        if (typeof callback === 'function') {
-          callback(data);
-        }
+    this.socket.on('initial_state', function(socket) {
+      _this._handleInitialState.call(_this, socket);
+      
+      if (typeof callback === 'function') {
+        callback();
       }
     });
+
+    this.socket.on('state', this._handleState.bind(this));
+    this.socket.on('cells_placed', this._handleCellsPlaced.bind(this));
+
+    this.socket.on('connections', function(msg) {
+      console.log(msg);
+    });
+  };
+
+  GameClient.prototype._handleCellsPlaced = function(msg) {
+    var cells = msg;
+
+    this.game.placeCells(this.playerManager.localPlayer, cells);
+  };
+
+  GameClient.prototype._handleInitialState = function(msg) {
+    var newPlayer = this.playerManager.createNewPlayer(msg.newPlayer.id, msg.newPlayer.color);
+    this.playerManager.setLocalPlayer(newPlayer);
+    this.app.updateState(msg);
+  };
+
+  GameClient.prototype._handleState = function(msg) {
+    this.app.updateState(msg);
   };
 
   GameClient.prototype.getPlayers = function(callback) {
@@ -40,62 +57,15 @@ define([], function() {
     });
   };
 
-  GameClient.prototype.getUpdate = function(callback) {
-    var _this = this;
-    this.updating = true;
-
-    $.get('/state', function(data) {
-      // set everything equal to the state the server sent back
-
-      _this.game.generation = data.generation;
-      _this.game.nextTick = (+new Date) + data.timeBeforeTick;
-      _this.game.grid.setLivingCells(data.livingCells);
-
-      _this.playerManager.updatePlayers(data.players);      
-
-      console.log('update for generation ' + data.generation);
-
-      _this.nextUpdate = (+new Date) + _this.config.timeBetweenUpdates;
-      _this.updating = false;
-
-      if (typeof callback === 'function') {
-        callback(data);
-      }
-    });
-  };
-
-  GameClient.prototype.isTimeToUpdate = function() {
-    var now = +new Date;
-    return (now >= this.nextUpdate);
-  };
-
   GameClient.prototype.placeLiveCells = function(cells, callback) {
     var _this = this,
       localPlayer = this.playerManager.getLocalPlayer(),
-      message = {
+      msg = {
         'cells': cells,
         'playerId': localPlayer.id
       };
 
-    if (!this.game.canPlaceLiveCells(localPlayer, cells)) {
-      return false;
-    }
-
-    $.ajax({
-      url: '/placeLiveCells',
-      type: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify(message),
-      success: function(data) {
-        if (data.success) {
-          _this.game.placeCells(_this.playerManager.getLocalPlayer(), cells);
-        }
-
-        if (typeof callback === 'function') {
-          callback(data);
-        }
-      }
-    });
+    this.socket.emit('place_live_cells', msg);
   };
 
   return GameClient;

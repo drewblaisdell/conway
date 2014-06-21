@@ -1,7 +1,8 @@
 requirejs.config({
   baseUrl: 'js',
   paths: {
-    'jquery': 'lib/jquery.min'
+    'jquery': 'lib/jquery.min',
+    'socket.io': 'https://cdn.socket.io/socket.io-1.0.4'
   }
 });
 

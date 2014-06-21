@@ -8,5 +8,13 @@ define([], function() {
     this.color = color;
   };
 
+  Player.prototype.setSocket = function(socket) {
+    this.socket = socket;
+  };
+
+  Player.prototype.getSocket = function() {
+    return this.socket;
+  };
+
   return Player;
 });

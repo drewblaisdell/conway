@@ -12,7 +12,7 @@ define([], function() {
     gridHeight: 70,
 
     // game settings
-    generationDuration: 3000,
+    generationDuration: 5000,
     timeBetweenUpdates: 10000,
 
     // player settings
