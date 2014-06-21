@@ -1,9 +1,11 @@
 define(['app', 'config'], function(App, Config) {
-  var app = new App(Config);
+  var Conway = function() {
+    this.app = new App(Config);
 
-  app.init(120, 60);
+    this.app.init(120, 60);
 
-  app.run();
+    this.app.run();
+  }
 
-  return app;
+  return Conway;
 });

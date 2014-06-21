@@ -1,7 +1,8 @@
-var http = require('http');
-var path = require('path');
-var crypto = require('crypto');
 var express = require('express');
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+var path = require('path');
 var bodyParser = require('body-parser');
 var errorhandler = require('errorhandler');
 var requirejs = require('requirejs');
@@ -11,25 +12,27 @@ requirejs.config({
   name: 'main'
 });
 
-var appServer = express();
+requirejs(['app/main.js'], function(Conway) {
+  var environment = process.env.NODE_ENV || 'development';
 
-var environment = process.env.NODE_ENV || 'development';
+  // General configuration
+  app.set('port', process.env.PORT || 3000);
+  // var routes = require('./config/routes.js')(app, game);
 
-requirejs(['app/main.js'], function(conwayApp) {
-  appServer.use(bodyParser());
-  var routes = require('./config/routes.js')(appServer, conwayApp);
+  // Development
+  if (environment === 'development') {
+    app.use(errorhandler());
+    app.use(express.static(path.join(__dirname, 'public')));
+  }
+
+  http.listen(app.get('port'), function() {
+    console.log('Conway started: ' + app.get('port') + ' (' + environment + ')');
+  });
+
+  app.use(bodyParser());
+
+  var conway = new Conway();
+
+  var routes = require('./config/routes.js')(app, conway.app);
 });
 
-// General configuration
-appServer.set('port', process.env.PORT || 3000);
-// var routes = require('./config/routes.js')(appServer, game);
-
-// Development
-if (environment === 'development') {
-  appServer.use(errorhandler());
-  appServer.use(express.static(path.join(__dirname, 'public')));
-}
-
-http.createServer(appServer).listen(appServer.get('port'), function() {
-  console.log('Conway started: ' + appServer.get('port') + ' (' + environment + ')');
-});
