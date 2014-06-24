@@ -23,16 +23,20 @@ define(['socket.io'], function(io) {
 
     this.socket.on('state', this._handleState.bind(this));
     this.socket.on('cells_placed', this._handleCellsPlaced.bind(this));
+    this.socket.on('new_player', this._handleNewPlayer.bind(this));
 
     this.socket.on('connections', function(msg) {
-      console.log(msg);
     });
   };
 
   GameClient.prototype._handleCellsPlaced = function(msg) {
-    var cells = msg;
+    var cells = msg.cells,
+      cellCount = msg.cellCount,
+      player = this.playerManager.getPlayer(msg.playerId);
 
-    this.game.placeCells(this.playerManager.localPlayer, cells);
+    this.game.placeCells(player, cells);
+
+    this._testStateSync(cellCount);
   };
 
   GameClient.prototype._handleInitialState = function(msg) {
@@ -41,8 +45,29 @@ define(['socket.io'], function(io) {
     this.app.updateState(msg);
   };
 
+  GameClient.prototype._handleNewPlayer = function(msg) {
+    var newPlayer = this.playerManager.createNewPlayer(msg.player.id, msg.player.color),
+      cellCount = msg.cellCount;
+
+    console.log('Player #' + msg.player.id + ' has joined.');
+  };
+
   GameClient.prototype._handleState = function(msg) {
     this.app.updateState(msg);
+  };
+
+  GameClient.prototype._requestState = function() {
+    console.log('--- OUT OF SYNC ---');
+
+    this.socket.emit('request_state', this.playerManager.getLocalPlayer().id);
+  };
+
+  GameClient.prototype._testStateSync = function(serverCellCount) {
+    var localCellCount = this.game.grid.getLivingCellCount();
+
+    if (serverCellCount !== localCellCount) {
+      this._requestState();
+    }
   };
 
   GameClient.prototype.getPlayers = function(callback) {

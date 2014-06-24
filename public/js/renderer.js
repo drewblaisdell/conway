@@ -120,6 +120,10 @@ define(['jquery'], function($) {
 
   };
 
+  Renderer.prototype.setTickBarColor = function(color) {
+    $(this.tickBarFill).css('background', color);
+  };
+
   Renderer.prototype._drawGrid = function() {
     var i,
       config = this.config,

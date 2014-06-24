@@ -26,35 +26,58 @@ define([], function() {
     this.nextStateUpdate = Date.now() + this.config.timeBetweenStateUpdates;
   };
 
+  GameServer.prototype.sendStateToSocket = function(socket) {
+    socket.emit('state', this.app.getState());
+  };
+
   GameServer.prototype._handleConnect = function(socket) {
-    var initialState = this.app.getInitialState();
+    var initialState = this.app.getState();
+    initialState.newPlayer = this.playerManager.createNewPlayer();
 
     this.sockets[initialState.newPlayer.id] = socket;
 
-    console.log('a user connected');
-
     socket.on('disconnect', this._handleDisconnect.bind(this));
     socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));
+    socket.on('request_state', this._handleStateRequest.bind(this));
 
     socket.emit('initial_state', initialState);
 
+    socket.broadcast.emit('new_player', {
+      cellCount: this.game.grid.getLivingCellCount(),
+      player: initialState.newPlayer
+    });
+
     this.io.emit('connections', 'a player connected');
+
+    // console.log(this.io.sockets.clients().length +' player(s) connected.');
   };
 
   GameServer.prototype._handleDisconnect = function(socket) {
-    console.log('user disconnected');
+    // console.log(this.io.sockets.clients().length +' player(s) connected.');
   };
 
   GameServer.prototype._handlePlaceLiveCells = function(msg) {
     var cells = msg.cells,
-      player = this.playerManager.getPlayer(msg.playerId),
-      socket = this.getSocket(msg.playerId);
+      player = this.playerManager.getPlayer(msg.playerId);
+
     if (this.game.canPlaceLiveCells(player, cells)) {
       this.game.placeCells(player, cells);
-      socket.emit('cells_placed', cells);
+      this.io.emit('cells_placed', {
+        cells: cells,
+        cellCount: this.game.grid.getLivingCellCount(),
+        playerId: player.id
+      });
     } else {
 
     }
+  };
+
+  GameServer.prototype._handleStateRequest = function(msg) {
+    var playerId = msg,
+      socket = this.getSocket(playerId);
+// TODO: check for abuse of this endpoint
+console.log("sending state to out of sync client");
+    this.sendStateToSocket(socket);
   };
 
   return GameServer;

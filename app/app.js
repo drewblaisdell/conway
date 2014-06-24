@@ -26,19 +26,11 @@ define(['game', 'playermanager', 'gameserver'], function(Game, PlayerManager, Ga
       }
 
       if (_this.gameServer.isTimeToSendState()) {
-        _this.gameServer.sendState();
+        // _this.gameServer.sendState();
       }
     
       _this.run();
     }, 1000 / 30);
-  };
-
-  App.prototype.getInitialState = function() {
-    var state = this.getState();
-
-    state.newPlayer = this.playerManager.createNewPlayer();
-
-    return state;
   };
 
   App.prototype.getState = function() {

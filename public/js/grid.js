@@ -42,6 +42,12 @@ define(['cell'], function(Cell) {
     return n;
   };
 
+  Grid.prototype.getLivingCellCount = function(cells) {
+    cells = (cells !== undefined) ? cells : this.getCells();
+
+    return this.getLivingCells(cells).length;
+  };
+
   Grid.prototype.getLivingCells = function(cells) {
     var aliveCells = [],
       cells = (cells !== undefined) ? cells : this.getCells(),

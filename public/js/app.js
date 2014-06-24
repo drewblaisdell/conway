@@ -20,16 +20,9 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
     var _this = this;
 
     this.gameClient.init(function() {
+      _this.renderer.setTickBarColor(_this.playerManager.getLocalPlayer().color);
       _this.run();
     });
-
-    // this.gameClient.createNewPlayer(function(data) {
-    //   _this.gameClient.getPlayers(function(data) {
-    //     _this.gameClient.getUpdate(function(data) {
-    //       _this.run();
-    //     });
-    //   });
-    // });
   };
 
   App.prototype.run = function() {
@@ -48,14 +41,6 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
       _this.run();
     });
 
-  };
-
-  App.prototype.getInitialState = function() {
-    var state = this.getState();
-
-    state.newPlayer = this.playerManager.createNewPlayer();
-
-    return state;
   };
 
   App.prototype.getState = function() {
