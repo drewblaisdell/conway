@@ -5,11 +5,16 @@ define(['socket.io'], function(io) {
     this.playerManager = playerManager;
     this.config = app.config;
 
+    this.outOfSync = true;
+    this.hidden = false;
+
     this.updating = false;
   };
 
   GameClient.prototype.init = function(callback) {
     var _this = this;
+
+    document.addEventListener('visibilitychange', this._handleVisibilityChange.bind(this));
 
     this.socket = io();
 
@@ -51,11 +56,20 @@ define(['socket.io'], function(io) {
 
   GameClient.prototype._handleState = function(msg) {
     this.app.updateState(msg);
+    this.outOfSync = false;
+  };
+
+  GameClient.prototype._handleVisibilityChange = function(event) {
+    if (this.hidden && this.outOfSync) {
+      // the page wasn't visible and is out of sync, request state
+      this._requestState();
+    }
+    
+    this.hidden = document.hidden;
   };
 
   GameClient.prototype._requestState = function() {
-    console.log('--- OUT OF SYNC ---');
-
+    console.log('--- REQUESTING STATE ---');
     this.socket.emit('request_state', this.playerManager.getLocalPlayer().id);
   };
 
@@ -63,7 +77,13 @@ define(['socket.io'], function(io) {
     var localCellCount = this.game.grid.getLivingCellCount();
 
     if (serverCellCount !== localCellCount) {
-      this._requestState();
+      this.outOfSync = true;
+      console.log('--- OUT OF SYNC ---');
+
+      if (!this.hidden) {
+        // request the state if we're out of sync but visible
+        this._requestState();
+      }
     }
   };
 

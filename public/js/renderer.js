@@ -206,7 +206,7 @@ define(['jquery'], function($) {
 
   Renderer.prototype._handleMouseMove = function(event) {
     this.lastX = event.offsetX || (event.pageX - this.canvas.offsetLeft);
-    this.lastY = event.offsetY || (event.pageY - this.canvas.offsetLeft);
+    this.lastY = event.offsetY || (event.pageY - this.canvas.offsetTop);
 
     var oldCell = this.hoveredCell;
     this.hoveredCell = this.getCellFromPosition(this.lastX, this.lastY);
