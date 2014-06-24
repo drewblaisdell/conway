@@ -24,9 +24,6 @@ define(['socket.io'], function(io) {
     this.socket.on('state', this._handleState.bind(this));
     this.socket.on('cells_placed', this._handleCellsPlaced.bind(this));
     this.socket.on('new_player', this._handleNewPlayer.bind(this));
-
-    this.socket.on('connections', function(msg) {
-    });
   };
 
   GameClient.prototype._handleCellsPlaced = function(msg) {

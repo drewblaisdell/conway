@@ -47,8 +47,6 @@ define([], function() {
       player: initialState.newPlayer
     });
 
-    this.io.emit('connections', 'a player connected');
-
     // console.log(this.io.sockets.clients().length +' player(s) connected.');
   };
 
