@@ -47,6 +47,9 @@ define(['jquery'], function($) {
     // make the cell living when clicked
     this.canvas.addEventListener('click', this._handleClick.bind(this), false);
 
+    // attempt to place flagged cells when the place cells button is pushed
+    $('#controls .place-cells').on('click', this._handlePlaceCells.bind(this));
+
     this.canvas.width = this.pixelWidth;
     this.canvas.height = this.pixelHeight;
 
@@ -164,33 +167,6 @@ define(['jquery'], function($) {
       return;
     }
 
-    var i,
-      config = this.config,
-      context = this.context,
-      cellSize = this.cellSize,
-      spacing = this.spacing,
-      x1 = cell.x * (cellSize + spacing) + 1,
-      y1 = cell.y * (cellSize + spacing) + 1;
-
-    if (cell.equals(this.hoveredCell)) {
-      context.fillStyle = config.hoveredCellColor;
-    } else {
-      if (!cell.alive) {
-        context.fillStyle = config.deadCellColor;
-      } else {
-        context.fillStyle = this.playerManager.getPlayer(cell.playerId).color;      
-      }
-    }
-
-    context.fillRect(x1, y1, cellSize, cellSize);
-  };
-
-  Renderer.prototype._drawCell = function(cell) {
-    // return if the cell was made undefined by _handleMouseLeave
-    if (cell === undefined) {
-      return;
-    }
-
     var config = this.config,
       context = this.context,
       cellSize = this.cellSize,
@@ -198,13 +174,16 @@ define(['jquery'], function($) {
       x1 = cell.x * (cellSize + spacing) + 1,
       y1 = cell.y * (cellSize + spacing) + 1;
 
-    if (!cell.alive) {
-      context.fillStyle = config.deadCellColor;
+    if (this._isFlaggedCell(cell)) {
+      this._drawFramedCell(cell);
     } else {
-      context.fillStyle = this.playerManager.getPlayer(cell.playerId).color;      
+      if (!cell.alive) {
+        context.fillStyle = config.deadCellColor;
+      } else {
+        context.fillStyle = this.playerManager.getPlayer(cell.playerId).color;      
+      }
+      context.fillRect(x1, y1, cellSize, cellSize);
     }
-
-    context.fillRect(x1, y1, cellSize, cellSize);
   };
 
   Renderer.prototype._drawFramedCell = function(cell) {
@@ -222,6 +201,16 @@ define(['jquery'], function($) {
     context.strokeRect(x1, y1, cellSize - 1, cellSize - 1);
   };
 
+  Renderer.prototype._isFlaggedCell = function(cell) {
+    for (var i = 0; i < this.flaggedCells.length; i++) {
+      if (cell.equals(this.flaggedCells[i])) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   Renderer.prototype._handleClick = function(event) {
     var clickedCell = this.getCellFromPosition(this.lastX, this.lastY),
       cells = [
@@ -231,7 +220,8 @@ define(['jquery'], function($) {
         }
       ];
 
-    this.gameClient.placeLiveCells(cells);
+    this.flaggedCells.push(clickedCell);
+    clickedCell.setDirty();
   };
 
   Renderer.prototype._handleMouseLeave = function(event) {
@@ -249,6 +239,13 @@ define(['jquery'], function($) {
 
     this._drawCell(oldCell);
     this._drawFramedCell(this.hoveredCell);
+  };
+
+  Renderer.prototype._handlePlaceCells = function(event) {
+    this.gameClient.placeLiveCells(this.flaggedCells);
+    this.flaggedCells = [];
+
+    event.preventDefault();
   };
 
   Renderer.prototype._setTickBarColor = function(color) {
