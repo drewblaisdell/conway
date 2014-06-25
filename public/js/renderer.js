@@ -174,15 +174,15 @@ define(['jquery'], function($) {
       x1 = cell.x * (cellSize + spacing) + 1,
       y1 = cell.y * (cellSize + spacing) + 1;
 
+    if (!cell.alive) {
+      context.fillStyle = config.deadCellColor;
+    } else {
+      context.fillStyle = this.playerManager.getPlayer(cell.playerId).color;      
+    }
+    context.fillRect(x1, y1, cellSize, cellSize);
+
     if (this._isFlaggedCell(cell)) {
       this._drawFramedCell(cell);
-    } else {
-      if (!cell.alive) {
-        context.fillStyle = config.deadCellColor;
-      } else {
-        context.fillStyle = this.playerManager.getPlayer(cell.playerId).color;      
-      }
-      context.fillRect(x1, y1, cellSize, cellSize);
     }
   };
 
@@ -197,8 +197,9 @@ define(['jquery'], function($) {
       x1 = cell.x * (cellSize + spacing) + 1.5,
       y1 = cell.y * (cellSize + spacing) + 1.5;
 
+    context.lineWidth = 1.5;
     context.strokeStyle = this.color;
-    context.strokeRect(x1, y1, cellSize - 1, cellSize - 1);
+    context.strokeRect(x1 + .5, y1 + .5, cellSize - 2, cellSize - 2);
   };
 
   Renderer.prototype._isFlaggedCell = function(cell) {
@@ -220,8 +221,19 @@ define(['jquery'], function($) {
         }
       ];
 
-    this.flaggedCells.push(clickedCell);
-    clickedCell.setDirty();
+    if (!this._isFlaggedCell(clickedCell)) {
+      this.flaggedCells.push(clickedCell);
+      clickedCell.setDirty();
+    } else {
+      // remove the cell
+      for (var i = 0; i < this.flaggedCells.length; i++) {
+        if (clickedCell.equals(this.flaggedCells[i])) {
+          this.flaggedCells.splice(i, 1);
+          clickedCell.setDirty();
+          break;
+        }
+      }
+    }
   };
 
   Renderer.prototype._handleMouseLeave = function(event) {
