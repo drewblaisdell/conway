@@ -11,6 +11,7 @@ define(['jquery'], function($) {
     this.cellSize = this.config.cellSize;
     this.spacing = this.config.cellSpacing;
     this.hoveredCell = undefined;
+    this.flaggedCells = [];
 
     this.pixelWidth = this.width * (this.cellSize + this.spacing) + 1;
     this.pixelHeight = this.height * (this.cellSize + this.spacing) + 1;
@@ -36,10 +37,6 @@ define(['jquery'], function($) {
     });
 
     var that = this;
-
-    // handle scroll by zooming
-    this.canvas.addEventListener('DOMMouseScroll', this._handleScroll.bind(this), false);
-    this.canvas.addEventListener('mousewheel', this._handleScroll.bind(this), false);
 
     // keep track of the mouse position on the canvas
     this.canvas.addEventListener('mousemove', this._handleMouseMove.bind(this), false);
@@ -120,8 +117,10 @@ define(['jquery'], function($) {
 
   };
 
-  Renderer.prototype.setTickBarColor = function(color) {
-    $(this.tickBarFill).css('background', color);
+  Renderer.prototype.setAccentColor = function(color) {
+    this.color = color;
+
+    this._setTickBarColor(color);
   };
 
   Renderer.prototype._drawGrid = function() {
@@ -186,6 +185,43 @@ define(['jquery'], function($) {
     context.fillRect(x1, y1, cellSize, cellSize);
   };
 
+  Renderer.prototype._drawCell = function(cell) {
+    // return if the cell was made undefined by _handleMouseLeave
+    if (cell === undefined) {
+      return;
+    }
+
+    var config = this.config,
+      context = this.context,
+      cellSize = this.cellSize,
+      spacing = this.spacing,
+      x1 = cell.x * (cellSize + spacing) + 1,
+      y1 = cell.y * (cellSize + spacing) + 1;
+
+    if (!cell.alive) {
+      context.fillStyle = config.deadCellColor;
+    } else {
+      context.fillStyle = this.playerManager.getPlayer(cell.playerId).color;      
+    }
+
+    context.fillRect(x1, y1, cellSize, cellSize);
+  };
+
+  Renderer.prototype._drawFramedCell = function(cell) {
+    if (cell === undefined) {
+      return;
+    }
+
+    var context = this.context,
+      cellSize = this.cellSize,
+      spacing = this.spacing,
+      x1 = cell.x * (cellSize + spacing) + 1.5,
+      y1 = cell.y * (cellSize + spacing) + 1.5;
+
+    context.strokeStyle = this.color;
+    context.strokeRect(x1, y1, cellSize - 1, cellSize - 1);
+  };
+
   Renderer.prototype._handleClick = function(event) {
     var clickedCell = this.getCellFromPosition(this.lastX, this.lastY),
       cells = [
@@ -212,16 +248,11 @@ define(['jquery'], function($) {
     this.hoveredCell = this.getCellFromPosition(this.lastX, this.lastY);
 
     this._drawCell(oldCell);
-    this._drawCell(this.hoveredCell);
+    this._drawFramedCell(this.hoveredCell);
   };
 
-  Renderer.prototype._handleScroll = function(event) {
-    var delta = event.wheelDelta? event.wheelDelta / 50 : event.detail ? -event.detail : 0;
-    if (delta) {
-//      this.scale(delta);
-    }
-    // event.preventDefault();
-    // return false;
+  Renderer.prototype._setTickBarColor = function(color) {
+    $(this.tickBarFill).css('background', color);
   };
 
   return Renderer;

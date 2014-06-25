@@ -20,7 +20,7 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
     var _this = this;
 
     this.gameClient.init(function() {
-      _this.renderer.setTickBarColor(_this.playerManager.getLocalPlayer().color);
+      _this.renderer.setAccentColor(_this.playerManager.getLocalPlayer().color);
       _this.run();
     });
   };

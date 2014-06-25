@@ -81,7 +81,8 @@ define(['socket.io'], function(io) {
       console.log('--- OUT OF SYNC ---');
 
       if (!this.hidden) {
-        // request the state if we're out of sync but visible
+        // request the state if the client is out of sync but the
+        // window is visible
         this._requestState();
       }
     }
