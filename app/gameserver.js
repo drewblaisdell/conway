@@ -47,11 +47,9 @@ define([], function() {
       player: initialState.newPlayer
     });
 
-    // console.log(this.io.sockets.clients().length +' player(s) connected.');
   };
 
   GameServer.prototype._handleDisconnect = function(socket) {
-    // console.log(this.io.sockets.clients().length +' player(s) connected.');
   };
 
   GameServer.prototype._handlePlaceLiveCells = function(msg) {

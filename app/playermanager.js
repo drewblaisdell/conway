@@ -32,7 +32,7 @@ define(['player'], function(Player) {
     }
 
     if (color === undefined) {
-      // color = this.config.defaultPlayerColor;
+      // give random color for now
       var r = Math.floor(Math.random()*255),
         g = Math.floor(Math.random()*255),
         b = Math.floor(Math.random()*255);
@@ -72,7 +72,7 @@ define(['player'], function(Player) {
 
   PlayerManager.prototype.updatePlayers = function(players) {
     for (var i = 0; i < players.length; i++) {
-      var player = this.getPlayer(player.id);
+      var player = this.getPlayer(players[i].id);
 
       if (player) {
         player.setColor(players[i].color);

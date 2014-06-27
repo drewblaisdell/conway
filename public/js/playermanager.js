@@ -7,8 +7,7 @@ define(['player'], function(Player) {
 
   PlayerManager.prototype.addPlayer = function(player) {
     if (!this.getPlayer(player.id)) {
-      var newPlayer = new Player(player.id, player.color);
-      this.players.push(newPlayer);
+      this.players.push(player);
       return player;
     } else {
       return false;
@@ -33,7 +32,12 @@ define(['player'], function(Player) {
     }
 
     if (color === undefined) {
-      color = this.config.defaultPlayerColor;
+      // give random color for now
+      var r = Math.floor(Math.random()*255),
+        g = Math.floor(Math.random()*255),
+        b = Math.floor(Math.random()*255);
+
+      color = 'rgba('+ r +','+ g +','+ b +',1)';
     }
 
     newPlayer = new Player(id, color);

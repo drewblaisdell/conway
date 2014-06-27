@@ -1,7 +1,8 @@
 define([], function() {
-  var Player = function(id, color) {
+  var Player = function(id, color, cells) {
     this.id = id;
     this.color = color;
+    this.cells = cells;
   };
 
   Player.prototype.setColor = function(color) {

@@ -149,7 +149,7 @@ define(['jquery'], function($) {
       context.stroke();
     }
 
-    // finish the border  
+    // finish the border
     context.beginPath();
     context.moveTo(this.pixelWidth - 0.5, 0);
     context.lineTo(this.pixelWidth - 0.5, this.pixelHeight);
