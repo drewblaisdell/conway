@@ -15,6 +15,7 @@ define([], function() {
     generationDuration: 5000,
 
     // player settings
+    cellsPerPlayer: 10,
     defaultPlayerColor: '#00aaff',
 
     // server settings

@@ -16,6 +16,7 @@ define([], function() {
     timeBetweenUpdates: 10000,
 
     // player settings
+    cellsPerPlayer: 10,
     defaultPlayerColor: '#00aaff'
   };
 });

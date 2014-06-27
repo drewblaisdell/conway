@@ -20,7 +20,7 @@ define(['player'], function(Player) {
     }
   };
 
-  PlayerManager.prototype.createNewPlayer = function(id, color) {
+  PlayerManager.prototype.createNewPlayer = function(id, color, cells) {
     var newPlayer;
 
     if (id === undefined) {
@@ -40,7 +40,11 @@ define(['player'], function(Player) {
       color = 'rgba('+ r +','+ g +','+ b +',1)';
     }
 
-    newPlayer = new Player(id, color);
+    if (cells === undefined) {
+      cells = this.config.cellsPerPlayer;
+    }
+
+    newPlayer = new Player(id, color, cells);
 
     this.addPlayer(newPlayer);
 
@@ -72,6 +76,12 @@ define(['player'], function(Player) {
 
   PlayerManager.prototype.updatePlayers = function(players) {
     for (var i = 0; i < players.length; i++) {
+      if (!(players[i] instanceof Player)) {
+        // this lets the method handle an array of players
+        // or an array of objects representing players
+        players[i] = new Player(players[i].id, players[i].color, players[i].cells);
+      }
+
       var player = this.getPlayer(players[i].id);
 
       if (player) {

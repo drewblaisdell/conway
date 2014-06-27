@@ -20,7 +20,7 @@ define(['player'], function(Player) {
     }
   };
 
-  PlayerManager.prototype.createNewPlayer = function(id, color) {
+  PlayerManager.prototype.createNewPlayer = function(id, color, cells) {
     var newPlayer;
 
     if (id === undefined) {
@@ -40,7 +40,11 @@ define(['player'], function(Player) {
       color = 'rgba('+ r +','+ g +','+ b +',1)';
     }
 
-    newPlayer = new Player(id, color);
+    if (cells === undefined) {
+      cells = this.config.cellsPerPlayer;
+    }
+
+    newPlayer = new Player(id, color, cells);
 
     this.addPlayer(newPlayer);
 
