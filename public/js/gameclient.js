@@ -34,9 +34,10 @@ define(['socket.io'], function(io) {
   GameClient.prototype._handleCellsPlaced = function(msg) {
     var cells = msg.cells,
       cellCount = msg.cellCount,
-      player = this.playerManager.getPlayer(msg.playerId);
-
+      player = this.playerManager.getPlayer(msg.player.id);
+    
     this.game.placeCells(player, cells);
+    this.playerManager.updatePlayer(msg.player);
 
     this._testStateSync(cellCount);
   };

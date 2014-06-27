@@ -21,6 +21,7 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
 
     this.gameClient.init(function() {
       _this.renderer.setAccentColor(_this.playerManager.getLocalPlayer().color);
+      _this.renderer.updateControls();
       _this.run();
     });
   };
@@ -55,7 +56,8 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
       players = this.playerManager.getPlayers().map(function(player) {
         return {
           id: player.id,
-          color: player.color
+          color: player.color,
+          cells: player.cells
         };
       }),
       generation = this.game.generation,

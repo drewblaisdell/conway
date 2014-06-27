@@ -44,7 +44,7 @@ define([], function() {
 
     socket.broadcast.emit('new_player', {
       cellCount: this.game.grid.getLivingCellCount(),
-      player: initialState.newPlayer
+      player: initialState.newPlayer.transmission()
     });
 
   };
@@ -61,7 +61,7 @@ define([], function() {
       this.io.emit('cells_placed', {
         cells: cells,
         cellCount: this.game.grid.getLivingCellCount(),
-        playerId: player.id
+        player: player
       });
     } else {
 

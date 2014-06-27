@@ -1,12 +1,19 @@
 define(['grid'], function(Grid) {
   var Game = function(app) {
     this.app = app;
+
     this.generation = 0;
-    this.nextTick = +new Date;
-    this.gameStart = +new Date;
+
+    this.nextTick = Date.now();
+    this.gameStart = Date.now();
+    this.updating = false;
   };
 
   Game.prototype.canPlaceLiveCells = function(player, cells) {
+    if (cells.length > player.cells) {
+      return false;
+    }
+    
     for (var i = 0; i < cells.length; i++) {
       var cell = this.grid.getCell(cells[i].x, cells[i].y);
 
@@ -24,8 +31,12 @@ define(['grid'], function(Grid) {
   };
 
   Game.prototype.isTimeToTick = function() {
-    var now = +new Date;
+    var now = Date.now();
     return (now >= this.nextTick);
+  };
+
+  Game.prototype.percentageOfTick = function() {
+    return ((this.app.config.generationDuration - this.timeBeforeTick()) / this.app.config.generationDuration);
   };
 
   Game.prototype.placeCells = function(player, cells) {
@@ -34,6 +45,8 @@ define(['grid'], function(Grid) {
       cell.set('alive', true);
       cell.set('playerId', player.id);
     }
+
+    player.setCells(player.cells - cells.length);
   };
 
   Game.prototype.tick = function() {
@@ -42,6 +55,11 @@ define(['grid'], function(Grid) {
     this.grid.tick();
 
     this.nextTick += this.app.config.generationDuration;
+  };
+
+  Game.prototype.timeBeforeTick = function() {
+    var now = Date.now();
+    return (this.nextTick - now);
   };
 
   return Game;

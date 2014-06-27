@@ -10,6 +10,10 @@ define(['grid'], function(Grid) {
   };
 
   Game.prototype.canPlaceLiveCells = function(player, cells) {
+    if (cells.length > player.cells) {
+      return false;
+    }
+    
     for (var i = 0; i < cells.length; i++) {
       var cell = this.grid.getCell(cells[i].x, cells[i].y);
 
@@ -41,6 +45,8 @@ define(['grid'], function(Grid) {
       cell.set('alive', true);
       cell.set('playerId', player.id);
     }
+
+    player.setCells(player.cells - cells.length);
   };
 
   Game.prototype.tick = function() {

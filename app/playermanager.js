@@ -74,12 +74,31 @@ define(['player'], function(Player) {
     this.localPlayer = player;
   };
 
+  PlayerManager.prototype.updatePlayer = function(player) {
+    var ourPlayer = this.getPlayer(player.id);
+
+    if (ourPlayer) {
+      ourPlayer.setColor(player.color);
+      ourPlayer.setCells(player.cells);
+      ourPlayer.setDirty();
+    } else {
+      return false;
+    }
+  };
+
   PlayerManager.prototype.updatePlayers = function(players) {
     for (var i = 0; i < players.length; i++) {
+      if (!(players[i] instanceof Player)) {
+        // this lets the method handle an array of players
+        // or an array of objects representing players
+        players[i] = new Player(players[i].id, players[i].color, players[i].cells);
+      }
+
       var player = this.getPlayer(players[i].id);
 
       if (player) {
         player.setColor(players[i].color);
+        player.setCells(players[i].cells);
       } else {
         this.addPlayer(players[i]);
       }

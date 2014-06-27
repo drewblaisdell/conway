@@ -45,7 +45,8 @@ define(['game', 'playermanager', 'gameserver'], function(Game, PlayerManager, Ga
       players = this.playerManager.getPlayers().map(function(player) {
         return {
           id: player.id,
-          color: player.color
+          color: player.color,
+          cells: player.cells
         };
       }),
       generation = this.game.generation,

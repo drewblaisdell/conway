@@ -88,16 +88,20 @@ define(['jquery'], function($) {
   };
 
   Renderer.prototype.renderChanges = function() {
-    var i,
-      now = Date.now(),
+    var now = Date.now(),
       cells = this.grid.getCells(),
-      l = cells.length;
+      localPlayer = this.playerManager.getLocalPlayer();
 
-    for (i = 0; i < l; i++) {
+    for (var i = 0; i < cells.length; i++) {
       if (cells[i].isDirty()) {
         this._drawCell(cells[i]);
         cells[i].setClean();
       }
+    }
+
+    if (localPlayer.isDirty()) {
+      this.updateControls();
+      localPlayer.setClean();
     }
 
     if (this.nextTickBarUpdate <= now) {
@@ -124,6 +128,11 @@ define(['jquery'], function($) {
     this.color = color;
 
     this._setTickBarColor(color);
+  };
+
+  Renderer.prototype.updateControls = function() {
+    var cellCount = this.playerManager.getLocalPlayer().cells;
+    $('#controls .cell-count').text(cellCount);
   };
 
   Renderer.prototype._drawGrid = function() {
@@ -254,8 +263,14 @@ define(['jquery'], function($) {
   };
 
   Renderer.prototype._handlePlaceCells = function(event) {
-    this.gameClient.placeLiveCells(this.flaggedCells);
-    this.flaggedCells = [];
+    var player = this.playerManager.getLocalPlayer();
+
+    if (this.game.canPlaceLiveCells(player, this.flaggedCells)) {
+      this.gameClient.placeLiveCells(this.flaggedCells);
+      this.flaggedCells = [];
+    } else {
+      return false;
+    }
 
     event.preventDefault();
   };
