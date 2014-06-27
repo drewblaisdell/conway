@@ -17,7 +17,6 @@ requirejs(['app/main.js'], function(Conway) {
 
   // General configuration
   app.set('port', process.env.PORT || 3000);
-  // var routes = require('./config/routes.js')(app, game);
 
   // Development
   if (environment === 'development') {
@@ -32,7 +31,4 @@ requirejs(['app/main.js'], function(Conway) {
   app.use(bodyParser());
 
   var conway = new Conway(io);
-
-  var routes = require('./config/routes.js')(app, conway.app);
 });
-
