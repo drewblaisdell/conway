@@ -5,6 +5,19 @@ define(['cell'], function(Cell) {
     this.dirty = true;
   };
 
+  Grid.prototype.getCellCountByPlayer = function(playerId) {
+    var cells = this.getCells(),
+      n = 0;
+
+    for (var i = 0; i < cells.length; i++) {
+      if (cells[i].playerId === playerId) {
+        n++;
+      }
+    }
+
+    return n;
+  };
+
   Grid.prototype.getDominantNeighbor = function(x, y) {
     var neighbors = this.getLivingCells(this.getNeighbors(x, y)),
       max = 0,
@@ -157,12 +170,15 @@ define(['cell'], function(Cell) {
             if (livingNeighborCount < 2) {
               // live cells with < 2 neighbors die
               cell.aliveNextGeneration = false;
+              cell.playerIdNextGeneration = undefined;
             } else if (livingNeighborCount === 2 || livingNeighborCount === 3) {
               // live cells with 2 or 3 neighbors live
               cell.aliveNextGeneration = true;
+              cell.playerIdNextGeneration = cell.playerId;
             } else {
               // live cells with more than three neighbors die
               cell.aliveNextGeneration = false;
+              cell.playerIdNextGeneration = undefined;
             }
           } else {
             if (livingNeighborCount === 3) {
@@ -202,8 +218,9 @@ define(['cell'], function(Cell) {
 
     for (i = 0; i < l; i++) {
       cells[i].set('alive', cells[i].aliveNextGeneration);
-      cells[i].set('playerId', (cells[i].playerIdNextGeneration !== undefined) ? cells[i].playerIdNextGeneration : cells[i].playerId);
+      cells[i].set('playerId', cells[i].playerIdNextGeneration);
       cells[i].aliveNextGeneration = undefined;
+      cells[i].playerIdNextGeneration = undefined;
     }
   };
 

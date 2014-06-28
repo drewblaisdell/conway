@@ -25,6 +25,10 @@ define(['grid'], function(Grid) {
     return true;
   };
 
+  Game.prototype.getCellCountByPlayer = function(playerId) {
+    return this.grid.getCellCountByPlayer(playerId);
+  };
+
   Game.prototype.init = function(width, height) {
     this.grid = new Grid(this.app);
     this.grid.init(width, height);

@@ -110,6 +110,31 @@ define(['jquery'], function($) {
     }
   };
 
+  Renderer.prototype.setAccentColor = function(color) {
+    this.color = color;
+
+    this._setTickBarColor(color);
+  };
+
+  Renderer.prototype.updateControls = function() {
+    var localPlayer = this.playerManager.getLocalPlayer(),
+      cellCount = localPlayer.cells,
+      cellsOnGrid = this.game.getCellCountByPlayer(localPlayer.id);
+
+    $('#stats .cell-count').text(cellCount);
+    $('#stats .cells-on-grid').text(cellsOnGrid);
+
+    if (this.flaggedCells.length > 0 && localPlayer.cells >= this.flaggedCells.length) {
+      $('#controls .place-cells')
+        .addClass('enabled')
+        .css('border-color', this.color);
+    } else {
+      $('#controls .place-cells')
+      .removeClass('enabled')
+      .css('border-color', '');
+    }
+  };
+
   Renderer.prototype.updateTickBar = function(percent) {
     var nextWidth = this.pixelWidth * percent;
 
@@ -121,18 +146,6 @@ define(['jquery'], function($) {
     }
 
     $(this.tickBarFill).width(nextWidth);
-
-  };
-
-  Renderer.prototype.setAccentColor = function(color) {
-    this.color = color;
-
-    this._setTickBarColor(color);
-  };
-
-  Renderer.prototype.updateControls = function() {
-    var cellCount = this.playerManager.getLocalPlayer().cells;
-    $('#controls .cell-count').text(cellCount);
   };
 
   Renderer.prototype._drawGrid = function() {
@@ -243,6 +256,8 @@ define(['jquery'], function($) {
         }
       }
     }
+
+    this.updateControls();
   };
 
   Renderer.prototype._handleMouseLeave = function(event) {

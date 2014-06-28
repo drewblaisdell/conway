@@ -6,19 +6,27 @@
         <script src="js/lib/require.min.js" data-main="js/main.js"></script>
     </head>
     <body>
-        <h1>Conway's Multiplayer Game of Life</h1>
-        <div id="game">
-            <div class="tickbar">
-                <div class="tickbarfill moving"></div>
-            </div>
-            <canvas id="c"></canvas>
-            <div id="controls">
-                <div class="place-cells-container">
-                    <a href="#" class="place-cells">Place cells</a>
+        <div class="container">
+            <h1 class="brand-name">Conway's Multiplayer Game of Life</h1>
+            <div id="game">
+                <div class="tickbar">
+                    <div class="tickbarfill moving"></div>
                 </div>
-                <div class="cell-count-container">
-                    <span class="cell-count"></span>
-                    cells
+                <canvas id="c"></canvas>
+                <div id="controls">
+                    <div class="place-cells-container">
+                        <a href="#" class="place-cells">Place cells</a>
+                    </div>
+                </div>
+                <div id="stats">
+                    <div class="cell-count-container">
+                        <span class="cell-count"></span>
+                        cells left
+                    </div>
+                    <div class="cells-on-grid-container">
+                        <span class="cells-on-grid"></span>
+                        cells on board
+                    </div>
                 </div>
             </div>
         </div>

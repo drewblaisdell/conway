@@ -5,6 +5,19 @@ define(['cell'], function(Cell) {
     this.dirty = true;
   };
 
+  Grid.prototype.getCellCountByPlayer = function(playerId) {
+    var cells = this.getCells(),
+      n = 0;
+
+    for (var i = 0; i < cells.length; i++) {
+      if (cells[i].playerId === playerId) {
+        n++;
+      }
+    }
+
+    return n;
+  };
+
   Grid.prototype.getDominantNeighbor = function(x, y) {
     var neighbors = this.getLivingCells(this.getNeighbors(x, y)),
       max = 0,

@@ -36,6 +36,7 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
       // go to next generation
       if (_this.game.isTimeToTick()) {
         _this.game.tick();
+        _this.renderer.updateControls();
       }
 
       _this.renderer.renderChanges();

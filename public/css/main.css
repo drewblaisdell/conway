@@ -1,9 +1,15 @@
 * {
-  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-family: "Helvetica", "Helvetica", Arial, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: 100;
+  font-family: "Helvetica Neue";
+}
+
+.brand-name {
+  margin-bottom: 8px;
+  float: left;
 }
 
 .tickbar, .tickbarfill {
@@ -11,6 +17,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .tickbar {
+  clear: both;
   margin-bottom: 1px;
 }
 
@@ -21,4 +28,45 @@ h1, h2, h3, h4, h5, h6 {
 
 .tickbarfill.moving {
   transition: width 0.1s linear;
+}
+
+#game {
+  margin: 0 auto;
+}
+
+.container {
+  width: 1001px;
+  margin: 0 auto;
+}
+
+#controls {
+  margin-top: 5px;
+  text-align: center;
+}
+
+.place-cells {
+  text-transform: lowercase;
+  border-radius: 100px;
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  border: solid #bbb 3px;
+  color: #bbb;
+  width: 110px;
+  padding: 6px;
+  margin: 0 auto;
+  font-weight: bold;
+  transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.place-cells.enabled {
+  color: #222;
+}
+
+#stats {
+  text-align: center;
+  font-weight: 100;
+  margin-top: 7px;
+  text-transform: uppercase;
+  font-size: 12px;
 }
