@@ -55,6 +55,7 @@ define(['grid'], function(Grid) {
 
   Game.prototype.tick = function() {
     this.generation += 1;
+
     this.grid.setNextGeneration();
     this.grid.tick();
 

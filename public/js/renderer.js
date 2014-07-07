@@ -16,6 +16,8 @@ define(['jquery'], function($) {
     this.pixelWidth = this.width * (this.cellSize + this.spacing) + 1;
     this.pixelHeight = this.height * (this.cellSize + this.spacing) + 1;
 
+    this.tickBarHeight = this.config.tickBarHeight;
+
     this.nextTickBarUpdate = Date.now() + 100;
   };
 
@@ -28,8 +30,8 @@ define(['jquery'], function($) {
     this.context = this.canvas.getContext('2d');
 
     this.gameEl = this.canvas.parentElement;
-    this.tickBar = $('.tickbar');
-    this.tickBarFill = $(this.tickBar).find('.tickbarfill');
+    this.tickBar = document.getElementById('tickbar');
+    this.tickBarContext = this.tickBar.getContext('2d');
 
     // prevent text selection when interacting with the canvas
     this.canvas.addEventListener('selectstart', function(e) {
@@ -53,8 +55,10 @@ define(['jquery'], function($) {
     this.canvas.width = this.pixelWidth;
     this.canvas.height = this.pixelHeight;
 
+    this.tickBar.width = this.pixelWidth;
+    this.tickBar.height = this.tickBarHeight;
+
     $(this.gameEl).width(this.pixelWidth);
-    $(this.tickBar).width(this.pixelWidth);
 
     this._drawGrid();
   };
@@ -104,16 +108,16 @@ define(['jquery'], function($) {
       localPlayer.setClean();
     }
 
-    if (this.nextTickBarUpdate <= now) {
-      this.updateTickBar(this.game.percentageOfTick());
-      this.nextTickBarUpdate = now + 100;
-    }
+    this.updateTickBar(this.game.percentageOfTick());
+
+    // if (this.nextTickBarUpdate <= now) {
+    //   this.updateTickBar(this.game.percentageOfTick());
+    //   this.nextTickBarUpdate = now + 100;
+    // }
   };
 
   Renderer.prototype.setAccentColor = function(color) {
     this.color = color;
-
-    this._setTickBarColor(color);
   };
 
   Renderer.prototype.updateControls = function() {
@@ -136,16 +140,12 @@ define(['jquery'], function($) {
   };
 
   Renderer.prototype.updateTickBar = function(percent) {
-    var nextWidth = this.pixelWidth * percent;
+    var nextWidth = this.pixelWidth * percent,
+      context = this.tickBarContext;
 
-    if (nextWidth < $(this.tickBarFill).width()) {
-      // going back to zero
-      $(this.tickBarFill).removeClass('moving');
-    } else if (!$(this.tickBarFill).hasClass('moving')) {
-      $(this.tickBarFill).addClass('moving');
-    }
-
-    $(this.tickBarFill).width(nextWidth);
+    context.clearRect(0, 0, this.pixelWidth, this.tickBarHeight);
+    context.fillStyle = this.color;
+    context.fillRect(0, 0, nextWidth, this.tickBarHeight);
   };
 
   Renderer.prototype._drawGrid = function() {
@@ -288,10 +288,6 @@ define(['jquery'], function($) {
     }
 
     event.preventDefault();
-  };
-
-  Renderer.prototype._setTickBarColor = function(color) {
-    $(this.tickBarFill).css('background', color);
   };
 
   return Renderer;

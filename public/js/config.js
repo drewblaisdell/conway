@@ -6,6 +6,7 @@ define([], function() {
     hoveredCellColor: '#11ff77',
     cellSize: 9,
     cellSpacing: 1,
+    tickBarHeight: 5,
 
     // grid settings
     gridWidth: 100,

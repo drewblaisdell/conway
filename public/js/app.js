@@ -31,8 +31,6 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
 
     // "the loop"
     requestAnimationFrame(function() {
-      var now = +new Date;
-
       // go to next generation
       if (_this.game.isTimeToTick()) {
         _this.game.tick();
