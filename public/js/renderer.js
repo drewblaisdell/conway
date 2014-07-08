@@ -10,6 +10,7 @@ define(['jquery'], function($) {
     this.height = app.height;
     this.cellSize = this.config.cellSize;
     this.spacing = this.config.cellSpacing;
+    this.pickedColor = false;
     this.hoveredCell = undefined;
     this.flaggedCells = [];
 
@@ -41,6 +42,9 @@ define(['jquery'], function($) {
 
     // save the color when the colorpicker is clicked
     this.colorpicker.addEventListener('click', this._handleColorpickerClick.bind(this), false);
+
+    // show the picked color (if it exists) when the mouse leaves the color picker
+    this.colorpicker.addEventListener('mouseleave', this._handleColorpickerMouseLeave.bind(this), false);
 
     // prevent text selection when interacting with the canvas
     this.canvas.addEventListener('selectstart', function(e) {
@@ -288,8 +292,21 @@ define(['jquery'], function($) {
       rgb = this._HSLtoRGB(hue, sat, lit),
       rgba = 'rgba('+ rgb[0] +', '+ rgb[1] +', '+ rgb[2] +', 1)';
 
+    this.pickedColor = rgb;
+
+    this.setAccentColor(rgba);
+
     this.playButton.style.borderColor = rgba;
     this.playButton.style.color = rgba;
+  };
+
+  Renderer.prototype._handleColorpickerMouseLeave = function(event) {
+    if (this.pickedColor) {
+      var rgb = this.pickedColor;
+      this.colorpicker.style.background = 'rgba('+ rgb[0] +', '+ rgb[1] +', '+ rgb[2] +', 1)';
+    } else {
+      this.colorpicker.style.background = 'rgba(255, 255, 255, 1)';
+    }
   };
 
   Renderer.prototype._handleMouseLeave = function(event) {

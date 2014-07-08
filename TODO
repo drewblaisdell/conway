@@ -1,3 +1,5 @@
 - Calculating and ticking to the next generation takes ~15ms right now. This could be optimized by only testing cells that are either alive or neighbors of alive cells.
 
 - I should probably get rid of jQuery.
+
+- Don't show a hover-cell when there are no cells left to place.
