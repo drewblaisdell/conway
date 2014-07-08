@@ -50,6 +50,8 @@ define([], function() {
   };
 
   GameServer.prototype._handleDisconnect = function(socket) {
+    console.log(socket);
+    // console.log("UHH" + this.sockets.indexOf(socket));
   };
 
   GameServer.prototype._handlePlaceLiveCells = function(msg) {
@@ -71,7 +73,7 @@ define([], function() {
   GameServer.prototype._handleStateRequest = function(msg) {
     var playerId = msg,
       socket = this.getSocket(playerId);
-// TODO: check for abuse of this endpoint
+// TODO: rate-limit this endpoint
 console.log("sending state to out of sync client");
     this.sendStateToSocket(socket);
   };
