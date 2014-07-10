@@ -1,6 +1,7 @@
 define([], function() {
-  var Player = function(id, color, cells) {
+  var Player = function(id, name, color, cells) {
     this.id = id;
+    this.name = name;
     this.color = color;
     this.cells = cells;
     this.dirty = true;
@@ -39,6 +40,7 @@ define([], function() {
   Player.prototype.transmission = function() {
     return {
       id: this.id,
+      name: this.name,
       color: this.color,
       cells: this.cells
     };

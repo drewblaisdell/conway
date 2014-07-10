@@ -46,6 +46,9 @@ define(['jquery'], function($) {
     // show the picked color (if it exists) when the mouse leaves the color picker
     this.colorpicker.addEventListener('mouseleave', this._handleColorpickerMouseLeave.bind(this), false);
 
+    // request a new player when the play button is clicked
+    this.playButton.addEventListener('click', this._handlePlayButtonClick.bind(this), false);
+
     // prevent text selection when interacting with the canvas
     this.canvas.addEventListener('selectstart', function(e) {
       event.preventDefault();
@@ -116,7 +119,7 @@ define(['jquery'], function($) {
       }
     }
 
-    if (localPlayer.isDirty()) {
+    if (this.playerManager.localPlayer && localPlayer.isDirty()) {
       this.updateControls();
       localPlayer.setClean();
     }
@@ -134,21 +137,30 @@ define(['jquery'], function($) {
   };
 
   Renderer.prototype.updateControls = function() {
-    var localPlayer = this.playerManager.getLocalPlayer(),
-      cellCount = localPlayer.cells,
-      cellsOnGrid = this.game.getCellCountByPlayer(localPlayer.id);
+    var localPlayer = this.playerManager.getLocalPlayer();
 
-    $('#stats .cell-count').text(cellCount);
-    $('#stats .cells-on-grid').text(cellsOnGrid);
+    if (localPlayer) {
+      var cellCount = localPlayer.cells,
+        cellsOnGrid = this.game.getCellCountByPlayer(localPlayer.id);
 
-    if (this.flaggedCells.length > 0 && localPlayer.cells >= this.flaggedCells.length) {
-      $('#controls .place-cells')
-        .addClass('enabled')
-        .css('border-color', this.color);
+      $('#controls, #stats').show();
+      $('#new-player').hide();
+
+      $('#stats .cell-count').text(cellCount);
+      $('#stats .cells-on-grid').text(cellsOnGrid);
+
+      if (this.flaggedCells.length > 0 && localPlayer.cells >= this.flaggedCells.length) {
+        $('#controls .place-cells')
+          .addClass('enabled')
+          .css('border-color', this.color);
+      } else {
+        $('#controls .place-cells')
+        .removeClass('enabled')
+        .css('border-color', '');
+      }
     } else {
-      $('#controls .place-cells')
-      .removeClass('enabled')
-      .css('border-color', '');
+      $('#controls, #stats').hide();
+      $('#new-player').show();
     }
   };
 
@@ -290,20 +302,20 @@ define(['jquery'], function($) {
       sat = (y / this.colorpicker.offsetHeight),
       lit = .6,
       rgb = this._HSLtoRGB(hue, sat, lit),
-      rgba = 'rgba('+ rgb[0] +', '+ rgb[1] +', '+ rgb[2] +', 1)';
+      hex = '#'+ this._RGBtoHex(rgb[0], rgb[1], rgb[2]);
 
-    this.pickedColor = rgb;
+    this.pickedColor = hex;
 
-    this.setAccentColor(rgba);
+    this.setAccentColor(hex);
 
-    this.playButton.style.borderColor = rgba;
-    this.playButton.style.color = rgba;
+    this.playButton.style.borderColor = hex;
+    this.playButton.style.color = hex;
   };
 
   Renderer.prototype._handleColorpickerMouseLeave = function(event) {
     if (this.pickedColor) {
       var rgb = this.pickedColor;
-      this.colorpicker.style.background = 'rgba('+ rgb[0] +', '+ rgb[1] +', '+ rgb[2] +', 1)';
+      this.colorpicker.style.background = rgb;
     } else {
       this.colorpicker.style.background = 'rgba(255, 255, 255, 1)';
     }
@@ -339,6 +351,21 @@ define(['jquery'], function($) {
     event.preventDefault();
   };
 
+  Renderer.prototype._handlePlayButtonClick = function(event) {
+    var color = this.color,
+      name = document.getElementById('new-player').querySelector('.player-name').value;
+
+    this.gameClient.requestNewPlayer(name, color);
+
+    event.preventDefault();
+  };
+
+  Renderer.prototype._decToHex = function(n) {
+    var hex = n.toString(16);
+
+    return hex.length === 1 ? "0" + hex : hex;
+  };
+
   Renderer.prototype._HSLtoRGB = function(h, s, l){
     var r, g, b;
 
@@ -362,6 +389,10 @@ define(['jquery'], function($) {
     }
 
     return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  };
+
+  Renderer.prototype._RGBtoHex = function(r, g, b){
+    return this._decToHex(r) + this._decToHex(g) + this._decToHex(b);
   };
 
   return Renderer;

@@ -5,6 +5,8 @@ define(['socket.io'], function(io) {
     this.playerManager = playerManager;
     this.config = app.config;
 
+    this.receivedInitialState = false;
+
     this.outOfSync = true;
     this.hidden = false;
 
@@ -14,21 +16,20 @@ define(['socket.io'], function(io) {
   GameClient.prototype.init = function(callback) {
     var _this = this;
 
+    this.callback = callback;
+
     document.addEventListener('visibilitychange', this._handleVisibilityChange.bind(this));
 
     this.socket = io();
 
-    this.socket.on('initial_state', function(socket) {
-      _this._handleInitialState.call(_this, socket);
-      
-      if (typeof callback === 'function') {
-        callback();
-      }
-    });
-
     this.socket.on('state', this._handleState.bind(this));
     this.socket.on('cells_placed', this._handleCellsPlaced.bind(this));
     this.socket.on('new_player', this._handleNewPlayer.bind(this));
+    this.socket.on('receive_new_player', this._handleReceiveNewPlayer.bind(this));
+  };
+
+  GameClient.prototype.requestNewPlayer = function(name, color) {
+    this.socket.emit('request_new_player', { 'name': name, 'color': color });
   };
 
   GameClient.prototype._handleCellsPlaced = function(msg) {
@@ -43,21 +44,34 @@ define(['socket.io'], function(io) {
   };
 
   GameClient.prototype._handleInitialState = function(msg) {
-    var newPlayer = this.playerManager.createNewPlayer(msg.newPlayer.id, msg.newPlayer.color);
+    var newPlayer = this.playerManager.createNewPlayer(msg.newPlayer.id, msg.newPlayer.name, msg.newPlayer.color);
     this.playerManager.setLocalPlayer(newPlayer);
     this.app.updateState(msg);
   };
 
   GameClient.prototype._handleNewPlayer = function(msg) {
-    var newPlayer = this.playerManager.createNewPlayer(msg.player.id, msg.player.color),
+    var newPlayer = this.playerManager.createNewPlayer(msg.player.id, msg.player.name, msg.player.color),
       cellCount = msg.cellCount;
 
     console.log('Player #' + msg.player.id + ' has joined.');
   };
 
+  GameClient.prototype._handleReceiveNewPlayer = function(message) {
+    var newPlayer = this.playerManager.createNewPlayer(message.id, message.name, message.color, message.cells);
+
+    this.playerManager.setLocalPlayer(newPlayer);
+
+    this.app.setPlaying(true);
+  };
+
   GameClient.prototype._handleState = function(msg) {
     this.app.updateState(msg);
     this.outOfSync = false;
+
+    this.receivedInitialState = true;
+    if (typeof this.callback === 'function') {
+      this.callback();
+    }
   };
 
   GameClient.prototype._handleVisibilityChange = function(event) {
@@ -87,18 +101,6 @@ define(['socket.io'], function(io) {
         this._requestState();
       }
     }
-  };
-
-  GameClient.prototype.getPlayers = function(callback) {
-    var _this = this;
-
-    $.get('/players', function(data) {
-      _this.playerManager.addPlayers(data);
-
-      if (typeof callback === 'function') {
-        callback(data);
-      }
-    });
   };
 
   GameClient.prototype.placeLiveCells = function(cells, callback) {

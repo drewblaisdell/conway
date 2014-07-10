@@ -31,27 +31,29 @@ define([], function() {
   };
 
   GameServer.prototype._handleConnect = function(socket) {
-    var initialState = this.app.getState();
-    initialState.newPlayer = this.playerManager.createNewPlayer();
-
-    this.sockets[initialState.newPlayer.id] = socket;
-
     socket.on('disconnect', this._handleDisconnect.bind(this));
-    socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));
-    socket.on('request_state', this._handleStateRequest.bind(this));
+    socket.on('request_state', this._handleStateRequest.bind(this, socket));
+    socket.on('request_new_player', this._handleRequestNewPlayer.bind(this, socket));
 
-    socket.emit('initial_state', initialState);
-
-    socket.broadcast.emit('new_player', {
-      cellCount: this.game.grid.getLivingCellCount(),
-      player: initialState.newPlayer.transmission()
-    });
-
+    socket.emit('state', this.app.getState());
   };
 
   GameServer.prototype._handleDisconnect = function(socket) {
-    console.log(socket);
-    // console.log("UHH" + this.sockets.indexOf(socket));
+  };
+
+  GameServer.prototype._handleRequestNewPlayer = function(socket, msg) {
+    var name = msg.name,
+      color = msg.color,
+      player = this.playerManager.createNewPlayer(undefined, name, color);
+
+    socket.emit('receive_new_player', player.transmission());
+
+    socket.broadcast.emit('new_player', {
+      cellCount: this.game.grid.getLivingCellCount(),
+      player: player.transmission()
+    });
+
+    socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));
   };
 
   GameServer.prototype._handlePlaceLiveCells = function(msg) {
@@ -70,9 +72,8 @@ define([], function() {
     }
   };
 
-  GameServer.prototype._handleStateRequest = function(msg) {
-    var playerId = msg,
-      socket = this.getSocket(playerId);
+  GameServer.prototype._handleStateRequest = function(socket, msg) {
+    var playerId = msg;
 // TODO: rate-limit this endpoint
 console.log("sending state to out of sync client");
     this.sendStateToSocket(socket);

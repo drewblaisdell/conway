@@ -7,6 +7,8 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
     this.width = width;
     this.height = height;
 
+    this.playing = false;
+
     this.game = new Game(this);
     this.game.init(width, height);
     
@@ -20,7 +22,7 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
     var _this = this;
 
     this.gameClient.init(function() {
-      _this.renderer.setAccentColor(_this.playerManager.getLocalPlayer().color);
+      // _this.renderer.setAccentColor(_this.playerManager.getLocalPlayer().color);
       _this.renderer.updateControls();
       _this.run();
     });
@@ -68,6 +70,12 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
       generation: generation,
       timeBeforeTick: timeBeforeTick
     };
+  };
+
+  App.prototype.setPlaying = function(playing) {
+    this.playing = playing;
+
+    this.renderer.updateControls();
   };
 
   App.prototype.updateState = function(state) {
