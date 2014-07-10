@@ -125,11 +125,6 @@ define(['jquery'], function($) {
     }
 
     this.updateTickBar(this.game.percentageOfTick());
-
-    // if (this.nextTickBarUpdate <= now) {
-    //   this.updateTickBar(this.game.percentageOfTick());
-    //   this.nextTickBarUpdate = now + 100;
-    // }
   };
 
   Renderer.prototype.setAccentColor = function(color) {
@@ -288,21 +283,15 @@ define(['jquery'], function($) {
   Renderer.prototype._handleColorpickerMouseMove = function(event) {
     var x = event.offsetX || (event.pageX - this.colorpicker.offsetLeft),
       y = event.offsetY || (event.pageY - this.colorpicker.offsetTop),
-      hue = (x / this.colorpicker.offsetWidth) * 360,
-      sat = (y / this.colorpicker.offsetHeight) * 100 + '%',
-      lit = '60%';
+      hex = this._hexColorFromXY(x, y);
 
-    this.colorpicker.style.background = 'hsla('+ hue +', '+ sat +', '+ lit +', 1)';
+    this.colorpicker.style.background = hex;
   };
 
   Renderer.prototype._handleColorpickerClick = function(event) {
     var x = event.offsetX || (event.pageX - this.colorpicker.offsetLeft),
       y = event.offsetY || (event.pageY - this.colorpicker.offsetTop),
-      hue = (x / this.colorpicker.offsetWidth),
-      sat = (y / this.colorpicker.offsetHeight),
-      lit = .6,
-      rgb = this._HSLtoRGB(hue, sat, lit),
-      hex = '#'+ this._RGBtoHex(rgb[0], rgb[1], rgb[2]);
+      hex = this._hexColorFromXY(x, y);
 
     this.pickedColor = hex;
 
@@ -365,6 +354,43 @@ define(['jquery'], function($) {
 
     return hex.length === 1 ? "0" + hex : hex;
   };
+
+  Renderer.prototype._hexColorFromXY = function(x, y) {
+    x = Math.floor(x) * 3;
+    y = Math.floor(y) * 2;
+    var z = parseInt(x.toString().slice(0, 2)) + parseInt(y.toString().slice(0, 2));
+
+    // This function is inspired by the hex-from-int function
+    // in Svbtle's awesome colorpicker.
+    function hexFromValue(v) {
+      var l = {
+        10: 'A',
+        11: 'B',
+        12: 'C',
+        13: 'D',
+        14: 'E',
+        15: 'F'
+      };
+
+      v = v.toString();
+
+      if (v.length === 1) {
+        return '0' + v;
+      } else if (v.length === 3) {
+        var n1 = v.slice(0, 2),
+          n2 = v.slice(2, 3),
+          n1 = l[n1] ? l[n1] : 'F';
+
+        return n1 + n2;
+      } else {
+        return v;
+      }
+    }
+
+    hex = '#' + hexFromValue(Math.floor(x / 2)) + hexFromValue(y) + hexFromValue(z);
+
+    return hex;
+  }
 
   Renderer.prototype._HSLtoRGB = function(h, s, l){
     var r, g, b;
