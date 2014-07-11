@@ -8,8 +8,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .brand-name {
-  margin-bottom: 8px;
-  float: left;
+  margin-bottom: 5px;
+  text-align: center;
 }
 
 #game {

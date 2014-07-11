@@ -72,6 +72,10 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
     };
   };
 
+  App.prototype.isPlaying = function() {
+    return this.playing;
+  };
+
   App.prototype.setPlaying = function(playing) {
     this.playing = playing;
 
