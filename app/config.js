@@ -19,6 +19,7 @@ define([], function() {
     defaultPlayerColor: '#00aaff',
 
     // server settings
-    timeBetweenStateUpdates: 5000
+    timeBetweenStateUpdates: 5000,
+    secretToken: "secret witch's brew"
   };
 });

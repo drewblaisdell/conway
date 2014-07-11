@@ -6,6 +6,16 @@ define([], function() {
     this.config = app.config;
     this.io = io;
     this.sockets = {};
+    this.md5 = require('MD5');
+    this.tokens = {};
+  };
+
+  GameServer.prototype.getPlayerToken = function(player) {
+    return this.hash(player.id + player.name + this.config.secretToken);
+  };
+
+  GameServer.prototype.hash = function(s){
+    return this.md5(s);
   };
 
   GameServer.prototype.init = function() {
@@ -33,6 +43,7 @@ define([], function() {
   GameServer.prototype._handleConnect = function(socket) {
     socket.on('disconnect', this._handleDisconnect.bind(this));
     socket.on('request_state', this._handleStateRequest.bind(this, socket));
+    socket.on('request_player', this._handleRequestPlayer.bind(this, socket));
     socket.on('request_new_player', this._handleRequestNewPlayer.bind(this, socket));
 
     socket.emit('state', this.app.getState());
@@ -41,16 +52,33 @@ define([], function() {
   GameServer.prototype._handleDisconnect = function(socket) {
   };
 
+  GameServer.prototype._handleRequestPlayer = function(socket, msg) {
+    var transmission,
+      token = msg['token'],
+      player = this.playerManager.getPlayer(this.tokens[token]);
+
+    if (player) {
+      transmission = player.transmission();
+      socket.emit('receive_new_player', { player: transmission, token: token });
+
+      socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));
+    }
+  };
+
   GameServer.prototype._handleRequestNewPlayer = function(socket, msg) {
     var name = msg.name,
       color = msg.color,
-      player = this.playerManager.createNewPlayer(undefined, name, color);
+      player = this.playerManager.createNewPlayer(undefined, name, color),
+      playerTransmission = player.transmission(),
+      token = this.getPlayerToken(player);
 
-    socket.emit('receive_new_player', player.transmission());
+    this.tokens[token] = player.id;
+
+    socket.emit('receive_new_player', { player: playerTransmission, token: token });
 
     socket.broadcast.emit('new_player', {
       cellCount: this.game.grid.getLivingCellCount(),
-      player: player.transmission()
+      player: playerTransmission
     });
 
     socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));

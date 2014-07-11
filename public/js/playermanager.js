@@ -75,7 +75,7 @@ define(['player'], function(Player) {
   };
 
   PlayerManager.prototype.setLocalPlayer = function(player) {
-    this.localPlayer = player;
+    this.localPlayer = this.getPlayer(player.id);
   };
 
   PlayerManager.prototype.updatePlayer = function(player) {

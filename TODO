@@ -2,4 +2,4 @@
 
 - I should probably get rid of jQuery.
 
-- Don't show a hover-cell when there are no cells left to place.
+- Authenticate cell placement with the player's token instead of the player's ID.

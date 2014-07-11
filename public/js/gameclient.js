@@ -5,8 +5,6 @@ define(['socket.io'], function(io) {
     this.playerManager = playerManager;
     this.config = app.config;
 
-    this.receivedInitialState = false;
-
     this.outOfSync = true;
     this.hidden = false;
 
@@ -28,6 +26,10 @@ define(['socket.io'], function(io) {
     this.socket.on('receive_new_player', this._handleReceiveNewPlayer.bind(this));
   };
 
+  GameClient.prototype.requestPlayer = function(token) {
+    this.socket.emit('request_player', { token: token });
+  };
+
   GameClient.prototype.requestNewPlayer = function(name, color) {
     this.socket.emit('request_new_player', { 'name': name, 'color': color });
   };
@@ -43,12 +45,6 @@ define(['socket.io'], function(io) {
     this._testStateSync(cellCount);
   };
 
-  GameClient.prototype._handleInitialState = function(msg) {
-    var newPlayer = this.playerManager.createNewPlayer(msg.newPlayer.id, msg.newPlayer.name, msg.newPlayer.color);
-    this.playerManager.setLocalPlayer(newPlayer);
-    this.app.updateState(msg);
-  };
-
   GameClient.prototype._handleNewPlayer = function(msg) {
     var newPlayer = this.playerManager.createNewPlayer(msg.player.id, msg.player.name, msg.player.color),
       cellCount = msg.cellCount;
@@ -57,10 +53,12 @@ define(['socket.io'], function(io) {
   };
 
   GameClient.prototype._handleReceiveNewPlayer = function(message) {
-    var newPlayer = this.playerManager.createNewPlayer(message.id, message.name, message.color, message.cells);
+    var player = message.player,
+      newPlayer = this.playerManager.createNewPlayer(player.id, player.name, player.color, player.cells);
 
     this.playerManager.setLocalPlayer(newPlayer);
 
+    this.app.setToken(message.token);
     this.app.setPlaying(true);
   };
 
@@ -68,7 +66,6 @@ define(['socket.io'], function(io) {
     this.app.updateState(msg);
     this.outOfSync = false;
 
-    this.receivedInitialState = true;
     if (typeof this.callback === 'function') {
       this.callback();
     }
@@ -110,6 +107,8 @@ define(['socket.io'], function(io) {
         'cells': cells,
         'playerId': localPlayer.id
       };
+
+debugger;
 
     this.socket.emit('place_live_cells', msg);
   };

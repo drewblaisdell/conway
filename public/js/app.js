@@ -4,6 +4,9 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
   };
 
   App.prototype.init = function(width, height) {
+    var token,
+      _this = this;
+
     this.width = width;
     this.height = height;
 
@@ -19,10 +22,12 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
     this.renderer = new Renderer(this);
     this.renderer.init();
 
-    var _this = this;
-
     this.gameClient.init(function() {
-      // _this.renderer.setAccentColor(_this.playerManager.getLocalPlayer().color);
+      token = _this.getToken()
+      if (token) {
+        _this.gameClient.requestPlayer(token);
+      }
+
       _this.renderer.updateControls();
       _this.run();
     });
@@ -80,6 +85,17 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
     this.playing = playing;
 
     this.renderer.updateControls();
+    this.renderer.setAccentColor(this.playerManager.getLocalPlayer().color);
+  };
+
+  App.prototype.setToken = function(token) {
+    localStorage.setItem('token', token);
+    return token;
+  };
+
+  App.prototype.getToken = function() {
+    var token = localStorage.getItem('token');
+    return (token) ? token : false;
   };
 
   App.prototype.updateState = function(state) {
