@@ -108,8 +108,6 @@ define(['socket.io'], function(io) {
         'playerId': localPlayer.id
       };
 
-debugger;
-
     this.socket.emit('place_live_cells', msg);
   };
 
