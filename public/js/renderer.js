@@ -224,6 +224,13 @@ define(['jquery'], function($) {
     }
     context.fillRect(x1, y1, cellSize, cellSize);
 
+    if (this.app.isPlaying() && this.hoveredCell !== undefined && this.hoveredCell.equals(cell)) {
+      var player = this.playerManager.getLocalPlayer();
+      if (player.cells - this.flaggedCells > 0) {
+        this._drawFramedCell(cell);
+      }
+    }
+
     if (this._isFlaggedCell(cell)) {
       this._drawFramedCell(cell);
     }
