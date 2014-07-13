@@ -92,3 +92,14 @@ h1, h2, h3, h4, h5, h6 {
   user-select: none;
   cursor: default;
 }
+
+.place-cells {
+  -webkit-transition: scale .5s ease-in;
+}
+
+.place-cells:hover {
+}
+
+.place-cells:active {
+  -webkit-transform: scale(0.9, 0.9);
+}

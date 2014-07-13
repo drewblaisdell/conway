@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'colorpicker'], function($, Colorpicker) {
   var Renderer = function(app) {
     this.app = app;
     this.game = app.game;
@@ -34,17 +34,10 @@ define(['jquery'], function($) {
     this.tickBar = document.getElementById('tickbar');
     this.tickBarContext = this.tickBar.getContext('2d');
 
-    this.colorpicker = document.getElementById('new-player').querySelector('.colorpicker');
+    this.colorpicker = new Colorpicker(this.app);
+    this.colorpicker.init();
+
     this.playButton = document.getElementById('new-player').querySelector('.play');
-
-    // change the color picker color when the mouse moves over it
-    this.colorpicker.addEventListener('mousemove', this._handleColorpickerMouseMove.bind(this), false);
-
-    // save the color when the colorpicker is clicked
-    this.colorpicker.addEventListener('click', this._handleColorpickerClick.bind(this), false);
-
-    // show the picked color (if it exists) when the mouse leaves the color picker
-    this.colorpicker.addEventListener('mouseleave', this._handleColorpickerMouseLeave.bind(this), false);
 
     // request a new player when the play button is clicked
     this.playButton.addEventListener('click', this._handlePlayButtonClick.bind(this), false);
@@ -295,36 +288,6 @@ define(['jquery'], function($) {
     this.updateControls();
   };
 
-  Renderer.prototype._handleColorpickerMouseMove = function(event) {
-    var x = event.offsetX || (event.pageX - this.colorpicker.offsetLeft),
-      y = event.offsetY || (event.pageY - this.colorpicker.offsetTop),
-      hex = this._hexColorFromXY(x, y);
-
-    this.colorpicker.style.background = hex;
-  };
-
-  Renderer.prototype._handleColorpickerClick = function(event) {
-    var x = event.offsetX || (event.pageX - this.colorpicker.offsetLeft),
-      y = event.offsetY || (event.pageY - this.colorpicker.offsetTop),
-      hex = this._hexColorFromXY(x, y);
-
-    this.pickedColor = hex;
-
-    this.setAccentColor(hex);
-
-    this.playButton.style.borderColor = hex;
-    this.playButton.style.color = hex;
-  };
-
-  Renderer.prototype._handleColorpickerMouseLeave = function(event) {
-    if (this.pickedColor) {
-      var rgb = this.pickedColor;
-      this.colorpicker.style.background = rgb;
-    } else {
-      this.colorpicker.style.background = 'rgba(255, 255, 255, 1)';
-    }
-  };
-
   Renderer.prototype._handleMouseLeave = function(event) {
     var oldCell = this.hoveredCell;
     this.hoveredCell = undefined;
@@ -367,43 +330,6 @@ define(['jquery'], function($) {
 
     event.preventDefault();
   };
-
-  Renderer.prototype._hexColorFromXY = function(x, y) {
-    x = Math.floor(x) * 3;
-    y = Math.floor(y) * 2;
-    var z = parseInt(x.toString().slice(0, 2)) + parseInt(y.toString().slice(0, 2));
-
-    // This function is inspired by the hex-from-int function
-    // in Svbtle's awesome colorpicker.
-    function hexFromValue(v) {
-      var l = {
-        10: 'A',
-        11: 'B',
-        12: 'C',
-        13: 'D',
-        14: 'E',
-        15: 'F'
-      };
-
-      v = v.toString();
-
-      if (v.length === 1) {
-        return '0' + v;
-      } else if (v.length === 3) {
-        var n1 = v.slice(0, 2),
-          n2 = v.slice(2, 3),
-          n1 = l[n1] ? l[n1] : 'F';
-
-        return n1 + n2;
-      } else {
-        return v;
-      }
-    }
-
-    hex = '#' + hexFromValue(Math.floor(x / 2)) + hexFromValue(y) + hexFromValue(z);
-
-    return hex;
-  }
 
   return Renderer;
 });

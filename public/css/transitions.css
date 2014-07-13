@@ -1,0 +1,13 @@
+@-webkit-keyframes shake {
+  0% {
+    -webkit-transform: translateX(-10px);
+  }
+
+  50% {
+    -webkit-transform: translateX(10px);
+  }
+
+  100% {
+    -webkit-transform: translateX(-10px);
+  }
+}
