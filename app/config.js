@@ -8,7 +8,7 @@ define([], function() {
     cellSpacing: 1,
 
     // grid settings
-    gridWidth: 120,
+    gridWidth: 100,
     gridHeight: 50,
 
     // game settings

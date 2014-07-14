@@ -8,10 +8,10 @@ define(['game', 'playermanager', 'gameserver'], function(Game, PlayerManager, Ga
     this.width = width;
     this.height = height;
 
+    this.playerManager = new PlayerManager(this);
+
     this.game = new Game(this);
     this.game.init(width, height);
-
-    this.playerManager = new PlayerManager(this);
 
     this.gameServer = new GameServer(this, this.io);
     this.gameServer.init();
@@ -23,6 +23,7 @@ define(['game', 'playermanager', 'gameserver'], function(Game, PlayerManager, Ga
     setTimeout(function() {
       if (_this.game.isTimeToTick()) {
         _this.game.tick();
+        _this.game.updatePlayerStats();
       }
 
       if (_this.gameServer.isTimeToSendState()) {
@@ -43,11 +44,7 @@ define(['game', 'playermanager', 'gameserver'], function(Game, PlayerManager, Ga
         };
       }),
       players = this.playerManager.getPlayers().map(function(player) {
-        return {
-          id: player.id,
-          color: player.color,
-          cells: player.cells
-        };
+        return player.transmission();
       }),
       generation = this.game.generation,
       timeBeforeTick = (this.game.nextTick - Date.now());

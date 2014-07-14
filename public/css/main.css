@@ -16,6 +16,10 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 auto;
 }
 
+#tickbar, #c {
+  /*display: none;*/
+}
+
 .container {
   width: 1001px;
   margin: 0 auto;
@@ -102,4 +106,22 @@ h1, h2, h3, h4, h5, h6 {
 
 .place-cells:active {
   -webkit-transform: scale(0.9, 0.9);
+}
+
+#leaderboard {
+  font-weight: 100;
+  width: 30%;
+  margin: 10px 10%;
+}
+
+#leaderboard .color {
+  margin-top: 2px;
+  margin-right: 5px;
+  width: 13px;
+  height: 13px;
+  float: left;
+}
+
+#leaderboard .cells {
+  float: right;
 }

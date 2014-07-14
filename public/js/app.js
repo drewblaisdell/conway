@@ -12,10 +12,10 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
 
     this.playing = false;
 
+    this.playerManager = new PlayerManager(this);
+
     this.game = new Game(this);
     this.game.init(width, height);
-    
-    this.playerManager = new PlayerManager(this);
 
     this.gameClient = new GameClient(this, this.game, this.playerManager);
 
@@ -28,7 +28,9 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
         _this.gameClient.requestPlayer(token);
       }
 
+      _this.game.updatePlayerStats();
       _this.renderer.updateControls();
+      _this.renderer.updateLeaderboard();
       _this.run();
     });
   };
@@ -41,7 +43,9 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
       // go to next generation
       if (_this.game.isTimeToTick()) {
         _this.game.tick();
+        _this.game.updatePlayerStats();
         _this.renderer.updateControls();
+        _this.renderer.updateLeaderboard();
       }
 
       _this.renderer.renderChanges();
@@ -60,14 +64,10 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
         };
       }),
       players = this.playerManager.getPlayers().map(function(player) {
-        return {
-          id: player.id,
-          color: player.color,
-          cells: player.cells
-        };
+        return player.transmission();
       }),
       generation = this.game.generation,
-      timeBeforeTick = (game.nextTick - Date.now());
+      timeBeforeTick = (this.game.nextTick - Date.now());
 
     return {
       livingCells: livingCells,

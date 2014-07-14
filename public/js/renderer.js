@@ -1,4 +1,4 @@
-define(['jquery', 'colorpicker'], function($, Colorpicker) {
+define(['jquery', 'colorpicker', 'leaderboard'], function($, Colorpicker, Leaderboard) {
   var Renderer = function(app) {
     this.app = app;
     this.game = app.game;
@@ -36,6 +36,9 @@ define(['jquery', 'colorpicker'], function($, Colorpicker) {
 
     this.colorpicker = new Colorpicker(this.app);
     this.colorpicker.init();
+
+    this.leaderboard = new Leaderboard(this.app);
+    this.leaderboard.init();
 
     this.playButton = document.getElementById('new-player').querySelector('.play');
 
@@ -129,7 +132,7 @@ define(['jquery', 'colorpicker'], function($, Colorpicker) {
 
     if (localPlayer) {
       var cellCount = localPlayer.cells,
-        cellsOnGrid = this.game.getCellCountByPlayer(localPlayer.id);
+        cellsOnGrid = localPlayer.cellsOnGrid;
 
       $('#controls, #stats').show();
       $('#new-player').hide();
@@ -150,6 +153,10 @@ define(['jquery', 'colorpicker'], function($, Colorpicker) {
       $('#controls, #stats').hide();
       $('#new-player').show();
     }
+  };
+
+  Renderer.prototype.updateLeaderboard = function() {
+    this.leaderboard.render();
   };
 
   Renderer.prototype._drawTickBar = function(percent) {
@@ -219,7 +226,7 @@ define(['jquery', 'colorpicker'], function($, Colorpicker) {
 
     if (this.app.isPlaying() && this.hoveredCell !== undefined && this.hoveredCell.equals(cell)) {
       var player = this.playerManager.getLocalPlayer();
-      if (player.cells - this.flaggedCells > 0) {
+      if (player.cells - this.flaggedCells.length > 0) {
         this._drawFramedCell(cell);
       }
     }

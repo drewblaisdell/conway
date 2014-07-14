@@ -5,6 +5,7 @@ define([], function() {
     this.color = color;
     this.cells = cells;
     this.dirty = true;
+    this.cellsOnGrid = 0;
   };
 
   Player.prototype.getSocket = function() {
@@ -42,7 +43,8 @@ define([], function() {
       id: this.id,
       name: this.name,
       color: this.color,
-      cells: this.cells
+      cells: this.cells,
+      cellsOnGrid: this.cellsOnGrid
     };
   };
 
