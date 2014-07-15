@@ -46,15 +46,6 @@ define(['socket.io'], function(io) {
     this._testStateSync(cellCount);
   };
 
-  GameClient.prototype._handleNewPlayer = function(msg) {
-    var newPlayer = this.playerManager.createNewPlayer(msg.player.id, msg.player.name, msg.player.color),
-      cellCount = msg.cellCount;
-
-    newPlayer.setOnline(msg.player.online);
-
-    console.log(msg.player.name + ' has joined.');
-  };
-
   GameClient.prototype._handlePlayerConnect = function(message) {
     var playerObj = message.player,
       player = this.playerManager.getPlayer(playerObj.id);

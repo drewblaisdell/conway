@@ -85,6 +85,10 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
       cellX = Math.floor((x - 1) / (cellSize + spacing)),
       cellY = Math.floor((y - 1) / (cellSize + spacing));
 
+    if (cellY === this.config.gridHeight) {
+      cellY--;
+    }
+
     return this.grid.getCell(cellX, cellY);
   };
 
