@@ -31,6 +31,7 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
       _this.game.updatePlayerStats();
       _this.renderer.updateControls();
       _this.renderer.updateLeaderboard();
+      _this.renderer.updatePlayersOnline();
       _this.run();
     });
   };

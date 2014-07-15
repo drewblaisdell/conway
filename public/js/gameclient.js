@@ -22,8 +22,9 @@ define(['socket.io'], function(io) {
 
     this.socket.on('state', this._handleState.bind(this));
     this.socket.on('cells_placed', this._handleCellsPlaced.bind(this));
-    this.socket.on('new_player', this._handleNewPlayer.bind(this));
+    this.socket.on('player_connect', this._handlePlayerConnect.bind(this));
     this.socket.on('receive_new_player', this._handleReceiveNewPlayer.bind(this));
+    this.socket.on('player_disconnect', this._handlePlayerDisconnect.bind(this));
   };
 
   GameClient.prototype.requestPlayer = function(token) {
@@ -49,15 +50,43 @@ define(['socket.io'], function(io) {
     var newPlayer = this.playerManager.createNewPlayer(msg.player.id, msg.player.name, msg.player.color),
       cellCount = msg.cellCount;
 
-    console.log('Player #' + msg.player.id + ' has joined.');
+    newPlayer.setOnline(msg.player.online);
+
+    console.log(msg.player.name + ' has joined.');
+  };
+
+  GameClient.prototype._handlePlayerConnect = function(message) {
+    var playerObj = message.player,
+      player = this.playerManager.getPlayer(playerObj.id);
+
+    if (player) {
+      player.setOnline(true);
+    } else {
+      player = this.playerManager.createNewPlayer(playerObj.id, playerObj.name, playerObj.color, playerObj.cells, playerObj.online);
+    }
+
+    console.log(player.name + ' has joined.');
+  };
+
+  GameClient.prototype._handlePlayerDisconnect = function(message) {
+    var player = this.playerManager.getPlayer(message.playerId);
+
+    player.setOnline(false);
+
+    console.log(player.name + ' has disconnected.');
   };
 
   GameClient.prototype._handleReceiveNewPlayer = function(message) {
-    var player = message.player,
-      newPlayer = this.playerManager.createNewPlayer(player.id, player.name, player.color, player.cells);
+    var playerObj = message.player,
+      player = this.playerManager.getPlayer(playerObj.id);
 
-    this.playerManager.setLocalPlayer(newPlayer);
+    if (player) {
+      player.setOnline(true);
+    } else {
+      player = this.playerManager.createNewPlayer(player.id, player.name, player.color, player.cells, player.online);      
+    }
 
+    this.playerManager.setLocalPlayer(player);
     this.app.setToken(message.token);
     this.app.setPlaying(true);
   };

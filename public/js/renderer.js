@@ -1,4 +1,4 @@
-define(['jquery', 'colorpicker', 'leaderboard'], function($, Colorpicker, Leaderboard) {
+define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Colorpicker, Leaderboard, PlayersOnline) {
   var Renderer = function(app) {
     this.app = app;
     this.game = app.game;
@@ -13,6 +13,7 @@ define(['jquery', 'colorpicker', 'leaderboard'], function($, Colorpicker, Leader
     this.pickedColor = false;
     this.hoveredCell = undefined;
     this.flaggedCells = [];
+    this.onlinePlayerCount = this.playerManager.getOnlinePlayers().length;
 
     this.pixelWidth = this.width * (this.cellSize + this.spacing) + 1;
     this.pixelHeight = this.height * (this.cellSize + this.spacing) + 1;
@@ -39,6 +40,9 @@ define(['jquery', 'colorpicker', 'leaderboard'], function($, Colorpicker, Leader
 
     this.leaderboard = new Leaderboard(this.app);
     this.leaderboard.init();
+
+    this.playersOnline = new PlayersOnline(this.app);
+    this.playersOnline.init();
 
     this.playButton = document.getElementById('new-player').querySelector('.play');
 
@@ -106,7 +110,8 @@ define(['jquery', 'colorpicker', 'leaderboard'], function($, Colorpicker, Leader
   Renderer.prototype.renderChanges = function() {
     var now = Date.now(),
       cells = this.grid.getCells(),
-      localPlayer = this.playerManager.getLocalPlayer();
+      localPlayer = this.playerManager.getLocalPlayer(),
+      onlinePlayerCount = this.playerManager.getOnlinePlayers().length;
 
     for (var i = 0; i < cells.length; i++) {
       if (cells[i].isDirty()) {
@@ -121,6 +126,13 @@ define(['jquery', 'colorpicker', 'leaderboard'], function($, Colorpicker, Leader
     }
 
     this._drawTickBar(this.game.percentageOfTick());
+
+    if (this.onlinePlayerCount !== onlinePlayerCount) {
+      // players joined/left since last render
+      this.onlinePlayerCount = onlinePlayerCount;
+
+      this.updatePlayersOnline();
+    }
   };
 
   Renderer.prototype.setAccentColor = function(color) {
@@ -157,6 +169,10 @@ define(['jquery', 'colorpicker', 'leaderboard'], function($, Colorpicker, Leader
 
   Renderer.prototype.updateLeaderboard = function() {
     this.leaderboard.render();
+  };
+
+  Renderer.prototype.updatePlayersOnline = function() {
+    this.playersOnline.render();
   };
 
   Renderer.prototype._drawTickBar = function(percent) {

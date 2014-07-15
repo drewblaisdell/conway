@@ -20,7 +20,7 @@ define(['player'], function(Player) {
     }
   };
 
-  PlayerManager.prototype.createNewPlayer = function(id, name, color, cells) {
+  PlayerManager.prototype.createNewPlayer = function(id, name, color, cells, online) {
     var newPlayer;
 
     if (id === undefined) {
@@ -48,7 +48,7 @@ define(['player'], function(Player) {
       cells = this.config.cellsPerPlayer;
     }
 
-    newPlayer = new Player(id, name, color, cells);
+    newPlayer = new Player(id, name, color, cells, online);
 
     this.addPlayer(newPlayer);
 
@@ -57,6 +57,20 @@ define(['player'], function(Player) {
 
   PlayerManager.prototype.getLocalPlayer = function() {
     return this.localPlayer;
+  };
+
+  PlayerManager.prototype.getOnlinePlayers = function() {
+    var onlinePlayers = [];
+
+    for (var i = 0; i < this.players.length; i++) {
+      var player = this.players[i];
+
+      if (player.online) {
+        onlinePlayers.push(player);
+      }
+    }
+
+    return onlinePlayers;
   };
 
   PlayerManager.prototype.getPlayer = function(id) {
@@ -95,7 +109,7 @@ define(['player'], function(Player) {
       if (!(players[i] instanceof Player)) {
         // this lets the method handle an array of players
         // or an array of objects representing players
-        players[i] = new Player(players[i].id, players[i].name, players[i].color, players[i].cells);
+        players[i] = new Player(players[i].id, players[i].name, players[i].color, players[i].cells, players[i].online);
       }
 
       var player = this.getPlayer(players[i].id);
@@ -103,6 +117,7 @@ define(['player'], function(Player) {
       if (player) {
         player.setColor(players[i].color);
         player.setCells(players[i].cells);
+        player.setOnline(players[i].online);
       } else {
         this.addPlayer(players[i]);
       }

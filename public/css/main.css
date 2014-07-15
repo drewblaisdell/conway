@@ -108,13 +108,13 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(0.9, 0.9);
 }
 
-#leaderboard {
+#leaderboard, #players-online {
   font-weight: 100;
   width: 30%;
   margin: 10px 10%;
 }
 
-#leaderboard .color {
+#leaderboard .color, #players-online .color {
   margin-top: 2px;
   margin-right: 5px;
   width: 13px;
@@ -123,5 +123,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #leaderboard .cells {
+  float: right;
+}
+
+#leaderboard {
+  float: left;
+}
+
+#players-online {
   float: right;
 }
