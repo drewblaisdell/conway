@@ -7,6 +7,12 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Helvetica Neue";
 }
 
+a {
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+}
+
 .brand-name {
   margin-bottom: 5px;
   text-align: center;
@@ -138,4 +144,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .players-online-container {
   float: right;
+}
+
+#leave-game {
+  text-transform: lowercase;
+  font-weight: bold;
 }

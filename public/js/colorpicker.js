@@ -53,7 +53,7 @@ define([], function() {
   };
 
   Colorpicker.prototype._hexColorFromXY = function(x, y) {
-    x = Math.floor(x) * 3;
+    x = Math.floor(x) * 4;
     y = Math.floor(y) * 2;
     var z = parseInt(x.toString().slice(0, 2)) + parseInt(y.toString().slice(0, 2));
 

@@ -145,7 +145,6 @@ define(['cell'], function(Cell) {
 
     if (nextGeneration !== undefined) {
       // the server calculated the next generation for us
-      
       var j = nextGeneration.length;
 
       // kill all the cells

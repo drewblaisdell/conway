@@ -56,6 +56,9 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
 
     var that = this;
 
+    // "log out" of the current user
+    document.getElementById('leave-game').addEventListener('click', this._handleLeaveGame.bind(this), false);
+
     // keep track of the mouse position on the canvas
     this.canvas.addEventListener('mousemove', this._handleMouseMove.bind(this), false);
 
@@ -313,6 +316,13 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     }
 
     this.updateControls();
+  };
+
+  Renderer.prototype._handleLeaveGame = function(event) {
+    this.app.deleteToken();
+    location.reload();
+
+    event.preventDefault();
   };
 
   Renderer.prototype._handleMouseLeave = function(event) {

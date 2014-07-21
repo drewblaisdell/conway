@@ -99,6 +99,10 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
     return (token) ? token : false;
   };
 
+  App.prototype.deleteToken = function() {
+    delete localStorage.token;
+  };
+
   App.prototype.updateState = function(state) {
     this.game.generation = state.generation;
     this.game.nextTick = Date.now() + state.timeBeforeTick;
