@@ -9,8 +9,8 @@ define([], function() {
     tickBarHeight: 5,
 
     // grid settings
-    gridWidth: 100,
-    gridHeight: 50,
+    gridWidth: 90,
+    gridHeight: 45,
 
     // game settings
     generationDuration: 5000,

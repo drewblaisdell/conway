@@ -74,7 +74,7 @@ define(['socket.io'], function(io) {
     if (player) {
       player.setOnline(true);
     } else {
-      player = this.playerManager.createNewPlayer(player.id, player.name, player.color, player.cells, player.online);      
+      player = this.playerManager.createNewPlayer(playerObj.id, playerObj.name, playerObj.color, playerObj.cells, playerObj.online);      
     }
 
     this.playerManager.setLocalPlayer(player);

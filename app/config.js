@@ -8,8 +8,8 @@ define([], function() {
     cellSpacing: 1,
 
     // grid settings
-    gridWidth: 100,
-    gridHeight: 50,
+    gridWidth: 90,
+    gridHeight: 45,
 
     // game settings
     generationDuration: 5000,

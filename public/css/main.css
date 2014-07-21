@@ -108,10 +108,16 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transform: scale(0.9, 0.9);
 }
 
-#leaderboard, #players-online {
+.leaderboard-container, .players-online-container {
   font-weight: 100;
   width: 30%;
-  margin: 10px 10%;
+  margin: 20px 10% 10px 10%;
+}
+
+.leaderboard-container h2, .players-online-container h2 {
+  font-size: 22px;
+  margin: 0 0 5px;
+  text-align: center;
 }
 
 #leaderboard .color, #players-online .color {
@@ -126,10 +132,10 @@ h1, h2, h3, h4, h5, h6 {
   float: right;
 }
 
-#leaderboard {
+.leaderboard-container {
   float: left;
 }
 
-#players-online {
+.players-online-container {
   float: right;
 }
