@@ -11,15 +11,19 @@
             <h1 class="brand-name">Conway's Multiplayer Game of Life</h1>
             <div id="game">
                 <canvas id="tickbar"></canvas>
-                <canvas id="c"></canvas>
-                <div id="new-player">
-                    <div class="colorpicker">
-                        <div>
-                            your color
+                <div class="canvas-container">
+                    <canvas id="c"></canvas>
+                    <div class="new-player-container">
+                        <div id="new-player">
+                            <div class="colorpicker">
+                                <div>
+                                    your color
+                                </div>
+                            </div>
+                            <input type="text" class="player-name" placeholder="your name">
+                            <a href="#" class="play">play</a>
                         </div>
                     </div>
-                    <input type="text" class="player-name" placeholder="your name">
-                    <a href="#" class="play">play</a>
                 </div>
                 <div id="controls">
                     <div class="place-cells-container">

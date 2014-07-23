@@ -31,9 +31,11 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     this.canvas = document.getElementById('c');
     this.context = this.canvas.getContext('2d');
 
-    this.gameEl = this.canvas.parentElement;
+    this.gameEl = document.getElementById('game');
     this.tickBar = document.getElementById('tickbar');
     this.tickBarContext = this.tickBar.getContext('2d');
+
+    this.newPlayerEl = document.getElementById('new-player');
 
     this.colorpicker = new Colorpicker(this.app);
     this.colorpicker.init();
@@ -73,11 +75,14 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
 
     this.canvas.width = this.pixelWidth;
     this.canvas.height = this.pixelHeight;
+    this.canvas.parentElement.style.width = this.pixelWidth + 'px';
+    this.canvas.parentElement.style.height = this.pixelHeight + 'px';
+
 
     this.tickBar.width = this.pixelWidth;
     this.tickBar.height = this.tickBarHeight;
 
-    $(this.gameEl).width(this.pixelWidth);
+    this.gameEl.style.width = this.pixelWidth + 'px';
 
     this._drawGrid();
   };
@@ -97,6 +102,15 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
 
   Renderer.prototype.clear = function() {
     this.context.clearRect(0, 0, this.pixelWidth, this.pixelHeight);
+  };
+
+  Renderer.prototype.hideOverlay = function() {
+    var _this = this;
+    this.newPlayerEl.parentElement.style.opacity = 0;
+
+    setTimeout(function() {
+      _this.newPlayerEl.parentElement.style.display = 'none';
+    }, 500);
   };
 
   Renderer.prototype.render = function() {

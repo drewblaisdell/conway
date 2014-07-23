@@ -85,6 +85,7 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
   App.prototype.setPlaying = function(playing) {
     this.playing = playing;
 
+    this.renderer.hideOverlay();
     this.renderer.updateControls();
     this.renderer.setAccentColor(this.playerManager.getLocalPlayer().color);
   };
