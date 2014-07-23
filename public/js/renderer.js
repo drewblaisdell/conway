@@ -32,6 +32,7 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     this.context = this.canvas.getContext('2d');
 
     this.gameEl = document.getElementById('game');
+    this.connectingEl = document.getElementById('connecting');
     this.tickBar = document.getElementById('tickbar');
     this.tickBarContext = this.tickBar.getContext('2d');
 
@@ -102,6 +103,18 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
 
   Renderer.prototype.clear = function() {
     this.context.clearRect(0, 0, this.pixelWidth, this.pixelHeight);
+  };
+
+  Renderer.prototype.handleConnect = function() {
+    var _this = this;
+
+    this.connectingEl.style.opacity = 0;
+
+    setTimeout(function() {
+      _this.connectingEl.style.display = 'none';
+      _this.gameEl.style.display = 'block';
+      _this.gameEl.style.opacity = 1;
+    }, 500);
   };
 
   Renderer.prototype.hideOverlay = function() {
@@ -346,8 +359,17 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
   };
 
   Renderer.prototype._handleMouseMove = function(event) {
-    this.lastX = event.offsetX || (event.pageX - this.canvas.offsetLeft);
-    this.lastY = event.offsetY || (event.pageY - this.canvas.offsetTop);
+    if (event.offsetX && event.offsetY) {
+      this.lastX = event.offsetX;
+      this.lastY = event.offsetY;
+    } else {
+      var rect = this.canvas.getBoundingClientRect();
+
+      this.lastX = event.pageX - rect.left - window.scrollX;
+      this.lastY = event.pageY - rect.top - window.scrollY;
+    }
+    // this.lastX = event.offsetX || (event.pageX - this.canvas.offsetLeft);
+    // this.lastY = event.offsetY || (event.pageY - this.canvas.offsetTop);
 
     var player = this.playerManager.getLocalPlayer(),
       oldCell = this.hoveredCell;
@@ -374,12 +396,18 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
   };
 
   Renderer.prototype._handlePlayButtonClick = function(event) {
+    event.preventDefault();
+
     var color = this.color,
       name = document.getElementById('new-player').querySelector('.player-name').value;
 
-    this.gameClient.requestNewPlayer(name, color);
+    if (name.length === 0 || typeof color === undefined) {
+      return false;
+    }
 
-    event.preventDefault();
+    name = name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+    this.gameClient.requestNewPlayer(name, color);
   };
 
   return Renderer;

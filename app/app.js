@@ -27,7 +27,7 @@ define(['game', 'playermanager', 'gameserver'], function(Game, PlayerManager, Ga
       }
 
       if (_this.gameServer.isTimeToSendState()) {
-        // _this.gameServer.sendState();
+        _this.gameServer.sendState();
       }
     
       _this.run();

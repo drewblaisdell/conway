@@ -88,6 +88,8 @@ define(['socket.io'], function(io) {
 
     if (typeof this.callback === 'function') {
       this.callback();
+
+      this.callback = false;
     }
   };
 

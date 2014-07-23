@@ -13,7 +13,9 @@ a {
   font-weight: bold;
 }
 
-
+#connecting {
+  text-align: center;
+}
 
 .brand-name {
   margin-bottom: 5px;
@@ -22,6 +24,12 @@ a {
 
 #game {
   margin: 0 auto;
+  display: none;
+  opacity: 0;
+}
+
+#game, #connecting {
+  -webkit-transition: opacity .5s ease-in;
 }
 
 #tickbar, #c {

@@ -32,6 +32,7 @@ define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Rende
       _this.renderer.updateControls();
       _this.renderer.updateLeaderboard();
       _this.renderer.updatePlayersOnline();
+      _this.renderer.handleConnect();
       _this.run();
     });
   };

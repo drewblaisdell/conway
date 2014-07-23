@@ -23,18 +23,38 @@ define([], function() {
   };
 
   Colorpicker.prototype._handleMouseMove = function(event) {
-    var x = event.offsetX || (event.pageX - this.el.offsetLeft),
-      y = event.offsetY || (event.pageY - this.el.offsetTop),
-      hex = this._hexColorFromXY(x, y);
+    var x, y, hex;
+
+    if (event.offsetX && event.offsetY) {
+      x = event.offsetX;
+      y = event.offsetY; 
+    } else {
+      var rect = this.el.getBoundingClientRect();
+
+      x = event.pageX - rect.left - window.scrollX;
+      y = event.pageY - rect.top - window.scrollY;
+    }
+
+    hex = this._hexColorFromXY(x, y);
 
     this.el.style.background = hex;
   };
 
   Colorpicker.prototype._handleClick = function(event) {
-    var x = event.offsetX || (event.pageX - this.el.offsetLeft),
-      y = event.offsetY || (event.pageY - this.el.offsetTop),
-      hex = this._hexColorFromXY(x, y);
+    var x, y, hex;
 
+    if (event.offsetX && event.offsetY) {
+      x = event.offsetX;
+      y = event.offsetY; 
+    } else {
+      var rect = this.el.getBoundingClientRect();
+
+      x = event.pageX - rect.left - window.scrollX;
+      y = event.pageY - rect.top - window.scrollY;
+    }
+
+    hex = this._hexColorFromXY(x, y);
+    
     this.pickedColor = hex;
 
     this.renderer.setAccentColor(hex);
