@@ -84,8 +84,8 @@ a {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.5);
   bottom: 0;
+  background: rgba(255, 255, 255, .5);
   -webkit-transition: opacity .5s ease-in;
 }
 
@@ -93,13 +93,13 @@ a {
   text-align: center;
   position: absolute;
   left: 50%;
-  bottom: 20%;
+  bottom: 24%;
   width: 192px;
   margin-left: -108px;
   background: #fff;
   padding: 25px;
-  border: solid 1px #000;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, .8);
+  border: solid 1px #999;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .4);
 }
 
 #new-player input {
