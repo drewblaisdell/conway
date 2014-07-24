@@ -1,4 +1,4 @@
-define(['game', 'renderer', 'gameclient', 'playermanager'], function(Game, Renderer, GameClient, PlayerManager) {
+define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(Game, Renderer, GameClient, PlayerManager) {
   var App = function(config) {
     this.config = config;
   };

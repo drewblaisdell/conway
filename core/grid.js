@@ -1,4 +1,4 @@
-define(['cell'], function(Cell) {
+define(['core/cell'], function(Cell) {
   var Grid = function(app) {
     this.app = app;
     this.cells = [];

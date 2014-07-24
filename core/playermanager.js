@@ -1,4 +1,4 @@
-define(['player'], function(Player) {
+define(['core/player'], function(Player) {
   var PlayerManager = function(app) {
     this.app = app;
     this.config = app.config;

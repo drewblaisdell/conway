@@ -1,4 +1,4 @@
-define(['grid'], function(Grid) {
+define(['core/grid'], function(Grid) {
   var Game = function(app) {
     this.app = app;
     this.playerManager = app.playerManager;
