@@ -61,6 +61,8 @@ define([], function() {
 
     this.playButton.style.borderColor = hex;
     this.playButton.style.color = hex;
+
+    this.renderer.setFaviconColor(hex);
   };
 
   Colorpicker.prototype._handleMouseLeave = function(event) {

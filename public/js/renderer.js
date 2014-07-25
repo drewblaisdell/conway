@@ -35,6 +35,7 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     this.connectingEl = document.getElementById('connecting');
     this.tickBar = document.getElementById('tickbar');
     this.tickBarContext = this.tickBar.getContext('2d');
+    this.favicon = document.getElementById('favicon');
 
     this.newPlayerEl = document.getElementById('new-player');
 
@@ -86,6 +87,9 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     this.gameEl.style.width = this.pixelWidth + 'px';
 
     this._drawGrid();
+
+    this.setAccentColor(this.config.defaultAccentColor);
+    this.setFaviconColor(this.config.defaultAccentColor);
   };
 
   Renderer.prototype.getCellFromPosition = function(x, y) {
@@ -171,6 +175,22 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
 
   Renderer.prototype.setAccentColor = function(color) {
     this.color = color;
+  };
+
+  Renderer.prototype.setFaviconColor = function(color) {
+    var canvas = document.createElement('canvas'),
+      link = this.favicon,
+      context;
+
+    canvas.width = 16,
+    canvas.height = 16,
+    context = canvas.getContext('2d'),
+
+    context.fillStyle = color;
+    context.fillRect(0, 0, 16, 16);
+    context.fill();
+
+    link.href = canvas.toDataURL();
   };
 
   Renderer.prototype.updateControls = function() {
