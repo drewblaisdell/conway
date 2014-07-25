@@ -89,6 +89,7 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
     this.renderer.hideOverlay();
     this.renderer.updateControls();
     this.renderer.setAccentColor(this.playerManager.getLocalPlayer().color);
+    this.renderer.setFaviconColor(this.playerManager.getLocalPlayer().color);
   };
 
   App.prototype.setToken = function(token) {
