@@ -48,14 +48,14 @@ define([], function() {
     socket.emit('state', this.app.getState());
   };
 
-  GameServer.prototype._handleDisconnect = function(socket, player, msg) {
+  GameServer.prototype._handleDisconnect = function(socket, player, message) {
     player.setOnline(false);
     socket.broadcast.emit('player_disconnect', { playerId: player.id });
   };
 
-  GameServer.prototype._handleRequestPlayer = function(socket, msg) {
+  GameServer.prototype._handleRequestPlayer = function(socket, message) {
     var transmission,
-      token = msg['token'],
+      token = message['token'],
       player = this.playerManager.getPlayer(this.tokens[token]);
 
     if (player) {
@@ -74,9 +74,9 @@ define([], function() {
     }
   };
 
-  GameServer.prototype._handleRequestNewPlayer = function(socket, msg) {
-    var name = msg.name,
-      color = msg.color,
+  GameServer.prototype._handleRequestNewPlayer = function(socket, message) {
+    var name = message.name,
+      color = message.color,
       player = this.playerManager.createNewPlayer(undefined, name, color),
       token = this.getPlayerToken(player);
 
@@ -95,9 +95,14 @@ define([], function() {
     socket.on('disconnect', this._handleDisconnect.bind(this, socket, player));
   };
 
-  GameServer.prototype._handlePlaceLiveCells = function(msg) {
-    var cells = msg.cells,
-      player = this.playerManager.getPlayer(msg.playerId);
+  GameServer.prototype._handlePlaceLiveCells = function(message) {
+    var cells = message.cells,
+      player = this.playerManager.getPlayer(message.playerId),
+      token = this.getPlayerToken(player);
+
+    if (token !== message.token) {
+      return false;
+    }
 
     if (this.game.canPlaceLiveCells(player, cells)) {
       this.game.placeCells(player, cells);
@@ -107,12 +112,12 @@ define([], function() {
         player: player
       });
     } else {
-
+      // do nothing for now
     }
   };
 
-  GameServer.prototype._handleStateRequest = function(socket, msg) {
-    var playerId = msg;
+  GameServer.prototype._handleStateRequest = function(socket, message) {
+    var playerId = message;
 // TODO: rate-limit this endpoint
 console.log("sending state to out of sync client");
     this.sendStateToSocket(socket);

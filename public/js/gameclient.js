@@ -35,13 +35,13 @@ define(['socket.io'], function(io) {
     this.socket.emit('request_new_player', { 'name': name, 'color': color });
   };
 
-  GameClient.prototype._handleCellsPlaced = function(msg) {
-    var cells = msg.cells,
-      cellCount = msg.cellCount,
-      player = this.playerManager.getPlayer(msg.player.id);
+  GameClient.prototype._handleCellsPlaced = function(message) {
+    var cells = message.cells,
+      cellCount = message.cellCount,
+      player = this.playerManager.getPlayer(message.player.id);
     
     this.game.placeCells(player, cells);
-    this.playerManager.updatePlayer(msg.player);
+    this.playerManager.updatePlayer(message.player);
 
     this._testStateSync(cellCount);
   };
@@ -82,8 +82,8 @@ define(['socket.io'], function(io) {
     this.app.setPlaying(true);
   };
 
-  GameClient.prototype._handleState = function(msg) {
-    this.app.updateState(msg);
+  GameClient.prototype._handleState = function(message) {
+    this.app.updateState(message);
     this.outOfSync = false;
 
     if (typeof this.callback === 'function') {
@@ -125,12 +125,13 @@ define(['socket.io'], function(io) {
   GameClient.prototype.placeLiveCells = function(cells, callback) {
     var _this = this,
       localPlayer = this.playerManager.getLocalPlayer(),
-      msg = {
-        'cells': cells,
-        'playerId': localPlayer.id
+      message = {
+        cells: cells,
+        playerId: localPlayer.id,
+        token: this.app.getToken()
       };
 
-    this.socket.emit('place_live_cells', msg);
+    this.socket.emit('place_live_cells', message);
   };
 
   return GameClient;
