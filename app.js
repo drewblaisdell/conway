@@ -21,8 +21,10 @@ requirejs(['app/main.js'], function(Conway) {
   // Development
   if (environment === 'development') {
     app.use(errorhandler());
-    app.use(express.static(path.join(__dirname, 'public')));
   }
+
+  app.use(express.static(path.join(__dirname, 'public')));
+
 
   http.listen(app.get('port'), function() {
     console.log('Conway started: ' + app.get('port') + ' (' + environment + ')');

@@ -2,3 +2,5 @@
 node_modules
 app/core
 public/js/core
+public/js/main-built.js
+public/index.html

@@ -16,6 +16,8 @@
   "devDependencies": {
     "errorhandler": "~1.0.2",
     "grunt": "^0.4.5",
-    "grunt-contrib-copy": "^0.5.0"
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-processhtml": "^0.3.3"
   }
 }
