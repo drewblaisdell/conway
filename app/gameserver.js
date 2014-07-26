@@ -40,6 +40,15 @@ define([], function() {
     socket.emit('state', this.app.getState());
   };
 
+  GameServer.prototype._broadcastPlayerConnect = function(socket, player) {
+    socket.broadcast.emit('player_connect', {
+      cellCount: this.game.grid.getLivingCellCount(),
+      player: player.transmission()
+    });
+
+    console.log(player.name, 'joined.', this.playerManager.getOnlinePlayers().length, 'player(s) online.');
+  };
+
   GameServer.prototype._handleConnect = function(socket) {
     socket.on('request_state', this._handleStateRequest.bind(this, socket));
     socket.on('request_player', this._handleRequestPlayer.bind(this, socket));
@@ -51,6 +60,8 @@ define([], function() {
   GameServer.prototype._handleDisconnect = function(socket, player, message) {
     player.setOnline(false);
     socket.broadcast.emit('player_disconnect', { playerId: player.id });
+
+    console.log(player.name, 'left.', this.playerManager.getOnlinePlayers().length, 'player(s) online.');
   };
 
   GameServer.prototype._handleRequestPlayer = function(socket, message) {
@@ -64,10 +75,7 @@ define([], function() {
       transmission = player.transmission();
       socket.emit('receive_new_player', { player: transmission, token: token });
 
-      socket.broadcast.emit('player_connect', {
-        cellCount: this.game.grid.getLivingCellCount(),
-        player: player.transmission()
-      });
+      this._broadcastPlayerConnect(socket, player);
 
       socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));
       socket.on('disconnect', this._handleDisconnect.bind(this, socket, player));
@@ -77,6 +85,8 @@ define([], function() {
   GameServer.prototype._handleRequestNewPlayer = function(socket, message) {
     var name = message.name,
       color = message.color,
+// TODO: change createNewPlayer so it accepts an object
+// instead of relying on passing an undefined ID
       player = this.playerManager.createNewPlayer(undefined, name, color),
       token = this.getPlayerToken(player);
 
@@ -86,10 +96,7 @@ define([], function() {
 
     socket.emit('receive_new_player', { player: player.transmission(), token: token });
 
-    socket.broadcast.emit('player_connect', {
-      cellCount: this.game.grid.getLivingCellCount(),
-      player: player.transmission()
-    });
+    this._broadcastPlayerConnect(socket, player);
 
     socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));
     socket.on('disconnect', this._handleDisconnect.bind(this, socket, player));
@@ -117,9 +124,6 @@ define([], function() {
   };
 
   GameServer.prototype._handleStateRequest = function(socket, message) {
-    var playerId = message;
-// TODO: rate-limit this endpoint
-console.log("sending state to out of sync client");
     this.sendStateToSocket(socket);
   };
 

@@ -50,7 +50,10 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
         _this.renderer.updateLeaderboard();
       }
 
-      _this.renderer.renderChanges();
+      if (!_this.game.isBehindOnTicks()) {
+        _this.renderer.renderChanges();
+      }
+      
       _this.run();
     });
 

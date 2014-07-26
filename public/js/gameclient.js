@@ -32,6 +32,7 @@ define(['socket.io'], function(io) {
   };
 
   GameClient.prototype.requestNewPlayer = function(name, color) {
+    name = name.trim();
     this.socket.emit('request_new_player', { 'name': name, 'color': color });
   };
 

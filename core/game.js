@@ -1,6 +1,7 @@
 define(['core/grid'], function(Grid) {
   var Game = function(app) {
     this.app = app;
+    this.config = app.config;
     this.playerManager = app.playerManager;
 
     this.generation = 0;
@@ -43,6 +44,12 @@ define(['core/grid'], function(Grid) {
   Game.prototype.isTimeToTick = function() {
     var now = Date.now();
     return (now >= this.nextTick);
+  };
+
+  Game.prototype.isBehindOnTicks = function() {
+    var now = Date.now();
+
+    return ((now - this.nextTick) > this.config.generationDuration);
   };
 
   Game.prototype.percentageOfTick = function() {
