@@ -83,12 +83,27 @@ define([], function() {
   };
 
   GameServer.prototype._handleRequestNewPlayer = function(socket, message) {
-    var name = message.name,
+    var name = message.name.trim(),
       color = message.color,
+      player,
+      errorMessage = '',
+      token;
+
+    if (this.playerManager.getPlayerByName(name)) {
+      errorMessage = 'The name ' + name + ' is already taken';
+    } else if (name.length > 26) {
+      errorMessage = 'Your name cannot be longer than 26 characters.';
+    }
+
+    if (errorMessage.length > 0) {
+      socket.emit('new_player_error', { message: errorMessage });
+      return false;
+    }
+
 // TODO: change createNewPlayer so it accepts an object
 // instead of relying on passing an undefined ID
-      player = this.playerManager.createNewPlayer(undefined, name, color),
-      token = this.getPlayerToken(player);
+    player = this.playerManager.createNewPlayer(undefined, name, color);
+    token = this.getPlayerToken(player);
 
     this.tokens[token] = player.id;
 

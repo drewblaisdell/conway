@@ -7,6 +7,10 @@ define([], function() {
     this.pickedColor = false;
   };
 
+  Colorpicker.prototype.colorWasPicked = function() {
+    return (this.pickedColor !== false);
+  };
+
   Colorpicker.prototype.init = function() {
     this.playButton = document.getElementById('new-player').querySelector('.play');
 
@@ -63,6 +67,9 @@ define([], function() {
     this.playButton.style.color = hex;
 
     this.renderer.setFaviconColor(hex);
+
+    // select the name box
+    this.renderer.nameInput.focus();
   };
 
   Colorpicker.prototype._handleMouseLeave = function(event) {

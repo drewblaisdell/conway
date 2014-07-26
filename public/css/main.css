@@ -100,11 +100,20 @@ a {
   left: 50%;
   bottom: 24%;
   width: 192px;
-  margin-left: -108px;
+  margin-left: -107px;
   background: #fff;
   padding: 25px;
   border: solid 1px #999;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .4);
+}
+
+#new-player-error-message {
+  display: none;
+  margin-top: 10px;
+  font-size: 12px;
+  background: #fee;
+  padding: 3px;
+  border: solid 1px #faa;
 }
 
 #new-player input {

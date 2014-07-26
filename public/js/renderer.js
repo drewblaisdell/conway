@@ -36,7 +36,8 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     this.tickBar = document.getElementById('tickbar');
     this.tickBarContext = this.tickBar.getContext('2d');
     this.favicon = document.getElementById('favicon');
-
+    this.nameInput = document.getElementById('new-player').querySelector('.player-name');
+    this.newPlayerErrorEl = document.getElementById('new-player-error-message');
     this.newPlayerEl = document.getElementById('new-player');
 
     this.colorpicker = new Colorpicker(this.app);
@@ -53,12 +54,19 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     // request a new player when the play button is clicked
     this.playButton.addEventListener('click', this._handlePlayButtonClick.bind(this), false);
 
+    // submit new player on enter when selecting the input box
+    this.nameInput.addEventListener('keypress', function(event) {
+      var key = event.which || event.keyCode;
+
+      if (key === 13) {
+        _this._handlePlayButtonClick.bind(_this)(event);
+      }
+    });
+
     // prevent text selection when interacting with the canvas
     this.canvas.addEventListener('selectstart', function(e) {
       event.preventDefault();
     });
-
-    var that = this;
 
     // "log out" of the current user
     document.getElementById('leave-game').addEventListener('click', this._handleLeaveGame.bind(this), false);
@@ -128,6 +136,11 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     setTimeout(function() {
       _this.newPlayerEl.parentElement.style.display = 'none';
     }, 500);
+  };
+
+  Renderer.prototype.newPlayerError = function(message) {
+    this.newPlayerErrorEl.innerHTML = message;
+    this.newPlayerErrorEl.style.display = 'block';
   };
 
   Renderer.prototype.render = function() {
@@ -388,8 +401,6 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
       this.lastX = event.pageX - rect.left - window.scrollX;
       this.lastY = event.pageY - rect.top - window.scrollY;
     }
-    // this.lastX = event.offsetX || (event.pageX - this.canvas.offsetLeft);
-    // this.lastY = event.offsetY || (event.pageY - this.canvas.offsetTop);
 
     var player = this.playerManager.getLocalPlayer(),
       oldCell = this.hoveredCell;
@@ -419,9 +430,9 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     event.preventDefault();
 
     var color = this.color,
-      name = document.getElementById('new-player').querySelector('.player-name').value;
+      name = this.nameInput.value;
 
-    if (name.length === 0 || typeof color === undefined) {
+    if (name.length === 0 || !this.colorpicker.colorWasPicked()) {
       return false;
     }
 

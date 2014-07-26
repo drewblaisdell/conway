@@ -88,6 +88,16 @@ define(['core/player'], function(Player) {
     return this.players;
   };
 
+  PlayerManager.prototype.getPlayerByName = function(name) {
+    for (var i = 0; i < this.players.length; i++) {
+      if (this.players[i].name === name) {
+        return this.players[i];
+      }
+    }
+
+    return false;
+  };
+
   PlayerManager.prototype.setLocalPlayer = function(player) {
     this.localPlayer = this.getPlayer(player.id);
   };

@@ -25,6 +25,7 @@ define(['socket.io'], function(io) {
     this.socket.on('player_connect', this._handlePlayerConnect.bind(this));
     this.socket.on('receive_new_player', this._handleReceiveNewPlayer.bind(this));
     this.socket.on('player_disconnect', this._handlePlayerDisconnect.bind(this));
+    this.socket.on('new_player_error', this._handleNewPlayerError.bind(this));
   };
 
   GameClient.prototype.requestPlayer = function(token) {
@@ -45,6 +46,12 @@ define(['socket.io'], function(io) {
     this.playerManager.updatePlayer(message.player);
 
     this._testStateSync(cellCount);
+  };
+
+  GameClient.prototype._handleNewPlayerError = function(message) {
+    var message = message.message;
+
+    this.app.renderer.newPlayerError(message);
   };
 
   GameClient.prototype._handlePlayerConnect = function(message) {
