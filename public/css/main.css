@@ -162,6 +162,10 @@ a {
   -webkit-transform: scale(0.9, 0.9);
 }
 
+.boards {
+  margin-bottom: 20px;
+}
+
 .leaderboard-container, .players-online-container {
   font-weight: 100;
   width: 30%;
@@ -184,6 +188,14 @@ a {
 
 #leaderboard .cells {
   float: right;
+}
+
+#leaderboard, #players-online {
+  height: 210px;
+  overflow: auto;
+  margin-bottom: 20px;
+  border-top: solid 1px #DDD;
+  padding-top: 10px;
 }
 
 .leaderboard-container {
