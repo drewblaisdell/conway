@@ -82,39 +82,49 @@ define([], function() {
   };
 
   Colorpicker.prototype._hexColorFromXY = function(x, y) {
-    x = (x < 100) ? x / 2 : x;
-    x = Math.floor(x) * 4;
-    y = Math.floor(y) * 2;
-    var z = parseInt(x.toString().slice(0, 2)) + parseInt(y.toString().slice(0, 2));
+    var hue = (x / 194),
+      sat = (y / 100),
+      lit = .5,
+      rgb,
+      hex;
 
-    // This function is inspired by the hex-from-int function
-    // in Svbtle's awesome colorpicker.
-    function hexFromValue(v) {
-      var l = {
-        10: 'A',
-        11: 'B',
-        12: 'C',
-        13: 'D',
-        14: 'E',
-        15: 'F'
-      };
-
-      v = v.toString();
-
-      if (v.length === 1) {
-        return '0' + v;
-      } else if (v.length === 3) {
-        var n1 = v.slice(0, 2),
-          n2 = v.slice(2, 3),
-          n1 = l[n1] ? l[n1] : 'F';
-
-        return n1 + n2;
-      } else {
-        return v;
-      }
+    if (sat < .3) {
+      sat = .3;
+      lit = (x + y) / 294;
     }
 
-    hex = '#' + hexFromValue(Math.floor(x / 2)) + hexFromValue(y) + hexFromValue(z);
+    function HSLtoRGB(h, s, l){
+      var r, g, b;
+
+      if (s == 0) {
+        r = g = b = l; // achromatic
+      } else {
+        function hue2rgb(p, q, t) {
+          if(t < 0) t += 1;
+          if(t > 1) t -= 1;
+          if(t < 1/6) return p + (q - p) * 6 * t;
+          if(t < 1/2) return q;
+          if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+        }
+
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+
+      return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    }
+
+    function componentToHex(c) {
+      var hex = c.toString(16);
+      return hex.length == 1 ? "0" + hex : hex;
+    }
+
+    rgb = HSLtoRGB(hue, sat, lit);
+    hex = '#' + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
 
     return hex;
   };
