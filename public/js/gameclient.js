@@ -43,6 +43,7 @@ define(['socket.io'], function(io) {
       player = this.playerManager.getPlayer(message.player.id);
     
     this.game.placeCells(player, cells);
+    this.game.updatePlayerStats();
     this.playerManager.updatePlayer(message.player);
 
     this._testStateSync(cellCount);

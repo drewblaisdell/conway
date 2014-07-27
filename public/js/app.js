@@ -89,8 +89,14 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
   App.prototype.setPlaying = function(playing) {
     this.playing = playing;
 
-    this.renderer.hideOverlay();
+    if (playing) {
+      this.renderer.hideOverlay();
+      this.renderer.showControls();
+      this.renderer.showStats();
+    }
+
     this.renderer.updateControls();
+    this.renderer.updateStats();
     this.renderer.setAccentColor(this.playerManager.getLocalPlayer().color);
     this.renderer.setFaviconColor(this.playerManager.getLocalPlayer().color);
   };

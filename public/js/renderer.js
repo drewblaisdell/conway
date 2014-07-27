@@ -1,4 +1,4 @@
-define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Colorpicker, Leaderboard, PlayersOnline) {
+define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Leaderboard, PlayersOnline) {
   var Renderer = function(app) {
     this.app = app;
     this.game = app.game;
@@ -14,6 +14,8 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     this.hoveredCell = undefined;
     this.flaggedCells = [];
     this.onlinePlayerCount = this.playerManager.getOnlinePlayers().length;
+    this.lastCellsOnGrid = 0;
+    this.lastCellCount = 0;
 
     this.pixelWidth = this.width * (this.cellSize + this.spacing) + 1;
     this.pixelHeight = this.height * (this.cellSize + this.spacing) + 1;
@@ -39,6 +41,11 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     this.nameInput = document.getElementById('new-player').querySelector('.player-name');
     this.newPlayerErrorEl = document.getElementById('new-player-error-message');
     this.newPlayerEl = document.getElementById('new-player');
+    this.controlsEl = document.getElementById('controls');
+    this.placeCellsEl = this.controlsEl.querySelector('.place-cells');
+    this.statsEl = document.getElementById('stats');
+    this.cellCountEl = this.statsEl.querySelector('.cell-count');
+    this.cellsOnGridEl = this.statsEl.querySelector('.cells-on-grid');
 
     this.colorpicker = new Colorpicker(this.app);
     this.colorpicker.init();
@@ -81,7 +88,7 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     this.canvas.addEventListener('click', this._handleClick.bind(this), false);
 
     // attempt to place flagged cells when the place cells button is pushed
-    $('#controls .place-cells').on('click', this._handlePlaceCells.bind(this));
+    this.placeCellsEl.addEventListener('click', this._handlePlaceCells.bind(this));
 
     this.canvas.width = this.pixelWidth;
     this.canvas.height = this.pixelHeight;
@@ -162,7 +169,9 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     var now = Date.now(),
       cells = this.grid.getCells(),
       localPlayer = this.playerManager.getLocalPlayer(),
-      onlinePlayerCount = this.playerManager.getOnlinePlayers().length;
+      onlinePlayerCount = this.playerManager.getOnlinePlayers().length,
+      cellCount,
+      cellsOnGrid;
 
     for (var i = 0; i < cells.length; i++) {
       if (cells[i].isDirty()) {
@@ -183,6 +192,18 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
       this.onlinePlayerCount = onlinePlayerCount;
 
       this.updatePlayersOnline();
+    }
+
+    if (localPlayer) {
+      cellCount = localPlayer.cells;
+      cellsOnGrid = localPlayer.cellsOnGrid;
+
+      if (cellCount !== this.lastCellCount || cellsOnGrid !== this.cellsOnGrid) {
+        this.lastCellCount = cellCount;
+        this.cellsOnGrid = cellsOnGrid;
+
+        this.updateStats();
+      }
     }
   };
 
@@ -206,6 +227,14 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
     link.href = canvas.toDataURL();
   };
 
+  Renderer.prototype.showControls = function() {
+    this.controlsEl.style.display = 'block';
+  };
+
+  Renderer.prototype.showStats = function() {
+    this.statsEl.style.display = 'block';
+  };
+
   Renderer.prototype.updateControls = function() {
     var localPlayer = this.playerManager.getLocalPlayer();
 
@@ -213,24 +242,27 @@ define(['jquery', 'colorpicker', 'leaderboard', 'playersonline'], function($, Co
       var cellCount = localPlayer.cells,
         cellsOnGrid = localPlayer.cellsOnGrid;
 
-      $('#controls, #stats').show();
-      $('#new-player').hide();
-
-      $('#stats .cell-count').text(cellCount);
-      $('#stats .cells-on-grid').text(cellsOnGrid);
-
       if (this.flaggedCells.length > 0 && localPlayer.cells >= this.flaggedCells.length) {
-        $('#controls .place-cells')
-          .addClass('enabled')
-          .css('border-color', this.color);
+        this.placeCellsEl.className = 'place-cells enabled';
+        this.placeCellsEl.style.borderColor = this.color;
       } else {
-        $('#controls .place-cells')
-        .removeClass('enabled')
-        .css('border-color', '');
+        this.placeCellsEl.className = 'place-cells';
+        this.placeCellsEl.style.borderColor = '';
       }
-    } else {
-      $('#controls, #stats').hide();
-      $('#new-player').show();
+    }
+  };
+
+  Renderer.prototype.updateStats = function() {
+    var localPlayer = this.playerManager.getLocalPlayer(),
+      cellCount,
+      cellsOnGrid;
+
+    if (localPlayer) {
+      cellCount = localPlayer.cells;
+      cellsOnGrid = localPlayer.cellsOnGrid;
+
+      this.cellCountEl.innerHTML = cellCount;
+      this.cellsOnGridEl.innerHTML = cellsOnGrid;
     }
   };
 
