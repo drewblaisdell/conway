@@ -1,9 +1,7 @@
 define([], function() {
   return {
     // render settings
-    aliveCellColor: '#00aaff',
     deadCellColor: '#ffffff',
-    hoveredCellColor: '#11ff77',
     defaultAccentColor: '#000000',
     cellSize: 9,
     cellSpacing: 1,
@@ -18,6 +16,6 @@ define([], function() {
     timeBetweenUpdates: 10000,
 
     // player settings
-    cellsPerPlayer: 100
+    cellsPerPlayer: 12
   };
 });
