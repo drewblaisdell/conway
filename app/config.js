@@ -11,7 +11,8 @@ define([], function() {
 
     // game settings
     generationDuration: 5000,
-
+    giveCellsEvery: 3, // generations
+    
     // player settings
     cellsPerPlayer: 12,
     defaultPlayerColor: '#00aaff',

@@ -38,6 +38,9 @@
                                 github
                             </a>
                         </li>
+                        <li id="leave-game-container">
+                            <a href="#" id="leave-game">leave game</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -68,16 +71,26 @@
                     </div>
                 </div>
                 <div id="stats">
+                    <div class="high-score-container">
+                        high score: 
+                        <span id="high-score">0</span>
+                    </div>
                     <div class="cell-count-container">
                         <span class="cell-count"></span>
-                        cells left
+                        cells to place
                     </div>
                     <div class="cells-on-grid-container">
                         <span class="cells-on-grid"></span>
                         cells on board
                     </div>
-                    <div class="leave-game-container">
-                        <a href="#" id="leave-game">leave game</a>
+                    <div class="flash">
+                        <div class="new-cell-container">
+                            <div id="new-cell-message">+1 new cell</div>
+                        </div>
+
+                        <div class="new-high-score-container">
+                            <div id="new-high-score-message">new high score</div>
+                        </div>
                     </div>
                 </div>
                 <div class="boards">

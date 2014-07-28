@@ -24,6 +24,10 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
       if (_this.game.isTimeToTick()) {
         _this.game.tick();
         _this.game.updatePlayerStats();
+        
+        if (_this.game.isTimeToGiveNewCells()) {
+          _this.game.giveNewCells();
+        }
       }
     
       _this.run();

@@ -48,9 +48,16 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
       // go to next generation
       if (_this.game.isTimeToTick()) {
         _this.game.tick();
+
+        if (_this.game.isTimeToGiveNewCells()) {
+          _this.game.giveNewCells();
+          _this.renderer.flashNewCell();
+        }
+
         _this.game.updatePlayerStats();
         _this.renderer.updateControls();
         _this.renderer.updateLeaderboard();
+        _this.renderer.flashNewHighScore();
       }
 
       if (!_this.game.isBehindOnTicks()) {
@@ -95,6 +102,7 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
     if (playing) {
       this.renderer.hideOverlay();
       this.renderer.showControls();
+      this.renderer.showLeaveGameContainer();
       this.renderer.showStats();
     }
 

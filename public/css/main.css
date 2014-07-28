@@ -269,7 +269,40 @@ a {
   float: right;
 }
 
-#leave-game {
-  text-transform: lowercase;
+#leave-game-container {
+  display: none;
+}
+
+#new-cell-message {
+  height: 0;
+}
+
+#new-cell-message, #new-high-score-message {
+  text-transform: uppercase;
   font-weight: bold;
+  opacity: 0;
+  position: relative;
+  top: 10px;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+#new-cell-message.active {
+  height: 12px;
+}
+
+#new-cell-message.active, #new-high-score-message.active {
+  opacity: 1;
+  top: 0;
+}
+
+.flash {
+  height: 30px;
+  text-align: center;
 }

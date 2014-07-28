@@ -36,9 +36,24 @@ define(['core/grid'], function(Grid) {
     return this.playerStats;
   };
 
+  Game.prototype.giveNewCells = function() {
+    var players = this.playerManager.getPlayers();
+
+    for (var i = 0; i < players.length; i++) {
+      // give each player another cell if they don't already have the max
+      if (players[i].cells < this.config.cellsPerPlayer) {
+        players[i].cells++;
+      }
+    }
+  };
+
   Game.prototype.init = function(width, height) {
     this.grid = new Grid(this.app);
     this.grid.init(width, height);
+  };
+
+  Game.prototype.isTimeToGiveNewCells = function() {
+    return this.generation % this.config.giveCellsEvery === 0;
   };
 
   Game.prototype.isTimeToTick = function() {

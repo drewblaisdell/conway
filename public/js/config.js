@@ -13,6 +13,7 @@ define([], function() {
 
     // game settings
     generationDuration: 5000,
+    giveCellsEvery: 3, // generations
     timeBetweenUpdates: 10000,
 
     // player settings

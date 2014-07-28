@@ -14,6 +14,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.hoveredCell = undefined;
     this.flaggedCells = [];
     this.onlinePlayerCount = this.playerManager.getOnlinePlayers().length;
+    this.lastHighScore = 0;
     this.lastCellsOnGrid = 0;
     this.lastCellCount = 0;
 
@@ -44,9 +45,13 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.controlsEl = document.getElementById('controls');
     this.placeCellsEl = this.controlsEl.querySelector('.place-cells');
     this.statsEl = document.getElementById('stats');
+    this.highScoreEl = document.getElementById('high-score');
     this.cellCountEl = this.statsEl.querySelector('.cell-count');
     this.cellsOnGridEl = this.statsEl.querySelector('.cells-on-grid');
     this.rulesEl = document.getElementById('rules');
+    this.leaveGameContainerEl = document.getElementById('leave-game-container');
+    this.newCellMessageEl = document.getElementById('new-cell-message');
+    this.newHighScoreMessageEl = document.getElementById('new-high-score-message'); 
 
     this.colorpicker = new Colorpicker(this.app);
     this.colorpicker.init();
@@ -129,6 +134,36 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
 
   Renderer.prototype.clear = function() {
     this.context.clearRect(0, 0, this.pixelWidth, this.pixelHeight);
+  };
+
+  Renderer.prototype.flashNewCell = function() {
+    var _this = this,
+      localPlayer = this.playerManager.getLocalPlayer();
+
+    if (localPlayer && localPlayer.cells < this.config.cellsPerPlayer) {
+      this.newCellMessageEl.className = 'active';
+      this.newCellMessageEl.style.color = this.color;
+
+      setTimeout(function() {
+        _this.newCellMessageEl.className = '';
+      }, 1500);
+    }
+  };
+
+  Renderer.prototype.flashNewHighScore = function() {
+    var _this = this,
+      localPlayer = this.playerManager.getLocalPlayer();
+
+    if (localPlayer && localPlayer.highScore > this.lastHighScore) {
+      this.lastHighScore = localPlayer.highScore;
+
+      this.newHighScoreMessageEl.className = 'active';
+      this.newHighScoreMessageEl.style.color = this.color;
+
+      setTimeout(function() {
+        _this.newHighScoreMessageEl.className = '';
+      }, 1500);
+    }
   };
 
   Renderer.prototype.handleConnect = function() {
@@ -248,6 +283,10 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.controlsEl.style.display = 'block';
   };
 
+  Renderer.prototype.showLeaveGameContainer = function() {
+    this.leaveGameContainerEl.style.display = 'inline-block';
+  };
+
   Renderer.prototype.showRules = function() {
     var _this = this;
     this.rulesEl.style.display = 'block';
@@ -289,6 +328,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
       cellCount = localPlayer.cells;
       cellsOnGrid = localPlayer.cellsOnGrid;
 
+      this.highScoreEl.innerHTML = localPlayer.highScore;
       this.cellCountEl.innerHTML = cellCount;
       this.cellsOnGridEl.innerHTML = cellsOnGrid;
     }
@@ -454,8 +494,10 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
   };
 
   Renderer.prototype._handleLeaveGame = function(event) {
-    this.app.deleteToken();
-    location.reload();
+    if (confirm("Are you sure you want to leave? You won't be able to log in to your user again.")) {
+      this.app.deleteToken();
+      location.reload();
+    }
 
     event.preventDefault();
   };
