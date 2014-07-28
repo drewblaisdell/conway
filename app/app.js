@@ -25,10 +25,6 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
         _this.game.tick();
         _this.game.updatePlayerStats();
       }
-
-      if (_this.gameServer.isTimeToSendState()) {
-        _this.gameServer.sendState();
-      }
     
       _this.run();
     }, 1000 / 30);

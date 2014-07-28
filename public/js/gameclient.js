@@ -57,7 +57,8 @@ define(['socket.io'], function(io) {
 
   GameClient.prototype._handlePlayerConnect = function(message) {
     var playerObj = message.player,
-      player = this.playerManager.getPlayer(playerObj.id);
+      player = this.playerManager.getPlayer(playerObj.id),
+      cellCount = message.cellCount;
 
     if (player) {
       player.setOnline(true);
@@ -72,6 +73,8 @@ define(['socket.io'], function(io) {
     }
 
     console.log(player.name + ' has joined.');
+
+    this._testStateSync(cellCount);
   };
 
   GameClient.prototype._handlePlayerDisconnect = function(message) {
@@ -118,7 +121,7 @@ define(['socket.io'], function(io) {
     if (this.hidden && this.outOfSync) {
       // the page wasn't visible and is out of sync, request state
       this._requestState();
-    }
+    } 
     
     this.hidden = document.hidden;
   };
