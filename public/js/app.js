@@ -23,7 +23,10 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
     this.renderer.init();
 
     this.gameClient.init(function() {
+      // this callback is executed once the gameClient receives the state
+
       token = _this.getToken()
+      
       if (token) {
         _this.gameClient.requestPlayer(token);
       }

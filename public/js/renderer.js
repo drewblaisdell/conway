@@ -268,7 +268,9 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
       var cellCount = localPlayer.cells,
         cellsOnGrid = localPlayer.cellsOnGrid;
 
-      if (this.flaggedCells.length > 0 && localPlayer.cells >= this.flaggedCells.length) {
+      if (this.flaggedCells.length > 0
+        && localPlayer.cells >= this.flaggedCells.length
+        && this.game.canPlaceLiveCells(localPlayer, this.flaggedCells)) {
         this.placeCellsEl.className = 'place-cells enabled';
         this.placeCellsEl.style.borderColor = this.color;
       } else {
