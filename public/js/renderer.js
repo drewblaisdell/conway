@@ -46,6 +46,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.statsEl = document.getElementById('stats');
     this.cellCountEl = this.statsEl.querySelector('.cell-count');
     this.cellsOnGridEl = this.statsEl.querySelector('.cells-on-grid');
+    this.rulesEl = document.getElementById('rules');
 
     this.colorpicker = new Colorpicker(this.app);
     this.colorpicker.init();
@@ -74,6 +75,12 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.canvas.addEventListener('selectstart', function(e) {
       event.preventDefault();
     });
+
+    // show the rules
+    document.getElementById('rules-link').addEventListener('click', this._handleClickRulesLink.bind(this), false);
+
+    // hide the rules when clicking the overlay
+    this.rulesEl.addEventListener('click', this._handleClickRulesOverlay.bind(this), false);
 
     // "log out" of the current user
     document.getElementById('leave-game').addEventListener('click', this._handleLeaveGame.bind(this), false);
@@ -134,6 +141,15 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
       _this.gameEl.style.display = 'block';
       _this.gameEl.style.opacity = 1;
     }, 500);
+  };
+
+  Renderer.prototype.hideRules = function() {
+    var _this = this;
+    this.rulesEl.style.opacity = 0;
+
+    setTimeout(function() {
+      _this.rulesEl.style.display = 'none';
+    }, 250);
   };
 
   Renderer.prototype.hideOverlay = function() {
@@ -230,6 +246,15 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
 
   Renderer.prototype.showControls = function() {
     this.controlsEl.style.display = 'block';
+  };
+
+  Renderer.prototype.showRules = function() {
+    var _this = this;
+    this.rulesEl.style.display = 'block';
+
+    setTimeout(function() {
+      _this.rulesEl.style.opacity = 1;
+    }, 1);
   };
 
   Renderer.prototype.showStats = function() {
@@ -411,6 +436,21 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.updateControls();
   };
 
+  Renderer.prototype._handleClickRulesLink = function(event) {
+    this.showRules();
+
+    event.preventDefault();
+  };
+
+  Renderer.prototype._handleClickRulesOverlay = function(event) {
+    // make sure we're clicking the overlay and not the rules box content
+    if (event.target !== this.rulesEl) {
+      return false;
+    }
+
+    this.hideRules();
+  };
+
   Renderer.prototype._handleLeaveGame = function(event) {
     this.app.deleteToken();
     location.reload();
@@ -463,7 +503,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     event.preventDefault();
 
     var color = this.color,
-      name = this.nameInput.value;
+      name = this.nameInput.value.trim();
 
     if (name.length === 0 || !this.colorpicker.colorWasPicked()) {
       return false;

@@ -22,6 +22,69 @@ a {
   text-align: center;
 }
 
+.table {
+  display: table;
+  margin: 0 auto;
+}
+
+.links {
+  list-style: none;
+  margin: 3px 0 0 0;
+  padding: 0;
+}
+
+.links li {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.links li:before {
+  content: "-";
+  margin-right: 10px;
+}
+
+.links li:first-child:before {
+  content: none;
+  margin: 0;
+}
+
+.links li a {
+  color: #444;
+  font-weight: 100;
+}
+
+.links li a:hover {
+  color: #111;
+  text-decoration: underline;
+}
+
+#rules {
+  display: none;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  -webkit-transition: opacity .25s ease-in;
+}
+
+.rules-box {
+  width: 500px;
+  padding: 5px 15px;
+  background: #fff;
+  margin: 0 auto;
+  margin-top: 150px;
+  border: solid 1px #999;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .4);
+}
+
+.rules-box a:hover {
+  text-decoration: underline;
+}
+
 #game {
   margin: 0 auto;
   display: none;

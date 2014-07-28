@@ -1,10 +1,6 @@
 - Calculating and ticking to the next generation takes ~15ms right now. This could be optimized by only testing cells that are either alive or neighbors of alive cells.
 
-- Get rid of jQuery.
-
-- Optimize for mobile. The game is playable on iOS, but tapping cells too quickly is interpreted as a zoom in/out double tap.
-
-- Authenticate cell placement with the player's token instead of the player's ID.
+- Optimize for mobile. The game is playable on iOS, but tapping cells too quickly is interpreted as a zoom in/out double tap. (UPDATE: there isn't an event for the double-tap-zoom, but this might be possible using touchstart/touchend with timestamps)
 
 - Make sure methods are named properly and ordered properly.
 

@@ -89,7 +89,7 @@ define([], function() {
       hex;
 
     if (sat < .3) {
-      sat = .3;
+      sat = .3 + (.3 - sat);
       lit = (x + y) / 294;
     }
 
