@@ -100,9 +100,10 @@ define([], function() {
       return false;
     }
 
-// TODO: change createNewPlayer so it accepts an object
-// instead of relying on passing an undefined ID
-    player = this.playerManager.createNewPlayer(undefined, name, color);
+    player = this.playerManager.createNewPlayer({
+      name: name,
+      color: color
+    });
     token = this.getPlayerToken(player);
 
     this.tokens[token] = player.id;

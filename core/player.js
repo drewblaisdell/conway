@@ -1,5 +1,5 @@
 define([], function() {
-  var Player = function(id, name, color, cells, online) {
+  var Player = function(options, id, name, color, cells, online) {
     this.id = id;
     this.name = name;
     this.color = color;

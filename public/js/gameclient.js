@@ -62,7 +62,13 @@ define(['socket.io'], function(io) {
     if (player) {
       player.setOnline(true);
     } else {
-      player = this.playerManager.createNewPlayer(playerObj.id, playerObj.name, playerObj.color, playerObj.cells, playerObj.online);
+      player = this.playerManager.createNewPlayer({
+        id: playerObj.id,
+        name: playerObj.name,
+        color: playerObj.color,
+        cells: playerObj.cells,
+        online: playerObj.online
+      });
     }
 
     console.log(player.name + ' has joined.');
@@ -83,7 +89,13 @@ define(['socket.io'], function(io) {
     if (player) {
       player.setOnline(true);
     } else {
-      player = this.playerManager.createNewPlayer(playerObj.id, playerObj.name, playerObj.color, playerObj.cells, playerObj.online);      
+      player = this.playerManager.createNewPlayer({
+        id: playerObj.id,
+        name: playerObj.name,
+        color: playerObj.color,
+        cells: playerObj.cells,
+        online: playerObj.online
+      });
     }
 
     this.playerManager.setLocalPlayer(player);

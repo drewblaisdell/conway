@@ -20,8 +20,14 @@ define(['core/player'], function(Player) {
     }
   };
 
-  PlayerManager.prototype.createNewPlayer = function(id, name, color, cells, online) {
-    var newPlayer;
+  PlayerManager.prototype.createNewPlayer = function(options) {
+    var newPlayer,
+      id = options.id,
+      color = options.color,
+      name = options.name,
+      cells = options.cells,
+      online = options.online,
+      highScore = options.highScore;
 
     if (id === undefined) {
       if (this.players.length > 0) {
