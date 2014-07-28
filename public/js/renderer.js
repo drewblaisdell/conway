@@ -203,6 +203,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
         this.cellsOnGrid = cellsOnGrid;
 
         this.updateStats();
+        this.updateLeaderboard();
       }
     }
   };

@@ -12,19 +12,15 @@ define([], function() {
   };
 
   Leaderboard.prototype.render = function() {
-    var playerStats = this.game.getPlayerStats(),
+    var playerStats = this.playerManager.getPlayersByHighScore(),
       html = '';
-
-    playerStats.sort(function(a, b) {
-      return b.cellsOnGrid - a.cellsOnGrid;
-    });
 
     for (var i = 0; i < playerStats.length; i++) {
       var stat = playerStats[i];
 
       html += '<div><div class="color" style="background: ' + stat.color + ';"></div>';
       html += '<span class="name">' + stat.name + '</span>';
-      html += '<div class="cells">' + stat.cellsOnGrid + '</div></div>';
+      html += '<div class="cells">' + stat.highScore + '</div></div>';
     }
 
     this.el.innerHTML = html;

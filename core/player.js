@@ -1,11 +1,12 @@
 define([], function() {
-  var Player = function(options, id, name, color, cells, online) {
+  var Player = function(id, name, color, cells, online, highScore) {
     this.id = id;
     this.name = name;
     this.color = color;
     this.cells = cells;
     this.dirty = true;
     this.cellsOnGrid = 0;
+    this.highScore = highScore || 0;
     this.online = online || false;
   };
 
@@ -25,6 +26,14 @@ define([], function() {
     this.cells = cells;
   };
 
+  Player.prototype.setCellsOnGrid = function(cellCount) {
+    this.cellsOnGrid = cellCount;
+
+    if (this.highScore < cellCount) {
+      this.highScore = cellCount;
+    }
+  };
+
   Player.prototype.setClean = function() {
     this.dirty = false;
   };
@@ -35,6 +44,10 @@ define([], function() {
 
   Player.prototype.setDirty = function() {
     this.dirty = true;
+  };
+
+  Player.prototype.setHighScore = function(score) {
+    this.highScore = score;
   };
 
   Player.prototype.setSocket = function(socket) {
@@ -54,6 +67,7 @@ define([], function() {
       color: this.color,
       cells: this.cells,
       cellsOnGrid: this.cellsOnGrid,
+      highScore: this.highScore,
       online: this.online
     };
   };

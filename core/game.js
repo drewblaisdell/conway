@@ -100,7 +100,7 @@ define(['core/grid'], function(Grid) {
     for (var i = 0; i < playerIds.length; i++) {
       var player = this.playerManager.getPlayer(playerIds[i]);
 
-      player.cellsOnGrid = playerCells[playerIds[i]];
+      player.setCellsOnGrid(playerCells[playerIds[i]]);
 
       this.playerStats.push({
         id: player.id,

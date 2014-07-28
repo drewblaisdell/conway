@@ -153,6 +153,8 @@ define(['socket.io'], function(io) {
       };
 
     this.socket.emit('place_live_cells', message);
+
+    this.game.updatePlayerStats();
   };
 
   return GameClient;

@@ -54,7 +54,7 @@ define(['core/player'], function(Player) {
       cells = this.config.cellsPerPlayer;
     }
 
-    newPlayer = new Player(id, name, color, cells, online);
+    newPlayer = new Player(id, name, color, cells, online, highScore);
 
     this.addPlayer(newPlayer);
 
@@ -94,6 +94,12 @@ define(['core/player'], function(Player) {
     return this.players;
   };
 
+  PlayerManager.prototype.getPlayersByHighScore = function() {
+    return this.players.sort(function(a, b) {
+      return b.highScore - a.highScore;
+    });
+  };
+
   PlayerManager.prototype.getPlayerByName = function(name) {
     for (var i = 0; i < this.players.length; i++) {
       if (this.players[i].name === name) {
@@ -125,7 +131,7 @@ define(['core/player'], function(Player) {
       if (!(players[i] instanceof Player)) {
         // this lets the method handle an array of players
         // or an array of objects representing players
-        players[i] = new Player(players[i].id, players[i].name, players[i].color, players[i].cells, players[i].online);
+        players[i] = new Player(players[i].id, players[i].name, players[i].color, players[i].cells, players[i].online, players[i].highScore);
       }
 
       var player = this.getPlayer(players[i].id);
@@ -134,6 +140,7 @@ define(['core/player'], function(Player) {
         player.setColor(players[i].color);
         player.setCells(players[i].cells);
         player.setOnline(players[i].online);
+        player.setHighScore(players[i].highScore);
       } else {
         this.addPlayer(players[i]);
       }
