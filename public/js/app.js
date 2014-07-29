@@ -51,13 +51,12 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
 
         if (_this.game.isTimeToGiveNewCells()) {
           _this.game.giveNewCells();
-          _this.renderer.flashNewCell();
         }
 
         _this.game.updatePlayerStats();
         _this.renderer.updateControls();
         _this.renderer.updateLeaderboard();
-        _this.renderer.flashNewHighScore();
+        _this.renderer.flashNews();
       }
 
       if (!_this.game.isBehindOnTicks()) {

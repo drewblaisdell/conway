@@ -278,7 +278,7 @@ a {
   height: 0;
 }
 
-#new-cell-message, #new-high-score-message {
+#new-cell-message, #new-high-score-message, #flash-news {
   text-transform: uppercase;
   font-weight: bold;
   opacity: 0;
@@ -298,7 +298,7 @@ a {
   height: 12px;
 }
 
-#new-cell-message.active, #new-high-score-message.active {
+#new-cell-message.active, #new-high-score-message.active, #flash-news.active {
   opacity: 1;
   top: 0;
 }

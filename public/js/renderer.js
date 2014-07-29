@@ -14,7 +14,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.hoveredCell = undefined;
     this.flaggedCells = [];
     this.onlinePlayerCount = this.playerManager.getOnlinePlayers().length;
-    this.lastHighScore = 0;
+    this.lastHighScore = false;
     this.lastCellsOnGrid = 0;
     this.lastCellCount = 0;
 
@@ -52,6 +52,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.leaveGameContainerEl = document.getElementById('leave-game-container');
     this.newCellMessageEl = document.getElementById('new-cell-message');
     this.newHighScoreMessageEl = document.getElementById('new-high-score-message'); 
+    this.flashNewsEl = document.getElementById('flash-news');
 
     this.colorpicker = new Colorpicker(this.app);
     this.colorpicker.init();
@@ -136,33 +137,38 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.context.clearRect(0, 0, this.pixelWidth, this.pixelHeight);
   };
 
-  Renderer.prototype.flashNewCell = function() {
+  Renderer.prototype.flashNews = function() {
     var _this = this,
+      news = false,
       localPlayer = this.playerManager.getLocalPlayer();
 
-    if (localPlayer && localPlayer.cells < this.config.cellsPerPlayer) {
-      this.newCellMessageEl.className = 'active';
-      this.newCellMessageEl.style.color = this.color;
+    this.flashNewsEl.style.color = this.color;
+    this.flashNewsEl.innerHTML = '';
+    
+    if (localPlayer) {
+      if (this.lastHighScore === false) {
+        this.lastHighScore = localPlayer.highScore;
+      }
 
-      setTimeout(function() {
-        _this.newCellMessageEl.className = '';
-      }, 1500);
-    }
-  };
+      if (this.game.isTimeToGiveNewCells() && localPlayer.cells < this.config.cellsPerPlayer) {
+        this.flashNewsEl.innerHTML += '+1 new cell<br>';
+        news = true;
+      }
 
-  Renderer.prototype.flashNewHighScore = function() {
-    var _this = this,
-      localPlayer = this.playerManager.getLocalPlayer();
+      if (localPlayer.highScore > this.lastHighScore) {
+        this.lastHighScore = localPlayer.highScore;
 
-    if (localPlayer && localPlayer.highScore > this.lastHighScore) {
-      this.lastHighScore = localPlayer.highScore;
+        this.flashNewsEl.innerHTML += 'new high score';
+        news = true;
+      }
 
-      this.newHighScoreMessageEl.className = 'active';
-      this.newHighScoreMessageEl.style.color = this.color;
+      if (news) {
+        _this.flashNewsEl.className = 'active';
 
-      setTimeout(function() {
-        _this.newHighScoreMessageEl.className = '';
-      }, 1500);
+        setTimeout(function() {
+          _this.flashNewsEl.className = '';
+        }, 1500);
+      }
     }
   };
 

@@ -5,3 +5,5 @@
 - Make sure methods are named properly and ordered properly.
 
 - Read every line of code again.
+
+- The renderer's lastHighScore needs to be set properly when loading an existing user from the server.
