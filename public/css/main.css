@@ -14,6 +14,14 @@ a {
   font-weight: bold;
 }
 
+html, body {
+  height: 100%;
+}
+
+.container {
+  min-height: 100%;
+}
+
 #connecting {
   text-align: center;
 }
@@ -255,7 +263,7 @@ a {
 }
 
 #leaderboard, #players-online {
-  height: 210px;
+  height: 115px;
   overflow: auto;
   margin-bottom: 20px;
   border-top: solid 1px #DDD;
@@ -306,4 +314,20 @@ a {
 .flash {
   height: 5px;
   text-align: center;
+}
+
+.clear {
+  clear: both;
+}
+
+footer {
+  clear: both;
+  border-top: solid 1px #ddd;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 8px;
+}
+
+footer a {
+  font-weight: 300;
 }
