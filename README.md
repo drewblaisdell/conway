@@ -2,6 +2,8 @@
 
 Conway's Multiplayer Game of Life (Conway) is a real-time, persistent, multiplayer version of Conway's Game of Life.
 
+You can find a live version on [lifecompetes.com](http://lifecompetes.com).
+
 ## Installation
 
 Run `grunt development` or just `grunt` to set up the development environment. This will move the shared core files to the client/server directories and start an Express server. 
