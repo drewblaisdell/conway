@@ -339,10 +339,6 @@ html, body {
   text-align: center;
 }
 
-.clear {
-  clear: both;
-}
-
 footer {
   clear: both;
   border-top: solid 1px #ddd;
