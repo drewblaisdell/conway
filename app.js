@@ -1,3 +1,4 @@
+var fs = require('fs');
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
@@ -30,5 +31,5 @@ requirejs(['app/main.js'], function(Conway) {
 
   app.use(bodyParser());
 
-  var conway = new Conway(io);
+  var conway = new Conway(fs, io);
 });

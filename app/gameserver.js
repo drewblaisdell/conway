@@ -27,6 +27,10 @@ define([], function() {
     return this.sockets[id];
   };
 
+  GameServer.prototype.getTokens = function() {
+    return this.tokens;
+  };
+
   GameServer.prototype.isTimeToSendState = function() {
     return (Date.now() > this.nextStateUpdate);
   };
@@ -38,6 +42,10 @@ define([], function() {
 
   GameServer.prototype.sendStateToSocket = function(socket) {
     socket.emit('state', this.app.getState());
+  };
+
+  GameServer.prototype.setTokens = function(tokens) {
+    this.tokens = tokens;
   };
 
   GameServer.prototype._broadcastPlayerConnect = function(socket, player) {

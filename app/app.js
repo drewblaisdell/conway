@@ -1,6 +1,7 @@
 define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerManager, GameServer) {
-  var App = function(config, io) {
+  var App = function(config, fs, io) {
     this.config = config;
+    this.fs = fs;
     this.io = io;
   };
 
@@ -15,6 +16,11 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
 
     this.gameServer = new GameServer(this, this.io);
     this.gameServer.init();
+
+    // create files/directories for saving content
+    this._createDataFiles();
+
+    this._loadState();
   };
 
   App.prototype.run = function() {
@@ -28,10 +34,20 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
         if (_this.game.isTimeToGiveNewCells()) {
           _this.game.giveNewCells();
         }
+
+        _this._saveState();
       }
     
       _this.run();
     }, 1000 / 30);
+  };
+
+  App.prototype.getServerState = function() {
+    var state = this.getState();
+
+    state.tokens = this.gameServer.getTokens();
+
+    return state;
   };
 
   App.prototype.getState = function() {
@@ -57,11 +73,49 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
     };
   };
 
+  App.prototype.updateServerState = function(state) {
+    this.updateState(state);
+
+    this.gameServer.setTokens(state.tokens);
+  };
+
   App.prototype.updateState = function(state) {
     this.game.generation = state.generation;
     this.game.nextTick = Date.now() + state.timeBeforeTick;
     this.game.grid.setLivingCells(state.livingCells);
     this.playerManager.updatePlayers(state.players);
+  };
+
+  App.prototype._createDataFiles = function() {
+    // make directory db or ensure that it exists
+    try {
+      this.fs.mkdirSync('db', 0744);
+    } catch(err) {
+      if (err.code !== 'EEXIST') {
+        console.log(err.code);
+      }
+    }
+
+    // at this point, we will assume db exists
+    // create last_state if it doesn't exist
+    if (!this.fs.existsSync('db/last_state')) {
+      this.fs.writeFileSync('db/last_state', '');
+    }
+  };
+
+  App.prototype._loadState = function() {
+    var lastStateData = this.fs.readFileSync('db/last_state', 'utf-8'),
+      lastState;
+
+    if (lastStateData.length > 0) {
+      lastState = JSON.parse(lastStateData);
+
+      this.updateServerState(lastState);
+    }
+  };
+
+  App.prototype._saveState = function() {
+    this.fs.writeFileSync('db/last_state', JSON.stringify(this.getServerState()));
   };
 
   return App;

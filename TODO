@@ -1,9 +1,2 @@
-- Calculating and ticking to the next generation takes ~15ms right now. This could be optimized by only testing cells that are either alive or neighbors of alive cells.
-
-- Optimize for mobile. The game is playable on iOS, but tapping cells too quickly is interpreted as a zoom in/out double tap. (UPDATE: there isn't an event for the double-tap-zoom, but this might be possible using touchstart/touchend with timestamps)
-
 - Make sure methods are named properly and ordered properly.
-
 - Read every line of code again.
-
-- The renderer's lastHighScore needs to be set properly when loading an existing user from the server.
