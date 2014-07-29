@@ -1,4 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700);
+
 * {
   font-family: "Helvetica", "Lato", Arial, sans-serif;
 }
@@ -78,6 +79,9 @@ html, body {
   right: 0;
   z-index: 1;
   -webkit-transition: opacity .25s ease-in;
+  -moz-transition: opacity .25s ease-in;
+  -o-transition: opacity .25s ease-in;
+  transition: opacity .25s ease-in;
 }
 
 .rules-box {
@@ -102,6 +106,9 @@ html, body {
 
 #game, #connecting {
   -webkit-transition: opacity .5s ease-in;
+  -moz-transition: opacity .5s ease-in;
+  -o-transition: opacity .5s ease-in;
+  transition: opacity .5s ease-in;
 }
 
 #tickbar, #c {
@@ -137,6 +144,9 @@ html, body {
   margin: 0 auto;
   font-weight: bold;
   -webkit-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 .place-cells.enabled {
@@ -164,6 +174,9 @@ html, body {
   bottom: 0;
   background: rgba(255, 255, 255, .5);
   -webkit-transition: opacity .5s ease-in;
+  -moz-transition: opacity .5s ease-in;
+  -o-transition: opacity .5s ease-in;
+  transition: opacity .5s ease-in;
 }
 
 #new-player {
@@ -225,6 +238,9 @@ html, body {
 
 .place-cells {
   -webkit-transition: scale .5s ease-in;
+  -moz-transition: scale .5s ease-in;
+  -o-transition: scale .5s ease-in;
+  transition: scale .5s ease-in;
 }
 
 .place-cells:hover {
@@ -232,6 +248,10 @@ html, body {
 
 .place-cells.enabled:active, .play:active {
   -webkit-transform: scale(0.9, 0.9);
+  -moz-transform: scale(0.9, 0.9);
+  -ms-transform: scale(0.9, 0.9);
+  -o-transform: scale(0.9, 0.9);
+  transform: scale(0.9, 0.9);
 }
 
 .boards {
@@ -300,6 +320,9 @@ html, body {
   -ms-user-select: none;
   user-select: none;
   -webkit-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 #new-cell-message.active {

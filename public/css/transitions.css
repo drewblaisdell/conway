@@ -3,14 +3,16 @@
   height: 40px;
   margin: 100px auto;
   background-color: #333;
-
-  border-radius: 100%;  
-  -webkit-animation: scaleout 1.0s infinite ease-in-out;
-  animation: scaleout 1.0s infinite ease-in-out;
+  border-radius: 100%;
+  -webkit-animation:scaleout 1.0s infinite ease-in-out;
+  -moz-animation:scaleout 1.0s infinite ease-in-out;
+  -ms-animation:scaleout 1.0s infinite ease-in-out;
+  -o-animation:scaleout 1.0s infinite ease-in-out;
+  animation:scaleout 1.0s infinite ease-in-out;
 }
 
 @-webkit-keyframes scaleout {
-  0% { -webkit-transform: scale(0.0) }
+  0% { -webkit-transform: scale(0.0); }
   100% {
     -webkit-transform: scale(1.0);
     opacity: 0;
