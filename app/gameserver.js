@@ -69,11 +69,22 @@ define([], function() {
   };
 
   GameServer.prototype._handleConnect = function(socket) {
+    var state = this.app.getState();
+    
+    // remove offline players that aren't on the board
+    state.players = state.players.filter(function(player) {
+      if (player.online || player.cellsOnGrid > 0 || player.highScore > 50) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
     socket.on('request_state', this._handleStateRequest.bind(this, socket));
     socket.on('request_player', this._handleRequestPlayer.bind(this, socket));
     socket.on('request_new_player', this._handleRequestNewPlayer.bind(this, socket));
 
-    socket.emit('state', this.app.getState());
+    socket.emit('state', state);
   };
 
   GameServer.prototype._handleDisconnect = function(socket, player, message) {
