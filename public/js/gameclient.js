@@ -151,7 +151,7 @@ define(['socket.io'], function(io) {
     
     this.playerManager.getLocalPlayer().setOnline(true);
 
-    this.socket.emit('request_state', this.playerManager.getLocalPlayer().id);
+    this.socket.emit('request_state', { playerId: this.playerManager.getLocalPlayer().id });
   };
 
   GameClient.prototype._testStateSync = function(serverCellCount) {

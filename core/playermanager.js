@@ -80,6 +80,10 @@ define(['core/player'], function(Player) {
   };
 
   PlayerManager.prototype.getPlayer = function(id) {
+    if (typeof id !== 'number') {
+      return false;
+    }
+
     for (var i = 0; i < this.players.length; i++) {
       var player = this.players[i];
       if (player.id === id) {
