@@ -148,6 +148,9 @@ define(['socket.io'], function(io) {
 
   GameClient.prototype._requestState = function() {
     console.log('--- REQUESTING STATE ---');
+    
+    this.playerManager.getLocalPlayer().setOnline(true);
+
     this.socket.emit('request_state', this.playerManager.getLocalPlayer().id);
   };
 

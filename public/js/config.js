@@ -18,6 +18,6 @@ define([], function() {
 
     // player settings
     cellsPerPlayer: 12,
-    lastSeenTimeout: 120000
+    lastSeenTimeout: 180000
   };
 });

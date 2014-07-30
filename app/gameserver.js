@@ -155,6 +155,10 @@ define([], function() {
   };
 
   GameServer.prototype._handleStateRequest = function(socket, message) {
+    var player = this.playerManager.getPlayer(message);
+
+    player.setOnline(true);
+
     this.sendStateToSocket(socket);
   };
 
