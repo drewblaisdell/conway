@@ -298,6 +298,18 @@ html, body {
   float: right;
 }
 
+.leaderboard-container h2, .players-online-container h2 {
+  margin-bottom: 1px;
+}
+
+.leaderboard-container h3, .players-online-container h3 {
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 0 5px;
+  font-size: 12px;
+  font-weight: 300;
+}
+
 #leave-game-container {
   display: none;
 }
