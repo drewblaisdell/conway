@@ -539,14 +539,14 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
   Renderer.prototype._handlePlaceCells = function(event) {
     var player = this.playerManager.getLocalPlayer();
 
+    event.preventDefault();
+    
     if (this.game.canPlaceLiveCells(player, this.flaggedCells)) {
       this.gameClient.placeLiveCells(this.flaggedCells);
       this.flaggedCells = [];
     } else {
       return false;
     }
-
-    event.preventDefault();
   };
 
   Renderer.prototype._handlePlayButtonClick = function(event) {
