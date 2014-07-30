@@ -118,7 +118,8 @@ define(['core/player'], function(Player) {
     var players = this.getOnlinePlayers();
 
     for (var i = 0; i < players.length; i++) {
-      if (players[i].getLastSeen() < Date.now() - this.config.lastSeenTimeout) {
+      if (players[i].getLastSeen() < Date.now() - this.config.lastSeenTimeout
+        && players[i].cellsOnGrid < 5) {
         players[i].setOnline(false);
         console.log(players[i].name + ' timed out. ' + this.getOnlinePlayers().length + ' player(s) online.');
       }
