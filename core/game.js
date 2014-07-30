@@ -98,6 +98,7 @@ define(['core/grid'], function(Grid) {
   Game.prototype.updatePlayerStats = function() {
     var cells = this.grid.getCells(),
       playerIds,
+      players = this.playerManager.getPlayers(),
       playerCells = {};
 
     for (var i = 0; i < cells.length; i++) {
@@ -111,18 +112,20 @@ define(['core/grid'], function(Grid) {
     }
 
     this.playerStats = [];
-    playerIds = Object.keys(playerCells).map(parseFloat);
-    for (var i = 0; i < playerIds.length; i++) {
-      var player = this.playerManager.getPlayer(playerIds[i]);
+    for (var i = 0; i < players.length; i++) {
+      var player = players[i];
+      if (playerCells[player.id]) {
+        player.setCellsOnGrid(playerCells[player.id]);
 
-      player.setCellsOnGrid(playerCells[playerIds[i]]);
-
-      this.playerStats.push({
-        id: player.id,
-        name: player.name,
-        color: player.color,
-        cellsOnGrid: player.cellsOnGrid
-      });
+        this.playerStats.push({
+          id: player.id,
+          name: player.name,
+          color: player.color,
+          cellsOnGrid: player.cellsOnGrid
+        });
+      } else {
+        player.setCellsOnGrid(0);
+      }
     }
   };
 

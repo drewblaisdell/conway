@@ -36,23 +36,15 @@ define([], function() {
   };
 
   GameServer.prototype.sendState = function() {
-    var state = this.app.getState();
-
-    // remove offline players that aren't on the board
-    state.players = state.players.filter(function(player) {
-      if (player.online || player.cellsOnGrid > 0 || player.highScore > 50) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+    var state = this.app.getMinimumState();
 
     this.io.emit('state', state);
     this.nextStateUpdate = Date.now() + this.config.timeBetweenStateUpdates;
   };
 
   GameServer.prototype.sendStateToSocket = function(socket) {
-    socket.emit('state', this.app.getState());
+    var state = this.app.getMinimumState();
+    socket.emit('state', state);
   };
 
   GameServer.prototype.setTokens = function(tokens) {
@@ -69,16 +61,7 @@ define([], function() {
   };
 
   GameServer.prototype._handleConnect = function(socket) {
-    var state = this.app.getState();
-    
-    // remove offline players that aren't on the board
-    state.players = state.players.filter(function(player) {
-      if (player.online || player.cellsOnGrid > 0 || player.highScore > 50) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+    var state = this.app.getMinimumState();
 
     socket.on('request_state', this._handleStateRequest.bind(this, socket));
     socket.on('request_player', this._handleRequestPlayer.bind(this, socket));
