@@ -42,9 +42,25 @@ define(['socket.io'], function(io) {
       cellCount = message.cellCount,
       player = this.playerManager.getPlayer(message.player.id);
     
+    if (player) {
+      player.setOnline(true);
+    } else {
+      player = this.playerManager.createNewPlayer({
+        id: message.player.id,
+        name: message.player.name,
+        color: message.player.color,
+        cells: message.player.cells,
+        highScore: message.player.highScore,
+        online: message.player.online,
+        lastSeen: message.player.lastSeen
+      });
+    }
+
     this.game.placeCells(player, cells);
     this.game.updatePlayerStats();
     this.playerManager.updatePlayer(message.player);
+
+    player.setLastSeen(Date.now());
 
     this._testStateSync(cellCount);
   };
@@ -68,7 +84,9 @@ define(['socket.io'], function(io) {
         name: playerObj.name,
         color: playerObj.color,
         cells: playerObj.cells,
-        online: playerObj.online
+        highScore: playerObj.highScore,
+        online: playerObj.online,
+        lastSeen: playerObj.lastSeen
       });
     }
 
@@ -97,7 +115,9 @@ define(['socket.io'], function(io) {
         name: playerObj.name,
         color: playerObj.color,
         cells: playerObj.cells,
-        online: playerObj.online
+        highScore: playerObj.highScore,
+        online: playerObj.online,
+        lastSeen: playerObj.lastSeen
       });
     }
 

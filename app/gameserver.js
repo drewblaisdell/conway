@@ -36,7 +36,18 @@ define([], function() {
   };
 
   GameServer.prototype.sendState = function() {
-    this.io.emit('state', this.app.getState());
+    var state = this.app.getState();
+
+    // remove offline players that aren't on the board
+    state.players = state.players.filter(function(player) {
+      if (player.isOnline || player.cellsOnGrid > 0 || player.highScore > 50) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    this.io.emit('state', state);
     this.nextStateUpdate = Date.now() + this.config.timeBetweenStateUpdates;
   };
 
@@ -134,6 +145,8 @@ define([], function() {
     if (token !== message.token) {
       return false;
     }
+
+    player.setLastSeen(Date.now());
 
     if (this.game.canPlaceLiveCells(player, cells)) {
       this.game.placeCells(player, cells);

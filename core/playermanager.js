@@ -114,6 +114,17 @@ define(['core/player'], function(Player) {
     this.localPlayer = this.getPlayer(player.id);
   };
 
+  PlayerManager.prototype.updateOnlinePlayers = function() {
+    var players = this.getOnlinePlayers();
+
+    for (var i = 0; i < players.length; i++) {
+      if (players[i].getLastSeen() < Date.now() - this.config.lastSeenTimeout) {
+        console.log(players[i].name + ' timed out. ' + this.getOnlinePlayers().length + ' player(s) online.');
+        players[i].setOnline(false);
+      }
+    }
+  };
+
   PlayerManager.prototype.updatePlayer = function(player) {
     var ourPlayer = this.getPlayer(player.id);
 

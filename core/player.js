@@ -1,5 +1,5 @@
 define([], function() {
-  var Player = function(id, name, color, cells, online, highScore) {
+  var Player = function(id, name, color, cells, online, highScore, lastSeen) {
     this.id = id;
     this.name = name;
     this.color = color;
@@ -8,6 +8,11 @@ define([], function() {
     this.cellsOnGrid = 0;
     this.highScore = highScore || 0;
     this.online = online || false;
+    this.lastSeen = lastSeen || Date.now();
+  };
+
+  Player.prototype.getLastSeen = function() {
+    return this.lastSeen;
   };
 
   Player.prototype.getSocket = function() {
@@ -50,12 +55,20 @@ define([], function() {
     this.highScore = score;
   };
 
+  Player.prototype.setLastSeen = function(when) {
+    this.lastSeen = when;
+  };
+
   Player.prototype.setSocket = function(socket) {
     this.socket = socket;
   };
 
   Player.prototype.setOnline = function(online) {
     this.online = online;
+
+    if (online) {
+      this.setLastSeen(Date.now());
+    }
   };
 
   // returns an object representing the player, to use
@@ -68,7 +81,8 @@ define([], function() {
       cells: this.cells,
       cellsOnGrid: this.cellsOnGrid,
       highScore: this.highScore,
-      online: this.online
+      online: this.online,
+      lastSeen: this.lastSeen
     };
   };
 

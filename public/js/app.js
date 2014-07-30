@@ -53,6 +53,7 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
           _this.game.giveNewCells();
         }
 
+        _this.playerManager.updateOnlinePlayers();
         _this.game.updatePlayerStats();
         _this.renderer.updateControls();
         _this.renderer.updateLeaderboard();

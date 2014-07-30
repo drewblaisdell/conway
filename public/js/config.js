@@ -17,6 +17,7 @@ define([], function() {
     timeBetweenUpdates: 10000,
 
     // player settings
-    cellsPerPlayer: 12
+    cellsPerPlayer: 12,
+    lastSeenTimeout: 60000
   };
 });

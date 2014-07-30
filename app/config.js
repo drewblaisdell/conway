@@ -16,6 +16,7 @@ define([], function() {
     // player settings
     cellsPerPlayer: 12,
     defaultPlayerColor: '#00aaff',
+    lastSeenTimeout: 60000,
 
     // server settings
     timeBetweenStateUpdates: 10000,
