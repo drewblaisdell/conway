@@ -18,7 +18,7 @@ define([], function() {
 
       html += '<div><div class="color" style="background: ' + player.color + ';"></div>';
       html += '<span class="name">' + player.name + '</span>';
-      html += '</div>';
+      html += '<div class="cells">' + player.highScore + '</div></div>';
     }
 
     this.el.innerHTML = html;

@@ -278,7 +278,7 @@ html, body {
   float: left;
 }
 
-#leaderboard .cells {
+#leaderboard .cells, #players-online .cells {
   float: right;
 }
 
