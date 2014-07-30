@@ -56,7 +56,7 @@ define([], function() {
   };
 
   Player.prototype.setLastSeen = function(when) {
-    this.lastSeen = when;
+    this.lastSeen = when || Date.now();
   };
 
   Player.prototype.setSocket = function(socket) {

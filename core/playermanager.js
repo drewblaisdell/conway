@@ -142,7 +142,7 @@ define(['core/player'], function(Player) {
       if (!(players[i] instanceof Player)) {
         // this lets the method handle an array of players
         // or an array of objects representing players
-        players[i] = new Player(players[i].id, players[i].name, players[i].color, players[i].cells, players[i].online, players[i].highScore);
+        players[i] = new Player(players[i].id, players[i].name, players[i].color, players[i].cells, players[i].online, players[i].highScore, players[i].lastSeen);
       }
 
       var player = this.getPlayer(players[i].id);
@@ -152,6 +152,7 @@ define(['core/player'], function(Player) {
         player.setCells(players[i].cells);
         player.setOnline(players[i].online);
         player.setHighScore(players[i].highScore);
+        player.setLastSeen(players[i].lastSeen);
       } else {
         this.addPlayer(players[i]);
       }
