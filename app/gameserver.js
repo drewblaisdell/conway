@@ -161,7 +161,7 @@ define([], function() {
     if (player) {
       player.setOnline(true);
     }
-    
+
     this.sendStateToSocket(socket);
   };
 
