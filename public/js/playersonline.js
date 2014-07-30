@@ -13,6 +13,10 @@ define([], function() {
     var html = '',
       online = this.playerManager.getOnlinePlayers();
 
+    online.sort(function(a, b) {
+      return b.cellsOnGrid - a.cellsOnGrid;
+    });
+
     for (var i = 0; i < online.length; i++) {
       var player = online[i];
 
