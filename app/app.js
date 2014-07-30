@@ -65,6 +65,15 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
       generation = this.game.generation,
       timeBeforeTick = (this.game.nextTick - Date.now());
 
+    // remove offline players that aren't on the board
+    players = players.filter(function(player) {
+      if (player.isOnline || player.cellsOnGrid > 0 || player.highScore > 50) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+
     return {
       livingCells: livingCells,
       players: players,
