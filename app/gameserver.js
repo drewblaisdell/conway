@@ -40,7 +40,7 @@ define([], function() {
 
     // remove offline players that aren't on the board
     state.players = state.players.filter(function(player) {
-      if (player.isOnline || player.cellsOnGrid > 0 || player.highScore > 50) {
+      if (player.isOnline() || player.cellsOnGrid > 0 || player.highScore > 50) {
         return true;
       } else {
         return false;
