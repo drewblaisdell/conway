@@ -119,8 +119,8 @@ define(['core/player'], function(Player) {
 
     for (var i = 0; i < players.length; i++) {
       if (players[i].getLastSeen() < Date.now() - this.config.lastSeenTimeout) {
-        console.log(players[i].name + ' timed out. ' + this.getOnlinePlayers().length + ' player(s) online.');
         players[i].setOnline(false);
+        console.log(players[i].name + ' timed out. ' + this.getOnlinePlayers().length + ' player(s) online.');
       }
     }
   };
