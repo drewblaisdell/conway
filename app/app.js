@@ -46,11 +46,12 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
   // this is the minimum state for the client, including players
   // on the grid, players with a high score > 50, and players online
   App.prototype.getMinimumState = function() {
-    var state = this.getState();
+    var state = this.getState(),
+      lowestHighScore = this.config.lowestHighScore;
 
     // remove offline players that aren't on the board
     state.players = state.players.filter(function(player) {
-      if (player.online || player.cellsOnGrid > 0 || player.highScore > 50) {
+      if (player.online || player.cellsOnGrid > 0 || player.highScore >= lowestHighScore) {
         return true;
       } else {
         return false;
