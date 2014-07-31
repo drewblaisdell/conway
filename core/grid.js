@@ -25,7 +25,7 @@ define(['core/cell'], function(Cell) {
       candidates = {};
 
     for (var i = 0; i < neighbors.length; i++) {
-      if (candidates[neighbors[i]] === undefined) {
+      if (candidates[neighbors[i].playerId] === undefined) {
         candidates[neighbors[i].playerId] = 1;
       } else {
         candidates[neighbors[i].playerId] += 1;
