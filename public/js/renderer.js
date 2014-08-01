@@ -53,6 +53,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.newCellMessageEl = document.getElementById('new-cell-message');
     this.newHighScoreMessageEl = document.getElementById('new-high-score-message'); 
     this.flashNewsEl = document.getElementById('flash-news');
+    this.observeLinkEl = document.getElementById('observe');
 
     this.colorpicker = new Colorpicker(this.app);
     this.colorpicker.init();
@@ -64,6 +65,8 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.playersOnline.init();
 
     this.playButton = document.getElementById('new-player').querySelector('.play');
+
+    this.observeLinkEl.addEventListener('click', this._handleClickObserve.bind(this), false);
 
     // request a new player when the play button is clicked
     this.playButton.addEventListener('click', this._handlePlayButtonClick.bind(this), false);
@@ -482,6 +485,12 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     }
 
     this.updateControls();
+  };
+
+  Renderer.prototype._handleClickObserve = function(event) {
+    this.hideOverlay();
+
+    event.preventDefault();
   };
 
   Renderer.prototype._handleClickRulesLink = function(event) {

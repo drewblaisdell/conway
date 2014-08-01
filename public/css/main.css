@@ -120,6 +120,17 @@ html, body {
   user-select: none;
 }
 
+#observe {
+  font-weight: 300;
+  margin-top: 16px;
+  display: block;
+  font-size: 14px;
+}
+
+#observe:hover {
+  text-decoration: underline;
+}
+
 .container {
   width: 1001px;
   margin: 0 auto;
