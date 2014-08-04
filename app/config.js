@@ -21,6 +21,6 @@ define([], function() {
     // server settings
     timeBetweenStateUpdates: 10000,
     secretToken: "secret witch's brew",
-    lowestHighScore: 90
+    lowestHighScore: 150
   };
 });
