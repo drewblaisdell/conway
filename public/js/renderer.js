@@ -423,11 +423,9 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     if (this.hoveredPlayer) {
       if (cell.alive && cell.playerId !== this.hoveredPlayer) {
         color = this._hexToRGB(this.playerManager.getPlayer(cell.playerId).color);
-        console.log(color);
         color.r = Math.floor(((255 - color.r) / 1.4) + color.r);
         color.g = Math.floor(((255 - color.g) / 1.4) + color.g);
         color.b = Math.floor(((255 - color.b) / 1.4) + color.b);
-        console.log(color);
 
         context.fillStyle = 'rgba('+ color.r +', '+ color.g +', '+ color.b +', 1)';
       }
