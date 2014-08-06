@@ -55,6 +55,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.newHighScoreMessageEl = document.getElementById('new-high-score-message'); 
     this.flashNewsEl = document.getElementById('flash-news');
     this.observeLinkEl = document.getElementById('observe');
+    this.cellsOnGridStatEl = document.getElementById('cells-on-grid-stat');
 
     this.colorpicker = new Colorpicker(this.app);
     this.colorpicker.init();
@@ -72,6 +73,10 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.playButton = document.getElementById('new-player').querySelector('.play');
 
     this.observeLinkEl.addEventListener('click', this._handleClickObserve.bind(this), false);
+
+    // highlight the current player's cells when hovering over the stats
+    this.cellsOnGridStatEl.addEventListener('mouseover', this._handleMouseOverCellsOnGridStat.bind(this), false);
+    this.cellsOnGridStatEl.addEventListener('mouseleave', this._handleMouseLeaveCellsOnGridStat.bind(this), false);
 
     // request a new player when the play button is clicked
     this.playButton.addEventListener('click', this._handlePlayButtonClick.bind(this), false);
@@ -545,6 +550,11 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.render();
   };
 
+  Renderer.prototype._handleMouseLeaveCellsOnGridStat = function(event) {
+    this.hoveredPlayer = false;
+    this.render();
+  };
+
   Renderer.prototype._handleMouseMove = function(event) {
     if (event.offsetX && event.offsetY) {
       this.lastX = event.offsetX;
@@ -574,6 +584,11 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
       this.hoveredPlayer = parseInt(playerId);
       this.render();
     }
+  };
+
+  Renderer.prototype._handleMouseOverCellsOnGridStat = function(event) {
+    this.hoveredPlayer = this.playerManager.getLocalPlayer().id;
+    this.render();
   };
 
   Renderer.prototype._handlePlaceCells = function(event) {
