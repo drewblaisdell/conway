@@ -12,6 +12,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.spacing = this.config.cellSpacing;
     this.pickedColor = false;
     this.hoveredCell = undefined;
+    this.hoveredPlayer = undefined;
     this.flaggedCells = [];
     this.onlinePlayerCount = this.playerManager.getOnlinePlayers().length;
     this.lastHighScore = false;
@@ -60,9 +61,13 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
 
     this.leaderboard = new Leaderboard(this.app);
     this.leaderboard.init();
+    this.leaderboard.el.addEventListener('mouseover', this._handleMouseOverPlayers.bind(this), false);
+    this.leaderboard.el.addEventListener('mouseleave', this._handleMouseLeavePlayers.bind(this), false);
 
     this.playersOnline = new PlayersOnline(this.app);
     this.playersOnline.init();
+    this.playersOnline.el.addEventListener('mouseover', this._handleMouseOverPlayers.bind(this), false);
+    this.playersOnline.el.addEventListener('mouseleave', this._handleMouseLeavePlayers.bind(this), false);
 
     this.playButton = document.getElementById('new-player').querySelector('.play');
 
@@ -110,7 +115,6 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.canvas.height = this.pixelHeight;
     this.canvas.parentElement.style.width = this.pixelWidth + 'px';
     this.canvas.parentElement.style.height = this.pixelHeight + 'px';
-
 
     this.tickBar.width = this.pixelWidth;
     this.tickBar.height = this.tickBarHeight;
@@ -407,13 +411,28 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
       cellSize = this.cellSize,
       spacing = this.spacing,
       x1 = cell.x * (cellSize + spacing) + 1,
-      y1 = cell.y * (cellSize + spacing) + 1;
+      y1 = cell.y * (cellSize + spacing) + 1,
+      color;
 
     if (!cell.alive) {
       context.fillStyle = config.deadCellColor;
     } else {
       context.fillStyle = this.playerManager.getPlayer(cell.playerId).color;      
     }
+
+    if (this.hoveredPlayer) {
+      if (cell.alive && cell.playerId !== this.hoveredPlayer) {
+        color = this._hexToRGB(this.playerManager.getPlayer(cell.playerId).color);
+        console.log(color);
+        color.r = Math.floor(((255 - color.r) / 1.4) + color.r);
+        color.g = Math.floor(((255 - color.g) / 1.4) + color.g);
+        color.b = Math.floor(((255 - color.b) / 1.4) + color.b);
+        console.log(color);
+
+        context.fillStyle = 'rgba('+ color.r +', '+ color.g +', '+ color.b +', 1)';
+      }
+    }
+
     context.fillRect(x1, y1, cellSize, cellSize);
 
     if (this.app.isPlaying() && this.hoveredCell !== undefined && this.hoveredCell.equals(cell)) {
@@ -523,6 +542,11 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this._drawCell(oldCell);
   };
 
+  Renderer.prototype._handleMouseLeavePlayers = function(event) {
+    this.hoveredPlayer = false;
+    this.render();
+  };
+
   Renderer.prototype._handleMouseMove = function(event) {
     if (event.offsetX && event.offsetY) {
       this.lastX = event.offsetX;
@@ -542,6 +566,15 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
 
     if (this.app.isPlaying() && (player.cells - this.flaggedCells.length) > 0) {
       this._drawFramedCell(this.hoveredCell);
+    }
+  };
+
+  Renderer.prototype._handleMouseOverPlayers = function(event) {
+    var playerId = event.target.dataset.playerId || event.target.parentElement.dataset.playerId;
+
+    if (playerId) {
+      this.hoveredPlayer = parseInt(playerId);
+      this.render();
     }
   };
 
@@ -571,6 +604,15 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     name = name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
     this.gameClient.requestNewPlayer(name, color);
+  };
+
+  Renderer.prototype._hexToRGB = function(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
   };
 
   return Renderer;

@@ -19,7 +19,7 @@ define([], function() {
       var stat = playerStats[i];
 
       if (playerStats[i].highScore > 0) {
-        html += '<div><div class="color" style="background: ' + stat.color + ';"></div>';
+        html += '<div data-player-id="'+ stat.id +'"><div class="color" style="background: ' + stat.color + ';"></div>';
         html += '<span class="name">' + stat.name + '</span>';
         html += '<div class="cells">' + stat.highScore + '</div></div>';
       }

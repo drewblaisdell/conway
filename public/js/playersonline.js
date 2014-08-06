@@ -20,7 +20,7 @@ define([], function() {
     for (var i = 0; i < online.length; i++) {
       var player = online[i];
 
-      html += '<div><div class="color" style="background: ' + player.color + ';"></div>';
+      html += '<div data-player-id="'+ player.id +'"><div class="color" style="background: ' + player.color + ';"></div>';
       html += '<span class="name">' + player.name + '</span>';
       html += '<div class="cells">' + player.cellsOnGrid + '</div></div>';
     }

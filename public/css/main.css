@@ -281,6 +281,15 @@ html, body {
   text-align: center;
 }
 
+#leaderboard > div, #players-online > div {
+  cursor: default;
+  padding: 1px 3px;
+}
+
+#leaderboard > div:hover, #players-online > div:hover {
+  background: #eee;
+}
+
 #leaderboard .color, #players-online .color {
   margin-top: 2px;
   margin-right: 5px;
