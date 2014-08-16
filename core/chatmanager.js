@@ -41,6 +41,10 @@ define([], function() {
   ChatManager.prototype.updateMessages = function(messages) {
     this.lastChatMessage = Date.now();
     
+    if (typeof messages === 'undefined') {
+      messages = [];
+    }
+
     this.chatMessages = messages;
   };
 
