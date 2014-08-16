@@ -19,13 +19,9 @@ define([], function() {
     var html = '',
       chatMessages = this.chatManager.getMessages();
 
-    for (var i = chatMessages.length - 1; i >= 0; i--) {
+    for (var i = 0; i < chatMessages.length; i++) {
       var chatMessage = chatMessages[i],
         player = chatMessage.player;
-
-      if (typeof player === 'undefined') {
-        return false;
-      }
 
       html += '<div><div class="color" style="background: ' + player.color + ';"></div>';
       html += '<span class="name">' + player.name + ':</span>';
@@ -33,6 +29,11 @@ define([], function() {
     }
 
     this.chatLogEl.innerHTML = html;
+    this.scrollToBottom();
+  };
+
+  Chat.prototype.scrollToBottom = function() {
+    this.chatLogEl.scrollTop = this.chatLogEl.scrollHeight;
   };
 
   Chat.prototype.showNewChatBox = function() {

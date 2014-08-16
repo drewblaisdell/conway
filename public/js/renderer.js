@@ -198,6 +198,7 @@ define(['colorpicker', 'leaderboard', 'playersonline', 'chat'], function(Colorpi
       _this.connectingEl.style.display = 'none';
       _this.gameEl.style.display = 'block';
       _this.gameEl.style.opacity = 1;
+      _this.chat.scrollToBottom();
     }, 500);
   };
 

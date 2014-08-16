@@ -318,7 +318,9 @@ html, body {
 }
 
 #chat-log {
-  padding: 8px 3px 0 3px;
+  height: 182px;
+  overflow: auto;
+  padding: 8px 3px 3px 3px;
 }
 
 #chat-log .color {
@@ -350,9 +352,8 @@ html, body {
 }
 
 #chat {
-  height: 210px;
   padding-top: 0;
-  overflow-x: hidden;
+  overflow: visible;
   text-align: left;
 }
 
@@ -360,10 +361,12 @@ html, body {
   display: none;
   width: 100%;
   border: 0;
+  border-top: solid 1px #ddd;
   border-bottom: solid 1px #ddd;
   outline: none;
   padding: 5px 3px;
   font-size: 12px;
+  margin: 0;
 }
 
 .leaderboard-container, .players-online-container, .chat-container {
