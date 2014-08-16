@@ -3,6 +3,7 @@ define([], function() {
     this.app = app;
     this.game = app.game;
     this.playerManager = app.playerManager;
+    this.chatManager = app.chatManager;
     this.config = app.config;
     this.io = io;
     this.sockets = {};
@@ -60,6 +61,24 @@ define([], function() {
     console.log(player.name, 'joined.', this.playerManager.getOnlinePlayers().length, 'player(s) online.');
   };
 
+  GameServer.prototype._handleChatMessage = function(message) {
+    var player = this.playerManager.getPlayer(message.playerId),
+      token = this.getPlayerToken(player),
+      chatMessage;
+
+    if (token !== message.token || !this.chatManager.canAddMessage(message.message)) {
+      return false;
+    }
+
+    message.message = message.message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    chatMessage = this.chatManager.addMessage(player, message.message);
+
+    if (chatMessage) {
+      this.io.emit('chat_message', chatMessage);
+    }
+  };
+
   GameServer.prototype._handleConnect = function(socket) {
     var state = this.app.getMinimumState();
 
@@ -92,6 +111,7 @@ define([], function() {
 
       socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));
       socket.on('disconnect', this._handleDisconnect.bind(this, socket, player));
+      socket.on('chat_message', this._handleChatMessage.bind(this));
     }
   };
 
@@ -129,6 +149,7 @@ define([], function() {
 
     socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));
     socket.on('disconnect', this._handleDisconnect.bind(this, socket, player));
+    socket.on('chat_message', this._handleChatMessage.bind(this));
   };
 
   GameServer.prototype._handlePlaceLiveCells = function(message) {

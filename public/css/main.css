@@ -271,48 +271,9 @@ html, body {
 }
 
 .boards {
+  margin-top: 10px;
   margin-bottom: 20px;
-}
-
-.leaderboard-container, .players-online-container {
-  font-weight: 300;
-  width: 30%;
-  margin: 20px 10% 10px 10%;
-}
-
-.leaderboard-container h2, .players-online-container h2 {
-  font-size: 22px;
-  margin: 0 0 5px;
   text-align: center;
-}
-
-#leaderboard > div, #players-online > div {
-  cursor: default;
-  padding: 1px 3px;
-}
-
-#leaderboard > div:hover, #players-online > div:hover {
-  background: #eee;
-}
-
-#leaderboard .color, #players-online .color {
-  margin-top: 2px;
-  margin-right: 5px;
-  width: 13px;
-  height: 13px;
-  float: left;
-}
-
-#leaderboard .cells, #players-online .cells {
-  float: right;
-}
-
-#leaderboard, #players-online {
-  height: 115px;
-  overflow: auto;
-  margin-bottom: 20px;
-  border-top: solid 1px #DDD;
-  padding-top: 10px;
 }
 
 .leaderboard-container {
@@ -323,11 +284,97 @@ html, body {
   float: right;
 }
 
-.leaderboard-container h2, .players-online-container h2 {
+.chat-container {
+  margin: 0 auto;
+}
+
+.leaderboard-container, .players-online-container, .chat-container {
+  font-weight: 300;
+  width: 30%;
+}
+
+.leaderboard-container h2, .players-online-container h2, .chat-container h2 {
+  font-size: 22px;
+  margin: 0 0 5px;
+  text-align: center;
+}
+
+#leaderboard > div, #players-online > div {
+  cursor: default;
+  padding: 1px 3px;
+  text-align: left;
+}
+
+#leaderboard > div:hover, #players-online > div:hover {
+  background: #eee;
+}
+
+#leaderboard .color, #players-online .color, #chat-log .color {
+  margin-top: 2px;
+  margin-right: 5px;
+  width: 13px;
+  height: 13px;
+  float: left;
+}
+
+#chat-log {
+  padding: 8px 3px 0 3px;
+}
+
+#chat-log .color {
+  width: 10px;
+  height: 10px;
+  margin-top: 3px;
+}
+
+#chat-log > div {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+#chat-log .name {
+  padding-right: 5px;
+  font-weight: bold;
+}
+
+#leaderboard .cells, #players-online .cells {
+  float: right;
+}
+
+#leaderboard, #players-online, #chat {
+  height: 200px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  border-top: solid 1px #DDD;
+  padding-top: 10px;
+}
+
+#chat {
+  height: 210px;
+  padding-top: 0;
+  overflow-x: hidden;
+  text-align: left;
+}
+
+#chat input {
+  display: none;
+  width: 100%;
+  border: 0;
+  border-bottom: solid 1px #ddd;
+  outline: none;
+  padding: 5px 3px;
+  font-size: 12px;
+}
+
+.leaderboard-container, .players-online-container, .chat-container {
+  /*float: left;*/
+}
+
+.leaderboard-container h2, .players-online-container h2, .chat-container h2 {
   margin-bottom: 1px;
 }
 
-.leaderboard-container h3, .players-online-container h3 {
+.leaderboard-container h3, .players-online-container h3, .chat-container h3 {
   text-transform: uppercase;
   text-align: center;
   margin: 0 0 5px;

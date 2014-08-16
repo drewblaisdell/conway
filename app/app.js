@@ -1,4 +1,4 @@
-define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerManager, GameServer) {
+define(['core/game', 'core/playermanager', 'core/chatmanager', 'gameserver'], function(Game, PlayerManager, ChatManager, GameServer) {
   var App = function(config, fs, io) {
     this.config = config;
     this.fs = fs;
@@ -10,6 +10,8 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
     this.height = height;
 
     this.playerManager = new PlayerManager(this);
+
+    this.chatManager = new ChatManager(this);
 
     this.game = new Game(this);
     this.game.init(width, height);
@@ -81,12 +83,14 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
       players = this.playerManager.getPlayers().map(function(player) {
         return player.transmission();
       }),
+      messages = this.chatManager.getMessages(),
       generation = this.game.generation,
       timeBeforeTick = (this.game.nextTick - Date.now());
 
     return {
       livingCells: livingCells,
       players: players,
+      messages: messages,
       generation: generation,
       timeBeforeTick: timeBeforeTick
     };
@@ -103,6 +107,7 @@ define(['core/game', 'core/playermanager', 'gameserver'], function(Game, PlayerM
     this.game.nextTick = Date.now() + state.timeBeforeTick;
     this.game.grid.setLivingCells(state.livingCells);
     this.playerManager.updatePlayers(state.players);
+    this.chatManager.updateMessages(state.messages);
   };
 
   App.prototype._createDataFiles = function() {

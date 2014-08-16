@@ -3,6 +3,7 @@ define([], function() {
     this.app = app;
     this.config = app.config;
     this.playerManager = app.playerManager;
+    this.gameClient = app.gameClient;
   };
 
   PlayersOnline.prototype.init = function() {

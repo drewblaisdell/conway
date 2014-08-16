@@ -3,6 +3,7 @@ define(['socket.io'], function(io) {
     this.app = app;
     this.game = game;
     this.playerManager = playerManager;
+    this.chatManager = app.chatManager;
     this.config = app.config;
 
     this.outOfSync = true;
@@ -26,6 +27,7 @@ define(['socket.io'], function(io) {
     this.socket.on('receive_new_player', this._handleReceiveNewPlayer.bind(this));
     this.socket.on('player_disconnect', this._handlePlayerDisconnect.bind(this));
     this.socket.on('new_player_error', this._handleNewPlayerError.bind(this));
+    this.socket.on('chat_message', this._handleChatMessage.bind(this));
   };
 
   GameClient.prototype.requestPlayer = function(token) {
@@ -35,6 +37,18 @@ define(['socket.io'], function(io) {
   GameClient.prototype.requestNewPlayer = function(name, color) {
     name = name.trim();
     this.socket.emit('request_new_player', { 'name': name, 'color': color });
+  };
+
+  GameClient.prototype.sendChatMessage = function(message) {
+    var player = this.playerManager.getLocalPlayer()
+      playerId = player.id,
+      token = this.app.getToken();
+
+    this.socket.emit('chat_message', {
+      message: message,
+      playerId: playerId,
+      token: token
+    });
   };
 
   GameClient.prototype._handleCellsPlaced = function(message) {
@@ -63,6 +77,18 @@ define(['socket.io'], function(io) {
     player.setLastSeen(Date.now());
 
     this._testStateSync(cellCount);
+  };
+
+  GameClient.prototype._handleChatMessage = function(message) {
+    var player = this.playerManager.getPlayer(message.player.id);
+
+    if (player) {
+      player.setOnline(true);
+    } else {
+      player = this.playerManager.createNewPlayer(message.player);
+    }
+
+    this.chatManager.addMessage(player, message.message);
   };
 
   GameClient.prototype._handleNewPlayerError = function(message) {

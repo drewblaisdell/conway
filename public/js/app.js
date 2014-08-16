@@ -1,4 +1,4 @@
-define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(Game, Renderer, GameClient, PlayerManager) {
+define(['core/game', 'renderer', 'gameclient', 'core/playermanager', 'core/chatmanager'], function(Game, Renderer, GameClient, PlayerManager, ChatManager) {
   var App = function(config) {
     this.config = config;
   };
@@ -13,6 +13,8 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
     this.playing = false;
 
     this.playerManager = new PlayerManager(this);
+
+    this.chatManager = new ChatManager(this);
 
     this.game = new Game(this);
     this.game.init(width, height);
@@ -105,6 +107,7 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
       this.renderer.showControls();
       this.renderer.showLeaveGameContainer();
       this.renderer.showStats();
+      this.renderer.showNewChatBox();
     }
 
     this.renderer.updateControls();
@@ -132,6 +135,7 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager'], function(G
     this.game.nextTick = Date.now() + state.timeBeforeTick;
     this.game.grid.setLivingCells(state.livingCells);
     this.playerManager.updatePlayers(state.players);
+    this.chatManager.updateMessages(state.messages);
   };
 
   return App;

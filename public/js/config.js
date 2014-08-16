@@ -18,6 +18,10 @@ define([], function() {
 
     // player settings
     cellsPerPlayer: 12,
-    lastSeenTimeout: 180000
+    lastSeenTimeout: 180000,
+
+    // chat settings
+    chatLogLength: 300,
+    chatMessageLength: 100
   };
 });

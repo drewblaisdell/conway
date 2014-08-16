@@ -1,9 +1,10 @@
-define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Leaderboard, PlayersOnline) {
+define(['colorpicker', 'leaderboard', 'playersonline', 'chat'], function(Colorpicker, Leaderboard, PlayersOnline, Chat) {
   var Renderer = function(app) {
     this.app = app;
     this.game = app.game;
     this.gameClient = app.gameClient;
     this.playerManager = app.playerManager;
+    this.chatManager = app.chatManager;
     this.config = app.config;
     this.grid = app.game.grid;
     this.width = app.width;
@@ -18,6 +19,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.lastHighScore = false;
     this.lastCellsOnGrid = 0;
     this.lastCellCount = 0;
+    this.lastChatMessage = 0;
 
     this.pixelWidth = this.width * (this.cellSize + this.spacing) + 1;
     this.pixelHeight = this.height * (this.cellSize + this.spacing) + 1;
@@ -69,6 +71,9 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
     this.playersOnline.init();
     this.playersOnline.el.addEventListener('mouseover', this._handleMouseOverPlayers.bind(this), false);
     this.playersOnline.el.addEventListener('mouseleave', this._handleMouseLeavePlayers.bind(this), false);
+
+    this.chat = new Chat(this.app);
+    this.chat.init();
 
     this.playButton = document.getElementById('new-player').querySelector('.play');
 
@@ -254,6 +259,11 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
       localPlayer.setClean();
     }
 
+    if (this.lastChatMessage !== this.chatManager.lastChatMessage) {
+      this.chat.render();
+      this.lastChatMessage = this.chatManager.lastChatMessage;
+    }
+
     this._drawTickBar(this.game.percentageOfTick());
 
     if (this.onlinePlayerCount !== onlinePlayerCount) {
@@ -303,6 +313,10 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
 
   Renderer.prototype.showLeaveGameContainer = function() {
     this.leaveGameContainerEl.style.display = 'inline-block';
+  };
+
+  Renderer.prototype.showNewChatBox = function() {
+    this.chat.showNewChatBox();
   };
 
   Renderer.prototype.showRules = function() {
@@ -614,7 +628,7 @@ define(['colorpicker', 'leaderboard', 'playersonline'], function(Colorpicker, Le
       return false;
     }
 
-    name = name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    name = name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
     this.gameClient.requestNewPlayer(name, color);
   };
