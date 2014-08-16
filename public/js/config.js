@@ -21,7 +21,7 @@ define([], function() {
     lastSeenTimeout: 180000,
 
     // chat settings
-    chatLogLength: 300,
-    chatMessageLength: 100
+    chatLogLength: 150,
+    chatMessageLength: 140
   };
 });
