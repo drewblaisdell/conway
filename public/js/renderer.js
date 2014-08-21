@@ -86,6 +86,19 @@ define(['colorpicker', 'leaderboard', 'playersonline', 'chat'], function(Colorpi
     // request a new player when the play button is clicked
     this.playButton.addEventListener('click', this._handlePlayButtonClick.bind(this), false);
 
+    // remove the flagged cells when the escape key is pressed
+    document.addEventListener('keydown', function(event) {
+      var key = event.which || event.keyCode;
+
+      if (key === 27) {
+        // escape was pressed
+        _this._handleEscapePress.bind(_this)(event);
+      } else if (key === 13) {
+        // enter was pressed
+        _this._handleEnterPress.bind(_this)(event);
+      }
+    });
+
     // submit new player on enter when selecting the input box
     this.nameInput.addEventListener('keypress', function(event) {
       var key = event.which || event.keyCode;
@@ -543,6 +556,20 @@ define(['colorpicker', 'leaderboard', 'playersonline', 'chat'], function(Colorpi
     }
 
     this.hideRules();
+  };
+
+  Renderer.prototype._handleEnterPress = function(event) {
+    if (event.target === document.body) {
+      // the key wasn't pressed in the chat input
+      if (this.flaggedCells.length > 0) {
+        this._handlePlaceCells.bind(this)(event);
+      }
+    }
+  };
+
+  Renderer.prototype._handleEscapePress = function(event) {
+    this.flaggedCells = [];
+    this.render();
   };
 
   Renderer.prototype._handleLeaveGame = function(event) {

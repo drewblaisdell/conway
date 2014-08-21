@@ -319,7 +319,8 @@ html, body {
 
 #chat-log {
   height: 182px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 8px 3px 3px 3px;
 }
 
@@ -327,6 +328,7 @@ html, body {
   width: 10px;
   height: 10px;
   margin-top: 3px;
+  margin-right: 3px;
 }
 
 #chat-log > div {
