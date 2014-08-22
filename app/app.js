@@ -125,6 +125,10 @@ define(['core/game', 'core/playermanager', 'core/chatmanager', 'gameserver'], fu
     if (!this.fs.existsSync('db/last_state')) {
       this.fs.writeFileSync('db/last_state', '');
     }
+
+    if (!this.fs.existsSync('public/last_state')) {
+      this.fs.writeFileSync('public/last_state', '');
+    }
   };
 
   App.prototype._loadState = function() {
@@ -140,6 +144,7 @@ define(['core/game', 'core/playermanager', 'core/chatmanager', 'gameserver'], fu
 
   App.prototype._saveState = function() {
     this.fs.writeFileSync('db/last_state', JSON.stringify(this.getServerState()));
+    this.fs.writeFileSync('public/last_state', JSON.stringify(this.getMinimumState()));
   };
 
   return App;
