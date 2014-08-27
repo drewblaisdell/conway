@@ -104,6 +104,22 @@ define(['core/cell'], function(Cell) {
     for (i = 0; i < l; i++) {
       var test = tests[i];
 
+      if (test[0] === -1) {
+        test[0] = this.width - 1;
+      }
+
+      if (test[1] === -1) {
+        test[1] = this.height - 1;
+      }
+
+      if (test[0] === this.width) {
+        test[0] = 0;
+      }
+
+      if (test[1] === this.height) {
+        test[1] = 0;
+      }
+
       if (test[0] >= 0 && test[0] < this.width && test[1] >= 0 && test[1] < this.height) {
         neighbors.push(this.getCell(test[0], test[1]));
       }
