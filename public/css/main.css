@@ -387,6 +387,10 @@ html, body {
   font-weight: 300;
 }
 
+#login-link-container {
+  display: none;
+}
+
 #leave-game-container {
   display: none;
 }

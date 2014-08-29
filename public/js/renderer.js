@@ -58,6 +58,8 @@ define(['colorpicker', 'leaderboard', 'playersonline', 'chat'], function(Colorpi
     this.flashNewsEl = document.getElementById('flash-news');
     this.observeLinkEl = document.getElementById('observe');
     this.cellsOnGridStatEl = document.getElementById('cells-on-grid-stat');
+    this.loginLinkContainerEl = document.getElementById('login-link-container');
+    this.loginLinkEl = document.getElementById('login-link');
 
     this.colorpicker = new Colorpicker(this.app);
     this.colorpicker.init();
@@ -321,6 +323,12 @@ define(['colorpicker', 'leaderboard', 'playersonline', 'chat'], function(Colorpi
     link.href = canvas.toDataURL();
   };
 
+  Renderer.prototype.showLoginLinkWithToken = function() {
+    var token = this.app.getToken();
+    this.loginLinkEl.href = '?token=' + token;
+    this.loginLinkContainerEl.style.display = 'inline-block';
+  };
+
   Renderer.prototype.showControls = function() {
     this.controlsEl.style.display = 'block';
   };
@@ -573,7 +581,7 @@ define(['colorpicker', 'leaderboard', 'playersonline', 'chat'], function(Colorpi
   };
 
   Renderer.prototype._handleLeaveGame = function(event) {
-    if (confirm("Are you sure you want to leave? You won't be able to log in to your user again.")) {
+    if (confirm("Are you sure you want to leave? You won't be able to log in to your user again unless you have copied your login link.")) {
       this.app.deleteToken();
       location.reload();
     }

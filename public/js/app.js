@@ -7,6 +7,10 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager', 'core/chatm
     var token,
       _this = this;
 
+    if (this.setTokenFromURL()) {
+      window.location.href = '/';
+    }
+
     this.width = width;
     this.height = height;
 
@@ -106,6 +110,7 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager', 'core/chatm
       this.renderer.hideOverlay();
       this.renderer.showControls();
       this.renderer.showLeaveGameContainer();
+      this.renderer.showLoginLinkWithToken();
       this.renderer.showStats();
       this.renderer.showNewChatBox();
     }
@@ -119,6 +124,16 @@ define(['core/game', 'renderer', 'gameclient', 'core/playermanager', 'core/chatm
   App.prototype.setToken = function(token) {
     localStorage.setItem('token', token);
     return token;
+  };
+
+  App.prototype.setTokenFromURL = function() {
+    var urlArgs = window.location.href.split('?token=');
+    if (urlArgs.length === 2) {
+      this.setToken(urlArgs[1]);
+      return true;
+    } else {
+      return false;
+    }
   };
 
   App.prototype.getToken = function() {
