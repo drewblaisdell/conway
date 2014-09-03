@@ -2,7 +2,7 @@ define([], function() {
   var Player = function(id, name, color, cells, online, highScore, lastSeen) {
     this.id = id;
     this.name = name;
-    this.color = color;
+    this.color = color.replace('-','');
     this.cells = cells;
     this.dirty = true;
     this.cellsOnGrid = 0;
@@ -44,7 +44,7 @@ define([], function() {
   };
 
   Player.prototype.setColor = function(color) {
-    this.color = color;
+    this.color = color.replace('-','');
   };
 
   Player.prototype.setDirty = function() {
@@ -77,7 +77,7 @@ define([], function() {
     return {
       id: this.id,
       name: this.name,
-      color: this.color,
+      color: this.color.replace('-',''),
       cells: this.cells,
       cellsOnGrid: this.cellsOnGrid,
       highScore: this.highScore,
