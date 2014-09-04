@@ -103,13 +103,16 @@ define([], function() {
   GameServer.prototype._handleRequestPlayer = function(socket, message) {
     var transmission,
       token = message['token'],
-      player = this.playerManager.getPlayer(this.tokens[token]);
+      player = this.playerManager.getPlayer(this.tokens[token]),
+      oldToken;
 
     if (player) {
-      if (token.length <= 32 && !player.getToken()) {
+      if (token.length <= 32) {
         // this is the old token, assign them a new one
+        oldToken = token;
         token = this.getNewPlayerToken(player);
         this.tokens[token] = player.id;
+        delete this.tokens[oldToken];
       }
 
       player.setOnline(true);
