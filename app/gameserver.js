@@ -106,7 +106,7 @@ define([], function() {
       player = this.playerManager.getPlayer(this.tokens[token]);
 
     if (player) {
-      if (token.length <= 32) {
+      if (token.length <= 32 && !player.getToken()) {
         // this is the old token, assign them a new one
         token = this.getNewPlayerToken(player);
         this.tokens[token] = player.id;
