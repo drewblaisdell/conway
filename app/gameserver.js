@@ -11,6 +11,10 @@ define([], function() {
     this.tokens = {};
   };
 
+  GameServer.prototype.getNewPlayerToken = function(player) {
+    return this.hash(player.id + player.name + this.config.secretToken + Date.now()) + 'v2';
+  };
+
   GameServer.prototype.getPlayerToken = function(player) {
     return this.hash(player.id + player.name + this.config.secretToken);
   };
@@ -63,7 +67,7 @@ define([], function() {
 
   GameServer.prototype._handleChatMessage = function(message) {
     var player = this.playerManager.getPlayer(message.playerId),
-      token = this.getPlayerToken(player),
+      token = player.getToken(),
       chatMessage;
 
     if (token !== message.token || !this.chatManager.canAddMessage(message.message)) {
@@ -102,7 +106,14 @@ define([], function() {
       player = this.playerManager.getPlayer(this.tokens[token]);
 
     if (player) {
+      if (token.length <= 32) {
+        // this is the old token, assign them a new one
+        token = this.getNewPlayerToken(player);
+        this.tokens[token] = player.id;
+      }
+
       player.setOnline(true);
+      player.setToken(token);
       
       transmission = player.transmission();
       socket.emit('receive_new_player', { player: transmission, token: token });
@@ -137,11 +148,12 @@ define([], function() {
       name: name,
       color: color
     });
-    token = this.getPlayerToken(player);
+    token = this.getNewPlayerToken(player);
 
     this.tokens[token] = player.id;
 
     player.setOnline(true);
+    player.setToken(token);
 
     socket.emit('receive_new_player', { player: player.transmission(), token: token });
 
@@ -155,7 +167,7 @@ define([], function() {
   GameServer.prototype._handlePlaceLiveCells = function(message) {
     var cells = message.cells,
       player = this.playerManager.getPlayer(message.playerId),
-      token = this.getPlayerToken(player);
+      token = player.getToken();
 
     if (token !== message.token) {
       return false;

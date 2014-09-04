@@ -66,6 +66,7 @@ define(['core/game', 'core/playermanager', 'core/chatmanager', 'gameserver'], fu
   App.prototype.getServerState = function() {
     var state = this.getState();
 
+    state.players = this.playerManager.getPlayers();
     state.tokens = this.gameServer.getTokens();
 
     return state;

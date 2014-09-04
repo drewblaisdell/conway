@@ -9,6 +9,7 @@ define([], function() {
     this.highScore = highScore || 0;
     this.online = online || false;
     this.lastSeen = lastSeen || Date.now();
+    this.token = false;
   };
 
   Player.prototype.getLastSeen = function() {
@@ -18,6 +19,14 @@ define([], function() {
   Player.prototype.getSocket = function() {
     return this.socket;
   };
+
+  Player.prototype.getToken = function() {
+    return this.token || false;
+  };
+
+  Player.prototype.setToken = function(token) {
+    this.token = token;
+  }
 
   Player.prototype.isDirty = function() {
     return this.dirty;

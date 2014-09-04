@@ -158,6 +158,10 @@ define(['core/player'], function(Player) {
         player.setOnline(players[i].online);
         player.setHighScore(players[i].highScore);
         player.setLastSeen(players[i].lastSeen);
+        
+        if (players[i].token) {
+          player.setToken(players[i].token);
+        }
       } else {
         this.addPlayer(players[i]);
       }
