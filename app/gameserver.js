@@ -12,7 +12,7 @@ define([], function() {
   };
 
   GameServer.prototype.getNewPlayerToken = function(player) {
-    return this.hash(player.id + player.name + this.config.secretToken + Date.now()) + 'v2';
+    return this.hash(player.id + player.name + this.config.secretToken + Date.now()) + Math.floor(Math.random() * 10000) + 'v3';
   };
 
   GameServer.prototype.getPlayerToken = function(player) {
@@ -107,7 +107,8 @@ define([], function() {
       oldToken;
 
     if (player) {
-      if (token.length <= 32) {
+      var version = token.substring(token.length - 2, token.length);
+      if (token.length <= 32 || version !== 'v3') {
         // this is the old token, assign them a new one
         oldToken = token;
         token = this.getNewPlayerToken(player);
