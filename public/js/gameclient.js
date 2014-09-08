@@ -175,9 +175,15 @@ define(['socket.io'], function(io) {
   GameClient.prototype._requestState = function() {
     console.log('--- REQUESTING STATE ---');
     
-    this.playerManager.getLocalPlayer().setOnline(true);
+    var player = this.playerManager.getLocalPlayer();
+    if (player) {
+      player.setOnline(true);
+      this.socket.emit('request_state', { playerId: this.playerManager.getLocalPlayer().id });
+    } else {
+      // "observe mode" state request
+      this.socket.emit('request_state', { playerId: "" });
+    }
 
-    this.socket.emit('request_state', { playerId: this.playerManager.getLocalPlayer().id });
   };
 
   GameClient.prototype._testStateSync = function(serverCellCount) {
