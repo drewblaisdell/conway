@@ -6,8 +6,8 @@ define([], function() {
     cellSpacing: 1,
 
     // grid settings
-    gridWidth: 90,
-    gridHeight: 45,
+    gridWidth: 100,
+    gridHeight: 50,
 
     // game settings
     generationDuration: 5000,
@@ -21,8 +21,8 @@ define([], function() {
     // server settings
     timeBetweenStateUpdates: 10000,
     secretToken: "secret witch's brew",
-    lowestHighScore: 150,
-    chatLogLength: 150,
+    lowestHighScore: 200,
+    chatLogLength: 175,
     chatMessageLength: 140
   };
 });

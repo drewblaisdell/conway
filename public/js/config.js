@@ -8,8 +8,8 @@ define([], function() {
     tickBarHeight: 5,
 
     // grid settings
-    gridWidth: 90,
-    gridHeight: 45,
+    gridWidth: 100,
+    gridHeight: 50,
 
     // game settings
     generationDuration: 5000,
@@ -21,7 +21,7 @@ define([], function() {
     lastSeenTimeout: 180000,
 
     // chat settings
-    chatLogLength: 150,
+    chatLogLength: 175,
     chatMessageLength: 140
   };
 });
