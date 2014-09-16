@@ -6,11 +6,15 @@ define([], function() {
     this.lastChatMessage = 0;
   };
 
-  ChatManager.prototype.addMessage = function(player, message) {
+  ChatManager.prototype.addMessage = function(player, message, timestamp) {
     var removing,
       chatMessage = {
-      player: player.transmission(),
-      message: message
+      player: {
+        name: player.name,
+        color: player.color
+      },
+      message: message,
+      timestamp: timestamp || Date.now()
     };
 
     if (!this.canAddMessage(message)) {

@@ -88,7 +88,7 @@ define(['socket.io'], function(io) {
       player = this.playerManager.createNewPlayer(message.player);
     }
 
-    this.chatManager.addMessage(player, message.message);
+    this.chatManager.addMessage(player, message.message, message.timestamp);
   };
 
   GameClient.prototype._handleNewPlayerError = function(message) {

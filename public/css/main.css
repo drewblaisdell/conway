@@ -154,10 +154,10 @@ html, body {
   padding: 6px;
   margin: 0 auto;
   font-weight: bold;
-  -webkit-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -moz-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
-  -o-transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
-  transition: all .5s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -webkit-transition: -webkit-transform .25s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -moz-transition: -moz-transform .25s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -o-transition: -o-transform .25s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: transform .25s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 .place-cells.enabled {
@@ -252,16 +252,6 @@ html, body {
   cursor: default;
 }
 
-.place-cells {
-  -webkit-transition: scale .5s ease-in;
-  -moz-transition: scale .5s ease-in;
-  -o-transition: scale .5s ease-in;
-  transition: scale .5s ease-in;
-}
-
-.place-cells:hover {
-}
-
 .place-cells.enabled:active, .play:active {
   -webkit-transform: scale(0.9, 0.9);
   -moz-transform: scale(0.9, 0.9);
@@ -336,9 +326,34 @@ html, body {
   line-height: 16px;
 }
 
+#chat-log .timestamp {
+  float: left;
+  font-weight: bold;
+  color: #000;
+  font-size: 12px;
+  /*pointer-events: none;*/
+  opacity: 0;
+  width: 0;
+  cursor: default;
+  /*height: 0;*/
+  overflow-x: hidden;
+  -webkit-transition: width .4s cubic-bezier(0,1.11,.81,.94);
+  transition: width .4s cubic-bezier(0,1.11,.81,.94);
+}
+
+#chat-log .timestamp.active {
+  opacity: 1;
+  width: 43px;
+  margin-right: 3px;
+  height: 15px;
+  -webkit-transition: width .4s cubic-bezier(0,1.11,.81,.94);
+  transition: width .4s cubic-bezier(0,1.11,.81,.94);
+}
+
 #chat-log .name {
   padding-right: 5px;
   font-weight: bold;
+  cursor: default;
 }
 
 #leaderboard .cells, #players-online .cells {

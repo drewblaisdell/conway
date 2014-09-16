@@ -76,7 +76,7 @@ define([], function() {
 
     message.message = message.message.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-    chatMessage = this.chatManager.addMessage(player, message.message);
+    chatMessage = this.chatManager.addMessage(player, message.message, Date.now());
 
     if (chatMessage) {
       this.io.emit('chat_message', chatMessage);
