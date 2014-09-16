@@ -10,6 +10,7 @@ define([], function() {
 
   Chat.prototype.init = function() {
     this.el = document.getElementById('chat');
+    this.timestampEl = document.getElementById('timestamp-tooltip');
     this.chatLogEl = document.getElementById('chat-log');
     this.newChatEl = document.getElementById('new-chat');
 
@@ -32,7 +33,6 @@ define([], function() {
         minutes,
         d;
 
-      html += '<div>'
       if (timestampExists) {
         d = new Date(chatMessage.timestamp);
         hours = d.getHours();
@@ -49,10 +49,11 @@ define([], function() {
 
         timestamp = hours + ':' + minutes + nightOrDay;
 
-        html += '<div class="timestamp">' + timestamp + '</div>';
+        html += '<div class="chat-message" data-timestamp="' + timestamp + '">';
       } else {
-        html += '<div class="timestamp-missing"></div>';
+        html += '<div class="chat-message">';
       }
+
       html += '<div class="color" style="background: ' + player.color + ';"></div>';
       html += '<span class="name">' + player.name + ':</span>';
       html += '<span class="message">'+ chatMessage.message + '</span>';
@@ -89,36 +90,21 @@ define([], function() {
   };
 
   Chat.prototype._handleMouseLeave = function(event) {
-    // close the old timestamp
-    if (this.activeTimestamp) {
-      this.activeTimestamp.className = 'timestamp';
-      this.activeTimestamp = false;
-    }
+    this.timestampEl.style.opacity = 0;
   };
 
   Chat.prototype._handleMouseOver = function(event) {
-    if (event.target.className === 'name') {
-      // the user is hovering over a name attached to a chat message
-      var chatLine = event.target.parentElement,
-        timestamp = chatLine.querySelector('.timestamp');
+    var timestamp = event.target.dataset.timestamp || event.target.parentElement.dataset.timestamp,
+      chatMessageEl = (event.target.dataset.timestamp) ? event.target : event.target.parentElement;
 
-      // close the old timestamp
-      if (this.activeTimestamp) {
-        this.activeTimestamp.className = 'timestamp';
-      }
+    if (timestamp) {
+      this.timestampEl.style.opacity = 1;
+      this.timestampEl.innerHTML = timestamp;
 
-      if (timestamp) {
-        this.activeTimestamp = timestamp;
-        timestamp.className = 'timestamp active';
-      } else {
-        this.activeTimestamp = false;
-      }
-    } else if (event.target.className !== 'timestamp active' && event.target.className !== 'color' && !(event.target.className !== '' || event.target.id !== 'new-chat')) {
-      // close the old timestamp
-      if (this.activeTimestamp) {
-        this.activeTimestamp.className = 'timestamp';
-        this.activeTimestamp = false;
-      }
+      this.timestampEl.style.top = chatMessageEl.offsetTop - this.chatLogEl.scrollTop - 3 + 'px';
+      this.timestampEl.style.left = chatMessageEl.offsetLeft - 50 + 'px';
+    } else {
+      this.timestampEl.style.opacity = 0;
     }
   };
 

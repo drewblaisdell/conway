@@ -326,28 +326,29 @@ html, body {
   line-height: 16px;
 }
 
-#chat-log .timestamp {
-  float: left;
-  font-weight: bold;
-  color: #000;
-  font-size: 12px;
-  /*pointer-events: none;*/
+#timestamp-tooltip {
+  position: absolute;
+  width: 100px;
+  background: rgba(0, 0, 0, 0.8);
+  pointer-events: none;
   opacity: 0;
-  width: 0;
-  cursor: default;
-  /*height: 0;*/
-  overflow-x: hidden;
-  -webkit-transition: width .4s cubic-bezier(0,1.11,.81,.94);
-  transition: width .4s cubic-bezier(0,1.11,.81,.94);
+  font-size: 12px;
+  color: #fff;
+  width: 50px;
+  text-align: center;
+  padding: 4px 0;
 }
 
-#chat-log .timestamp.active {
-  opacity: 1;
-  width: 43px;
-  margin-right: 3px;
-  height: 15px;
-  -webkit-transition: width .4s cubic-bezier(0,1.11,.81,.94);
-  transition: width .4s cubic-bezier(0,1.11,.81,.94);
+#timestamp-tooltip:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent rgba(0, 0, 0, 0.8);
+  top: 6px;
+  left: 50px;
 }
 
 #chat-log .name {
