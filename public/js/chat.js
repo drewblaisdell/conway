@@ -101,8 +101,15 @@ define([], function() {
       this.timestampEl.style.opacity = 1;
       this.timestampEl.innerHTML = timestamp;
 
-      this.timestampEl.style.top = chatMessageEl.offsetTop - this.chatLogEl.scrollTop - 3 + 'px';
-      this.timestampEl.style.left = chatMessageEl.offsetLeft - 50 + 'px';
+      var timestampTop = chatMessageEl.offsetTop - this.chatLogEl.scrollTop - 3,
+        timestampLeft = chatMessageEl.offsetLeft - 50;
+
+      if (timestampTop < this.chatLogEl.offsetTop - 10) {
+        this.timestampEl.style.opacity = 0;
+      } else {
+        this.timestampEl.style.top = chatMessageEl.offsetTop - this.chatLogEl.scrollTop - 3 + 'px';
+        this.timestampEl.style.left = chatMessageEl.offsetLeft - 50 + 'px';
+      }
     } else {
       this.timestampEl.style.opacity = 0;
     }
