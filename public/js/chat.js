@@ -90,7 +90,7 @@ define([], function() {
   };
 
   Chat.prototype._handleMouseLeave = function(event) {
-    this.timestampEl.style.opacity = 0;
+    this.timestampEl.className = '';
   };
 
   Chat.prototype._handleMouseOver = function(event) {
@@ -98,20 +98,22 @@ define([], function() {
       chatMessageEl = (event.target.dataset.timestamp) ? event.target : event.target.parentElement;
 
     if (timestamp) {
-      this.timestampEl.style.opacity = 1;
+      if (this.timestampEl.className === '') {
+        this.timestampEl.className = 'active';
+      }
       this.timestampEl.innerHTML = timestamp;
 
       var timestampTop = chatMessageEl.offsetTop - this.chatLogEl.scrollTop - 3,
         timestampLeft = chatMessageEl.offsetLeft - 50;
 
       if (timestampTop < this.chatLogEl.offsetTop - 10) {
-        this.timestampEl.style.opacity = 0;
+        this.timestampEl.className = '';
       } else {
         this.timestampEl.style.top = chatMessageEl.offsetTop - this.chatLogEl.scrollTop - 3 + 'px';
         this.timestampEl.style.left = chatMessageEl.offsetLeft - 50 + 'px';
       }
     } else {
-      this.timestampEl.style.opacity = 0;
+      this.timestampEl.className = '';
     }
   };
 

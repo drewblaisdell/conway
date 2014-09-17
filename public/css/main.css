@@ -337,6 +337,14 @@ html, body {
   width: 50px;
   text-align: center;
   padding: 4px 0;
+  margin-left: -10px;
+  -webkit-transition: opacity .25s ease-out, margin .25s ease-out;
+  transition: opacity .25s ease-out, margin .25s ease-out;
+}
+
+#timestamp-tooltip.active {
+  margin-left: 0;
+  opacity: 1;
 }
 
 #timestamp-tooltip:after {
