@@ -1,7 +1,7 @@
 requirejs.config({
   baseUrl: 'js',
   paths: {
-    'socket.io': 'https://cdn.socket.io/socket.io-1.0.4'
+    'socket.io': 'http://cdn.socket.io/socket.io-1.0.4'
   }
 });
 
