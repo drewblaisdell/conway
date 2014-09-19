@@ -1,8 +1,5 @@
 requirejs.config({
-  baseUrl: 'js',
-  paths: {
-    'socket.io': 'http://cdn.socket.io/socket.io-1.0.4'
-  }
+  baseUrl: 'js'
 });
 
 require(['app', 'config'], function(App, Config) {

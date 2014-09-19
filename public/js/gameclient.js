@@ -1,4 +1,4 @@
-define(['socket.io'], function(io) {
+define(['lib/socket.io'], function(io) {
   var GameClient = function(app, game, playerManager) {
     this.app = app;
     this.game = game;

@@ -83,7 +83,11 @@ define(['core/cell'], function(Cell) {
   Grid.prototype.getCell = function(x, y) {
     x = Math.max(x, 0);
     y = Math.max(y, 0);
-    return this.cells[y][x];
+    if (this.cells[y] && this.cells[y][x]){
+      return this.cells[y][x];
+    } else {
+      return false;
+    }
   };
 
   Grid.prototype.getNeighbors = function(x, y) {
