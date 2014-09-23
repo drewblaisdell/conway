@@ -1,4 +1,4 @@
-define([], function() {
+define(['lib/Autolinker.min'], function(Autolinker) {
   var Chat = function(app) {
     this.app = app;
     this.config = app.config;
@@ -6,6 +6,7 @@ define([], function() {
     this.chatManager = app.chatManager;
     this.gameClient = app.gameClient;
     this.activeTimestamp = false;
+    this.autolinker = Autolinker;
   };
 
   Chat.prototype.init = function() {
@@ -32,6 +33,10 @@ define([], function() {
         hours,
         minutes,
         d;
+
+      chatMessage.message = this.autolinker.link(chatMessage.message, {
+        stripPrefix: false
+      });
 
       if (timestampExists) {
         d = new Date(chatMessage.timestamp);

@@ -9,10 +9,24 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Helvetica Neue", "Helvetica", "Lato";
 }
 
+h1, h2, h3, h4, h5, h6, #chat {
+  cursor: default;
+}
+
+
 a {
   color: #000;
   text-decoration: none;
   font-weight: bold;
+}
+
+#chat a {
+  color: #00a;
+  font-weight: normal;
+}
+
+#chat a:hover {
+  text-decoration: underline;
 }
 
 html, body {
