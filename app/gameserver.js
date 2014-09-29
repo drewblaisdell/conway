@@ -79,6 +79,7 @@ define([], function() {
     chatMessage = this.chatManager.addMessage(player, message.message, Date.now());
 
     if (chatMessage) {
+      player.setLastSeen(Date.now());
       this.io.emit('chat_message', chatMessage);
     }
   };

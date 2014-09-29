@@ -35,7 +35,8 @@ define(['lib/Autolinker.min'], function(Autolinker) {
         d;
 
       chatMessage.message = this.autolinker.link(chatMessage.message, {
-        stripPrefix: false
+        stripPrefix: false,
+        twitter: false
       });
 
       if (timestampExists) {
