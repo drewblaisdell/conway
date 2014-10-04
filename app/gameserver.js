@@ -80,6 +80,7 @@ define([], function() {
 
     if (chatMessage) {
       player.setLastSeen(Date.now());
+      player.setOnline(true);
       this.io.emit('chat_message', chatMessage);
     }
   };
