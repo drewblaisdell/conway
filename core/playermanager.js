@@ -65,6 +65,24 @@ define(['core/player'], function(Player) {
     return this.localPlayer;
   };
 
+  PlayerManager.prototype.getOnlineIPs = function() {
+    var players = this.getOnlinePlayers(),
+      ip,
+      ips = {};
+
+    for (var i = 0; i < players.length; i++) {
+      ip = players[i].getIP();
+
+      if (ips[ip] !== undefined) {
+        ips[ip] = 1;
+      } else {
+        ips[ip] += 1;
+      }
+    }
+
+    return ips;
+  };
+
   PlayerManager.prototype.getOnlinePlayers = function() {
     var onlinePlayers = [];
 

@@ -120,7 +120,7 @@ define([], function() {
 
       player.setOnline(true);
       player.setToken(token);
-      
+
       transmission = player.transmission();
       socket.emit('receive_new_player', { player: transmission, token: token });
 

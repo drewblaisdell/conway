@@ -10,6 +10,11 @@ define([], function() {
     this.online = online || false;
     this.lastSeen = lastSeen || Date.now();
     this.token = false;
+    this.ip = false;
+  };
+
+  Player.prototype.getIP = function() {
+    return this.ip;
   };
 
   Player.prototype.getLastSeen = function() {
@@ -63,6 +68,10 @@ define([], function() {
   Player.prototype.setHighScore = function(score) {
     this.highScore = score;
   };
+
+  Player.prototype.setIP = function(ip) {
+    this.ip = ip;
+  }
 
   Player.prototype.setLastSeen = function(when) {
     this.lastSeen = when || Date.now();
