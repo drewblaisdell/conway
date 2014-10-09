@@ -73,7 +73,7 @@ define(['core/player'], function(Player) {
     for (var i = 0; i < players.length; i++) {
       ip = players[i].getIP();
 
-      if (ips[ip] !== undefined) {
+      if (ips[ip] === undefined) {
         ips[ip] = 1;
       } else {
         ips[ip] += 1;

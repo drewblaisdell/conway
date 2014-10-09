@@ -100,6 +100,7 @@ define([], function() {
     socket.broadcast.emit('player_disconnect', { playerId: player.id });
 
     console.log(player.name, 'left.', this.playerManager.getOnlinePlayers().length, 'player(s) online.');
+    console.log(this.playerManager.getOnlineIPs());
   };
 
   GameServer.prototype._handleRequestPlayer = function(socket, message) {
@@ -120,6 +121,7 @@ define([], function() {
 
       player.setOnline(true);
       player.setToken(token);
+      player.setIP(socket.request.connection.remoteAddress);
 
       transmission = player.transmission();
       socket.emit('receive_new_player', { player: transmission, token: token });
@@ -130,6 +132,8 @@ define([], function() {
       socket.on('disconnect', this._handleDisconnect.bind(this, socket, player));
       socket.on('chat_message', this._handleChatMessage.bind(this));
     }
+
+    console.log(this.playerManager.getOnlineIPs());
   };
 
   GameServer.prototype._handleRequestNewPlayer = function(socket, message) {
@@ -160,6 +164,7 @@ define([], function() {
 
     player.setOnline(true);
     player.setToken(token);
+    player.setIP(socket.request.connection.remoteAddress);
 
     socket.emit('receive_new_player', { player: player.transmission(), token: token });
 
@@ -168,6 +173,7 @@ define([], function() {
     socket.on('place_live_cells', this._handlePlaceLiveCells.bind(this));
     socket.on('disconnect', this._handleDisconnect.bind(this, socket, player));
     socket.on('chat_message', this._handleChatMessage.bind(this));
+    console.log(this.playerManager.getOnlineIPs());
   };
 
   GameServer.prototype._handlePlaceLiveCells = function(message) {

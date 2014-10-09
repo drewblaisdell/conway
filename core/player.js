@@ -70,7 +70,9 @@ define([], function() {
   };
 
   Player.prototype.setIP = function(ip) {
-    this.ip = ip;
+    if (typeof ip === 'string') {
+      this.ip = ip;
+    }
   }
 
   Player.prototype.setLastSeen = function(when) {
