@@ -74,6 +74,11 @@ define(['core/grid'], function(Grid) {
   Game.prototype.placeCells = function(player, cells) {
     for (var i = 0; i < cells.length; i++) {
       var cell = this.grid.getCell(cells[i].x, cells[i].y);
+      
+      if (!cell) {
+        return false;
+      }
+
       cell.set('alive', true);
       cell.set('playerId', player.id);
     }
