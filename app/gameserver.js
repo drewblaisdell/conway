@@ -188,7 +188,7 @@ define([], function() {
       this.io.emit('cells_placed', {
         cells: cells,
         cellCount: this.game.grid.getLivingCellCount(),
-        player: player
+        player: player.transmission()
       });
     } else {
       // do nothing for now
