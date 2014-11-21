@@ -18,9 +18,9 @@ define(['lib/socket.io'], function(io) {
     this.callback = callback;
 
     document.addEventListener('visibilitychange', this._handleVisibilityChange.bind(this));
-
     this.socket = io();
 
+    this.socket.on('latency_echo', this._handleLatencyEcho.bind(this));
     this.socket.on('state', this._handleState.bind(this));
     this.socket.on('cells_placed', this._handleCellsPlaced.bind(this));
     this.socket.on('player_connect', this._handlePlayerConnect.bind(this));
@@ -89,6 +89,10 @@ define(['lib/socket.io'], function(io) {
     }
 
     this.chatManager.addMessage(player, message.message, message.timestamp);
+  };
+
+  GameClient.prototype._handleLatencyEcho = function(message) {
+    this.socket.emit('latency_echo', message);
   };
 
   GameClient.prototype._handleNewPlayerError = function(message) {

@@ -88,6 +88,9 @@ define([], function() {
   GameServer.prototype._handleConnect = function(socket) {
     var state = this.app.getMinimumState();
 
+    socket._latency = {};
+
+    socket.on('latency_echo', this._receiveLatencyEcho.bind(this, socket));
     socket.on('request_state', this._handleStateRequest.bind(this, socket));
     socket.on('request_player', this._handleRequestPlayer.bind(this, socket));
     socket.on('request_new_player', this._handleRequestNewPlayer.bind(this, socket));
@@ -204,6 +207,31 @@ define([], function() {
     }
 
     this.sendStateToSocket(socket);
+  };
+
+  GameServer.prototype._receiveLatencyEcho = function(socket, message) {
+    // average trip time
+    var latency = (Date.now() - message) / 2,
+      _this = this;
+
+    socket._latency = {
+      value: latency,
+      waiting: false
+    };
+
+    socket.emit('latency', socket._latency.value);
+
+    setTimeout(function() {
+      // wait and try again
+      if (socket.conn.connected) {
+        _this._sendLatencyEcho(socket);
+      }
+    }, 5000);
+  };
+  
+  GameServer.prototype._sendLatencyEcho = function(socket) {
+    socket.emit('latency_echo', Date.now());
+    socket._latency.waiting = true;
   };
 
   return GameServer;
