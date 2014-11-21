@@ -462,7 +462,7 @@ define(['colorpicker', 'leaderboard', 'playersonline', 'chat'], function(Colorpi
     }
 
     if (this.hoveredPlayer) {
-      if (cell.alive && cell.playerId !== this.hoveredPlayer) {
+      if (cell.alive && cell.playerId !== this.hoveredPlayer && this.playerManager.getPlayer(cell.playerId)) {
         color = this._hexToRGB(this.playerManager.getPlayer(cell.playerId).color);
         color.r = Math.floor(((255 - color.r) / 1.4) + color.r);
         color.g = Math.floor(((255 - color.g) / 1.4) + color.g);
