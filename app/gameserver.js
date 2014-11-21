@@ -96,6 +96,9 @@ define([], function() {
     socket.on('request_new_player', this._handleRequestNewPlayer.bind(this, socket));
 
     socket.emit('state', state);
+
+    // start testing latency
+    this._sendLatencyEcho(socket);
   };
 
   GameServer.prototype._handleDisconnect = function(socket, player, message) {
@@ -223,10 +226,10 @@ define([], function() {
 
     setTimeout(function() {
       // wait and try again
-      if (socket.conn.connected) {
+      if (socket.connected) {
         _this._sendLatencyEcho(socket);
       }
-    }, 5000);
+    }, this.config.timeBetweenLatencyTests);
   };
   
   GameServer.prototype._sendLatencyEcho = function(socket) {

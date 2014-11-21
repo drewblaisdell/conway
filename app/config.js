@@ -23,6 +23,7 @@ define([], function() {
     secretToken: "secret witch's brew",
     lowestHighScore: 200,
     chatLogLength: 175,
-    chatMessageLength: 140
+    chatMessageLength: 140,
+    timeBetweenLatencyTests: 10000
   };
 });

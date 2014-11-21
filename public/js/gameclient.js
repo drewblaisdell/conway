@@ -20,6 +20,7 @@ define(['lib/socket.io'], function(io) {
     document.addEventListener('visibilitychange', this._handleVisibilityChange.bind(this));
     this.socket = io();
 
+    this.socket.on('latency', this._handleLatencyResponse.bind(this));
     this.socket.on('latency_echo', this._handleLatencyEcho.bind(this));
     this.socket.on('state', this._handleState.bind(this));
     this.socket.on('cells_placed', this._handleCellsPlaced.bind(this));
@@ -93,6 +94,10 @@ define(['lib/socket.io'], function(io) {
 
   GameClient.prototype._handleLatencyEcho = function(message) {
     this.socket.emit('latency_echo', message);
+  };
+
+  GameClient.prototype._handleLatencyResponse = function(message) {
+    this.latency = message;
   };
 
   GameClient.prototype._handleNewPlayerError = function(message) {
